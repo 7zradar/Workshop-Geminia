@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Agente QA con Gemini. Pruebas ejecutables, evidencia y revisión en un dashboard del workshop TCS."
+    />
+    <title>Agente QA · TCS Forward Engineering</title>
+    <link rel="stylesheet" href="estilos.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="#inicio"
+        ><span class="brand-symbol">Q<span>↗</span></span
+        ><span>Gemini QA<small>FORWARD ENGINEERING</small></span></a
+      >
+      <div class="workspace-label">WORKSHOP · DESARROLLADORES</div>
+      <nav aria-label="Secciones">
+        <a class="nav-item active" href="#inicio"
+          ><span>▦</span> Reporte de calidad</a
+        ><a class="nav-item" href="#casos"><span>✓</span> Casos de prueba</a
+        ><a class="nav-item" href="#diagnostico"
+          ><span>◎</span> Diagnóstico y revisión</a
+        ><a class="nav-item" href="#historial"><span>↺</span> Historial</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <span class="sidebar-tag">GEMINI + ADK</span>
+        <p>Del criterio a la evidencia.</p>
+        <a id="presentation-link" href="../WORKSHOP_GEMINI.html"
+          >Abrir presentación ↗</a
+        ><span class="team-mark">TCS <small>Forward Engineering</small></span>
+      </div>
+    </aside>
+
+    <main id="inicio">
+      <header class="topbar">
+        <span>Workspace <span class="slash">/</span> Agente QA</span
+        ><span id="connection" class="connection">Conectando con la demo</span>
+      </header>
+      <section class="page-heading">
+        <div>
+          <p class="eyebrow">GEMINI · SPEC-DRIVEN DEVELOPMENT</p>
+          <h1>Reporte de calidad<span class="heading-dot">.</span></h1>
+          <p>
+            El agente ejecuta pruebas, explica las fallas y entrega evidencia
+            para revisar.
+          </p>
+        </div>
+        <button id="download" class="button secondary" disabled>
+          ↓ Exportar JSON
+        </button>
+      </section>
+      <div id="message" class="notice" role="status" hidden></div>
+      <div class="toolbar">
+        <div class="toolbar-title">
+          <span class="status-dot"></span><strong>Motor de cálculo</strong
+          ><span class="badge neutral">Aplicación bajo prueba</span>
+        </div>
+        <div class="toolbar-actions">
+          <label class="sr-only" for="mode">Motor de análisis</label
+          ><select id="mode">
+            <option value="evidencia">Análisis local · pruebas reales</option>
+            <option value="gemini">Gemini · 2 agentes ADK</option></select
+          ><button class="button primary" id="run">▶ Ejecutar QA</button>
+        </div>
+      </div>
+
+      <section class="metrics" aria-label="Resumen de pruebas">
+        <article class="metric">
+          <span>Pruebas ejecutadas</span><strong id="total">—</strong
+          ><small>Contra la especificación</small>
+        </article>
+        <article class="metric">
+          <span>Aprobadas</span><strong id="passed" class="positive">—</strong
+          ><small>Cumplen el criterio esperado</small>
+        </article>
+        <article class="metric">
+          <span>Fallidas</span><strong id="failed" class="negative">—</strong
+          ><small>Requieren una corrección</small>
+        </article>
+        <article class="metric">
+          <span>Porcentaje de aprobación</span
+          ><strong id="percentage">—</strong>
+          <div class="progress-track"><div id="progress-fill"></div></div>
+        </article>
+      </section>
+
+      <div class="content-grid">
+        <section class="panel" id="casos">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">EVIDENCIA DE EJECUCIÓN</p>
+              <h2>Casos de prueba</h2>
+            </div>
+            <label class="filter-label"
+              >Mostrar
+              <select id="filter">
+                <option value="all">Todos los casos</option>
+                <option value="failed">Solo fallidos</option>
+                <option value="passed">Solo aprobados</option>
+              </select></label
+            >
+          </div>
+          <p id="report-meta" class="report-meta">
+            Ejecuta QA o importa un reporte para consultar sus resultados.
+          </p>
+          <div id="cases-list" class="cases-list">
+            <div class="empty-state">Los resultados aparecerán aquí.</div>
+          </div>
+          <div class="panel-footer">
+            <span id="verdict" class="badge neutral">Sin ejecución</span
+            ><span id="report-mode">Cada resultado conserva su origen.</span>
+          </div>
+        </section>
+
+        <aside class="right-column">
+          <section class="panel automation">
+            <p class="eyebrow">AUTOMATIZACIÓN</p>
+            <div class="automation-heading">
+              <h2>Del cambio al reporte</h2>
+              <label class="switch"
+                ><input
+                  id="watch"
+                  type="checkbox"
+                  aria-label="Activar ejecución automática al cambiar el código" /><span></span
+              ></label>
+            </div>
+            <p id="watch-description" class="muted">
+              Inicia el servidor para vigilar cambios.
+            </p>
+            <ol class="pipeline">
+              <li>
+                <span>01</span>
+                <div>
+                  <strong>Cambio en el código</strong
+                  ><small>app/calculadora.mjs</small>
+                </div>
+              </li>
+              <li>
+                <span>02</span>
+                <div>
+                  <strong>QA y herramientas</strong
+                  ><small>Spec + pruebas ejecutables</small>
+                </div>
+              </li>
+              <li>
+                <span>03</span>
+                <div>
+                  <strong>Revisión del diagnóstico</strong
+                  ><small>Consistencia con la evidencia</small>
+                </div>
+              </li>
+              <li>
+                <span>04</span>
+                <div>
+                  <strong>Reporte actualizado</strong
+                  ><small>JSON + dashboard</small>
+                </div>
+              </li>
+            </ol>
+            <div class="scenario-actions">
+              <button id="fix" class="button primary">Aplicar corrección</button
+              ><button id="bug" class="text-button">
+                Restaurar bug del ejercicio ↺
+              </button>
+            </div>
+            <p class="micro">
+              Estos botones escriben las versiones pedagógicas en el archivo
+              real. También puedes editarlo en Antigravity.
+            </p>
+          </section>
+          <section class="panel import-panel">
+            <h2>Revisar un artefacto</h2>
+            <p class="muted">
+              Carga el JSON de una ejecución local o de GitHub Actions.
+            </p>
+            <label class="button secondary file-button" for="import"
+              >↑ Importar reporte<input
+                id="import"
+                type="file"
+                accept=".json,application/json"
+            /></label>
+          </section>
+        </aside>
+      </div>
+
+      <section class="panel diagnosis" id="diagnostico">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">ANÁLISIS CON EVIDENCIA</p>
+            <h2>Diagnóstico y revisión</h2>
+          </div>
+          <span id="review-decision" class="badge neutral">Pendiente</span>
+        </div>
+        <div class="diagnosis-grid">
+          <div>
+            <h3 id="analysis-heading">Diagnóstico</h3>
+            <p id="analysis-summary" class="muted">
+              Cada hallazgo se vincula a una prueba ejecutada.
+            </p>
+            <div id="findings"></div>
+            <p id="next-action" class="next-action"></p>
+          </div>
+          <div class="review-column">
+            <h3 id="review-heading">Revisión de consistencia</h3>
+            <ul id="observations"></ul>
+            <details>
+              <summary>Ver traza de ejecución</summary>
+              <ol id="trace" class="trace-list"></ol>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="bottom-grid">
+        <section class="panel" id="historial">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">VERSIONES VERIFICADAS</p>
+              <h2>Historial</h2>
+            </div>
+            <span class="badge neutral">Por contenido</span>
+          </div>
+          <div id="history" class="history-list">
+            <p class="muted">
+              Una versión y un modo conservan un solo registro.
+            </p>
+          </div>
+        </section>
+        <section class="panel calculator">
+          <p class="eyebrow">REPRODUCE EL CASO QA-03</p>
+          <h2>Comprueba el cálculo</h2>
+          <p class="muted">
+            Con 20 operaciones y 4 transferencias, la spec exige S/ 74.00.
+          </p>
+          <form id="calculator-form">
+            <label
+              >Operaciones<input
+                id="operations"
+                type="number"
+                min="0"
+                max="200"
+                step="1"
+                value="20"
+                required /></label
+            ><label
+              >Transferencias<input
+                id="transfers"
+                type="number"
+                min="0"
+                max="100"
+                step="1"
+                value="4"
+                required /></label
+            ><button class="button secondary" type="submit">
+              Calcular en la versión actual
+            </button>
+          </form>
+          <output id="calculation" aria-live="polite"
+            >Ejecuta el cálculo para observar el comportamiento.</output
+          >
+        </section>
+      </section>
+      <footer class="page-footer">
+        <span>Datos ficticios · Banco Andino es parte del ejercicio.</span
+        ><span>SDD · Skills · Agente · Automatización · Vibe coding</span>
+      </footer>
+    </main>
+    <script src="ejemplo.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

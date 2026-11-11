@@ -1,0 +1,30 @@
+[
+  {
+    "id": "QA-01",
+    "name": "Sin operaciones se cobra solo mantenimiento",
+    "criterion": "El mantenimiento mensual es S/ 25",
+    "input": { "operaciones": 0, "interbancarias": 0 },
+    "expected": 25
+  },
+  {
+    "id": "QA-02",
+    "name": "Las primeras diez operaciones son gratuitas",
+    "criterion": "Hasta diez operaciones no generan comisión adicional",
+    "input": { "operaciones": 10, "interbancarias": 0 },
+    "expected": 25
+  },
+  {
+    "id": "QA-03",
+    "name": "Se cobra solo el exceso y las transferencias",
+    "criterion": "25 + (20 - 10) × 2.50 + 4 × 6 = 74",
+    "input": { "operaciones": 20, "interbancarias": 4 },
+    "expected": 74
+  },
+  {
+    "id": "QA-04",
+    "name": "Se rechazan operaciones negativas",
+    "criterion": "Las operaciones deben ser enteros entre 0 y 200",
+    "input": { "operaciones": -1, "interbancarias": 0 },
+    "expected": "ERROR_VALIDACION"
+  }
+]

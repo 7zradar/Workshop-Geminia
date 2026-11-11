@@ -1,5 +1,7 @@
 # Taller Gemini y Antigravity · Paquete de casos y textos
 
+> La sesión actual de tres horas se desarrolla en [Taller_QA_Gemini.md](Taller_QA_Gemini.md) y [WORKSHOP_GEMINI.html](WORKSHOP_GEMINI.html). El producto es un agente QA con un revisor y un dashboard. Este paquete conserva los casos bancarios originales como referencia. Sus reglas de cuenta PYME se reutilizan para la aplicación bajo prueba. Las skills activas están en `.agents/skills/`.
+
 TCS Forward Engineering · Ruta Gemini · 3 horas
 
 Este paquete completa todos los bloques vacíos del taller: reglas, workflows, prompts, código de referencia, datos ficticios, preguntas de prueba y solicitudes de `inbox/`. Trae cuatro casos: tres retos de banca y uno libre para el equipo.

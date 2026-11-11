@@ -1,639 +1,1205 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Immersion Workshop</title>
-  <style>
-    :root {
-      --bg-color-start: #0a101a; 
-      --bg-color-end: #000000;
-      --text-main: #ffffff;
-      --text-muted: #64748b;
-      --accent-blue: #38bdf8;
-      --accent-blue-hover: #0ea5e9;
-      --nav-bg: rgba(15, 23, 42, 0.95);
-      --card-bg: rgba(255,255,255,0.03);
-      --card-border: rgba(255,255,255,0.15);
-      --wave-opacity: 0.9;
-      --btn-next-bg: linear-gradient(90deg, #38bdf8 0%, #3b82f6 100%);
-    }
-
-    body.light-mode {
-      --bg-color-start: #f1f5f9; 
-      --bg-color-end: #e2e8f0;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --accent-blue: #0284c7;
-      --accent-blue-hover: #0369a1;
-      --nav-bg: rgba(255, 255, 255, 0.95);
-      --card-bg: rgba(255,255,255,0.8);
-      --card-border: rgba(0,0,0,0.1);
-      --wave-opacity: 0.3;
-      --btn-next-bg: linear-gradient(90deg, #0ea5e9 0%, #2563eb 100%);
-    }
-
-    body, html {
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: radial-gradient(circle at top center, var(--bg-color-start) 0%, var(--bg-color-end) 80%);
-      color: var(--text-main);
-      overflow: hidden;
-      height: 100vh;
-      transition: background 0.5s ease, color 0.5s ease;
-    }
-
-    .app-container {
-      position: relative;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .hidden { display: none !important; }
-    .invisible { visibility: hidden !important; }
-
-    /* Fondo Animado con líneas muy delgadas */
-    .animated-waves-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      overflow: hidden;
-      opacity: var(--wave-opacity);
-      transition: opacity 0.5s ease;
-    }
-    .waves { width: 100%; height: 100%; }
-    .wave { animation: wave-movement 15s infinite ease-in-out; transform-origin: center; }
-    
-    .wave1 { animation-duration: 28s; stroke: var(--accent-blue); }
-    .wave2 { animation-duration: 32s; animation-direction: reverse; stroke: var(--accent-blue); }
-    .wave3 { animation-duration: 25s; stroke: var(--accent-blue); }
-    .wave4 { animation-duration: 35s; animation-direction: reverse; stroke: var(--accent-blue); }
-    .wave5 { animation-duration: 30s; stroke: var(--accent-blue); }
-    .wave6 { animation-duration: 22s; animation-direction: reverse; stroke: var(--accent-blue); }
-    .wave8 { animation-duration: 27s; stroke: var(--accent-blue); }
-    .wave9 { animation-duration: 33s; animation-direction: reverse; stroke: var(--accent-blue); }
-    
-    .wave10 { animation-duration: 31s; stroke: #3b82f6; }
-    .wave11 { animation-duration: 26s; animation-direction: reverse; stroke: #60a5fa; }
-    .wave7 { animation-duration: 29s; stroke: #facc15; }
-
-    @keyframes wave-movement {
-      0% { transform: translateX(0) scaleY(1); }
-      50% { transform: translateX(-3%) scaleY(1.08); }
-      100% { transform: translateX(0) scaleY(1); }
-    }
-
-    /* HEADER Y BARRA SUPERIOR */
-    .app-header {
-      position: relative;
-      z-index: 10;
-      padding: 20px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    .logo-container:hover { opacity: 0.8; }
-
-    .tcs-logo-header { height: 26px; transition: filter 0.3s ease; }
-    .tcs-inline-logo { height: 50px; vertical-align: middle; transition: filter 0.3s ease; }
-    
-    body:not(.light-mode) .tcs-logo-header,
-    body:not(.light-mode) .tcs-inline-logo { filter: brightness(0) invert(1); }
-    
-    .brand-cross { color: var(--text-muted); font-size: 0.9rem; font-weight: bold; }
-    .brand-gemini { color: var(--accent-blue); font-weight: 700; font-size: 1.1rem; }
-
-    .top-controls { display: flex; align-items: center; gap: 20px; }
-    .control-btn {
-      background: none; border: none; color: var(--text-main); font-size: 1.2rem;
-      cursor: pointer; display: flex; align-items: center; gap: 8px;
-      opacity: 0.8; transition: opacity 0.2s; padding: 5px;
-    }
-    .control-btn:hover { opacity: 1; }
-    .lang-text { font-size: 0.9rem; font-weight: bold; }
-
-    /* CONTENIDO PRINCIPAL */
-    .main-content {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      text-align: center; padding: 20px; padding-bottom: 90px;
-      width: 100%; box-sizing: border-box; position: relative; z-index: 10;
-    }
-    .screen-view { width: 100%; max-width: 1200px; }
-
-    .btn-primary {
-      background-color: transparent; border: 1px solid var(--text-main); color: var(--text-main);
-      padding: 12px 24px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease;
-    }
-    .btn-primary:hover { background-color: rgba(150,150,150,0.2); }
-
-    .highlight-gemini { color: var(--accent-blue); font-weight: 700; }
-    .main-title { font-size: 4rem; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 20px; }
-    .subtitle { font-size: 3.5rem; font-weight: 600; margin: 0 0 20px 0; }
-    .description { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 40px; }
-
-    .section-eyebrow { color: var(--accent-blue); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; }
-    .section-title { font-size: 2.5rem; margin-bottom: 50px; }
-    .modules-grid { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-    .module-card {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px;
-      padding: 30px; width: 250px; text-align: left; cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s; backdrop-filter: blur(8px);
-    }
-    .module-card:hover { transform: translateY(-5px); border-color: var(--accent-blue); }
-    .module-number {
-      background: var(--text-main); color: var(--bg-color-start); width: 30px; height: 30px;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-weight: bold; margin-bottom: 20px;
-    }
-    .module-card-title { margin-top: 0; font-size: 1.2rem; }
-    .module-card-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.4; }
-
-    .content-container {
-      background: var(--nav-bg); padding: 50px; border-radius: 16px;
-      border: 1px solid var(--card-border); max-width: 800px; margin: 0 auto; backdrop-filter: blur(10px);
-    }
-    .content-title { font-size: 2rem; margin-bottom: 30px; }
-    .content-body { font-size: 1.2rem; min-height: 200px; }
-
-    .congrats-title { font-size: 5rem; margin-bottom: 20px; animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-    .congrats-text { font-size: 1.5rem; color: var(--text-muted); margin-bottom: 40px; }
-    @keyframes pop-in { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-
-    .confetti-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; overflow: hidden; }
-    .confetti { position: absolute; top: -20px; width: 10px; height: 20px; opacity: 0; animation: fall linear forwards; }
-    @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
-
-    /* BARRA INFERIOR SIEMPRE VISIBLE */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0; left: 0; width: 100%;
-      height: 85px;
-      background-color: var(--nav-bg);
-      border-top: 1px solid var(--card-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-      box-sizing: border-box;
-      z-index: 200;
-      backdrop-filter: blur(15px);
-    }
-    
-    .nav-module-label {
-      font-weight: 700; color: var(--accent-blue); letter-spacing: 1px;
-      font-size: 0.9rem; display: flex; align-items: center; gap: 15px; min-width: 120px;
-    }
-    .nav-divider { color: var(--text-muted); font-weight: 300; }
-
-    .nav-progress-segments {
-      display: flex; align-items: flex-start; gap: 5px; flex: 1; max-width: 800px; margin: 0 20px;
-    }
-    .step-segment { flex: 1; display: flex; flex-direction: column; gap: 8px; opacity: 0.5; transition: all 0.3s; }
-    .step-segment.active { opacity: 1; }
-    .step-segment.completed .step-line { background-color: var(--accent-blue); }
-    
-    .step-line { height: 4px; background-color: var(--text-muted); border-radius: 2px; width: 100%; transition: background-color 0.3s; }
-    .step-segment.active .step-line { background-color: var(--accent-blue); box-shadow: 0 0 8px var(--accent-blue); }
-    
-    .step-label {
-      font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-      color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .step-segment.active .step-label { color: var(--text-main); }
-
-    .nav-actions { display: flex; gap: 10px; align-items: center; }
-    .nav-btn-back {
-      background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main);
-      width: 45px; height: 45px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 1.2rem; transition: all 0.2s;
-    }
-    .nav-btn-back:hover { background: rgba(150,150,150,0.2); }
-    
-    .nav-btn-next {
-      background: var(--btn-next-bg); border: none; color: white; height: 45px; padding: 0 25px;
-      border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer;
-      display: flex; align-items: center; gap: 8px; transition: transform 0.2s, filter 0.2s;
-    }
-    .nav-btn-next:hover { filter: brightness(1.1); transform: scale(1.02); }
-
-    .keyboard-hint {
-      position: fixed; bottom: 95px; right: 20px; font-size: 0.75rem; color: var(--text-muted);
-      background: var(--nav-bg); padding: 6px 12px; border-radius: 6px;
-      border: 1px solid var(--card-border); opacity: 0.8; z-index: 300;
-      pointer-events: none;
-    }
-
-  </style>
-</head>
-<body>
-
-  <div class="app-container">
-    
-    <!-- Fondo Animado -->
-    <div class="animated-waves-container">
-      <svg class="waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
-        <path class="wave wave1" fill="none" stroke="rgba(56, 189, 248, 0.4)" stroke-width="0.3" d="M-200,160 C150,300 350,0 720,160 C1090,320 1290,20 1640,160"></path>
-        <path class="wave wave2" fill="none" stroke="rgba(56, 189, 248, 0.3)" stroke-width="0.5" d="M-200,120 C200,250 400,50 720,180 C1040,310 1240,80 1640,120"></path>
-        <path class="wave wave3" fill="none" stroke="rgba(56, 189, 248, 0.5)" stroke-width="0.3" d="M-200,200 C250,80 450,280 720,140 C990,0 1190,350 1640,200"></path>
-        <path class="wave wave4" fill="none" stroke="rgba(56, 189, 248, 0.2)" stroke-width="0.6" d="M-200,100 C300,350 500,-50 720,120 C940,290 1140,50 1640,100"></path>
-        <path class="wave wave5" fill="none" stroke="rgba(125, 211, 252, 0.4)" stroke-width="0.3" d="M-200,240 C350,0 550,350 720,190 C890,30 1090,300 1640,240"></path>
-        <path class="wave wave6" fill="none" stroke="rgba(14, 165, 233, 0.3)" stroke-width="0.5" d="M-200,180 C100,20 400,300 720,160 C1040,20 1340,300 1640,180"></path>
-        <path class="wave wave8" fill="none" stroke="rgba(56, 189, 248, 0.3)" stroke-width="0.3" d="M-200,140 C280,320 480,-20 720,150 C960,320 1160,20 1640,140"></path>
-        <path class="wave wave9" fill="none" stroke="rgba(56, 189, 248, 0.4)" stroke-width="0.3" d="M-200,220 C180,50 380,300 720,170 C1060,40 1260,280 1640,220"></path>
-        
-        <path class="wave wave10" fill="none" stroke="rgba(59, 130, 246, 0.3)" stroke-width="0.4" d="M-200,170 C150,50 450,350 720,150 C990,-50 1290,300 1640,170"></path>
-        <path class="wave wave11" fill="none" stroke="rgba(37, 99, 235, 0.2)" stroke-width="0.5" d="M-200,130 C250,350 350,20 720,200 C1090,380 1190,50 1640,130"></path>
-
-        <path class="wave wave7" fill="none" stroke="rgba(250, 204, 21, 0.7)" stroke-width="0.8" d="M-200,150 C250,300 450,20 720,160 C990,300 1190,40 1640,150"></path>
-      </svg>
-    </div>
-    
-    <!-- HEADER -->
-    <header class="app-header">
-      <div class="logo-container" onclick="showScreen('screen-home')" title="Ir al Inicio">
-        <img src="tcs-logo.png" alt="TCS Logo" class="tcs-logo-header" onerror="this.style.display='none'" />
-        <span class="brand-cross">✕</span>
-        <span class="brand-gemini">Gemini</span>
-      </div>
-      
-      <div class="top-controls">
-        <button class="control-btn" onclick="showScreen('screen-modules')" title="Menú de Módulos">
-          <span style="font-size:1.4rem">⊞</span>
-        </button>
-        <button class="control-btn" onclick="toggleLanguage()" title="Cambiar Idioma">
-          <span>🌐</span> <span class="lang-text" id="lang-indicator">ES</span>
-        </button>
-        <button class="control-btn" onclick="toggleTheme()" title="Cambiar Tema">
-          <span id="theme-icon">☀️</span>
-        </button>
-        <button class="control-btn" onclick="location.reload()" title="Reiniciar Aplicación">
-          <span style="font-size:1.4rem">↻</span>
-        </button>
-      </div>
-    </header>
-
-    <!-- PANTALLAS DE CONTENIDO -->
-    <main class="main-content">
-      
-      <!-- PANTALLA 1: INICIO -->
-      <div id="screen-home" class="screen-view">
-        <h1 class="main-title">
-          <span class="highlight-gemini">Gemini</span> ✕ <img src="tcs-logo.png" alt="TCS" class="tcs-inline-logo" onerror="this.style.display='none'"/>
-        </h1>
-        <h2 class="subtitle" id="t-home-sub">AI Immersion</h2>
-        <p class="description" id="t-home-desc">Cuatro módulos. Un método. Entregables reales al final del día.</p>
-        <button class="btn-primary" onclick="showScreen('screen-modules')" id="t-home-btn">
-          🔒 Toque para comenzar →
-        </button>
-      </div>
-
-      <!-- PANTALLA 2: SELECCIÓN DE MÓDULOS -->
-      <div id="screen-modules" class="screen-view hidden">
-        <p class="section-eyebrow" id="t-mod-eyebrow">EL RECORRIDO DE HOY</p>
-        <h2 class="section-title" id="t-mod-title">Cuatro módulos, cada uno de la demo a sus propias manos</h2>
-        <div class="modules-grid" id="modules-container"></div>
-      </div>
-
-      <!-- PANTALLA 3: PASOS / CONTENIDO -->
-      <div id="screen-content" class="screen-view hidden">
-        <div class="content-container">
-          <h2 class="content-title" id="content-header">Título</h2>
-          <div class="content-body" id="content-body">Contenido...</div>
-        </div>
-      </div>
-
-      <!-- PANTALLA 4: FELICITACIONES -->
-      <div id="screen-congrats" class="screen-view hidden">
-        <div id="confetti-layer" class="confetti-container"></div>
-        <h1 class="congrats-title" id="t-congrats-title">¡Felicitaciones!</h1>
-        <p class="congrats-text" id="t-congrats-text">Acaban de completar el módulo con éxito.</p>
-        <button class="btn-primary" onclick="goToNextModule()" id="t-congrats-btn">Ir al siguiente módulo →</button>
-      </div>
-
-    </main>
-
-    <!-- BARRA INFERIOR DE NAVEGACIÓN -->
-    <nav class="bottom-nav" id="bottom-navigation">
-      <div class="nav-module-label">
-        <span id="nav-module-name">INICIO</span>
-        <span class="nav-divider">|</span>
-      </div>
-
-      <div class="nav-progress-segments" id="nav-progress-segments">
-        <!-- Segmentos del módulo -->
-      </div>
-
-      <div class="nav-actions">
-        <button class="nav-btn-back invisible" id="nav-btn-prev" onclick="handlePrevStep()" title="Anterior">←</button>
-        <button class="nav-btn-next invisible" id="nav-btn-next" onclick="handleNextStep()">
-          <span id="nav-next-text">Siguiente</span> →
-        </button>
-      </div>
-    </nav>
-    
-    <div class="keyboard-hint" id="keyboard-hint">Usa ⬅️ y ➡️ para navegar</div>
-
-  </div>
-
-  <script>
-    let currentLang = 'es';
-    let currentStep = 0;
-    let currentScreen = 'screen-home';
-    let activeModule = null;
-
-    const translations = {
-      es: {
-        homeSub: "AI Immersion",
-        homeDesc: "Cuatro módulos. Un método. Entregables reales al final del día.",
-        homeBtn: "🔒 Toque para comenzar →",
-        modEyebrow: "EL RECORRIDO DE HOY",
-        modTitle: "Cuatro módulos, cada uno de la demo a sus propias manos",
-        congratsTitle: "¡Felicitaciones!",
-        congratsText: "Acaban de completar el módulo con éxito.",
-        congratsBtnNext: "Ir al siguiente módulo →",
-        congratsBtnHome: "Volver al Inicio ↺",
-        btnFinish: "Finalizar",
-        module: "MÓDULO",
-        homeLabel: "INICIO",
-        modulesLabel: "MÓDULOS",
-        completedLabel: "COMPLETADO"
-      },
-      en: {
-        homeSub: "AI Immersion",
-        homeDesc: "Four modules. One method. Real deliverables by the end of the day.",
-        homeBtn: "🔒 Tap to start →",
-        modEyebrow: "TODAY'S JOURNEY",
-        modTitle: "Four modules, from demo to your own hands",
-        congratsTitle: "Congratulations!",
-        congratsText: "You have successfully completed the module.",
-        congratsBtnNext: "Go to next module →",
-        congratsBtnHome: "Return to Home ↺",
-        btnFinish: "Finish",
-        module: "MODULE",
-        homeLabel: "HOME",
-        modulesLabel: "MODULES",
-        completedLabel: "COMPLETED"
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Workshop de tres horas para construir un agente QA, automatizarlo con un revisor y crear un dashboard con specs y skills."
+    />
+    <title>Agente QA · Workshop Gemini y Antigravity</title>
+    <style>
+      :root {
+        --bg-color-start: #0a101a;
+        --bg-color-end: #000000;
+        --text-main: #ffffff;
+        --text-muted: #64748b;
+        --accent-blue: #38bdf8;
+        --accent-blue-hover: #0ea5e9;
+        --nav-bg: rgba(15, 23, 42, 0.95);
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --card-border: rgba(255, 255, 255, 0.15);
+        --wave-opacity: 0.9;
+        --btn-next-bg: linear-gradient(90deg, #38bdf8 0%, #3b82f6 100%);
       }
-    };
 
-    const modulesData = [
-      { 
-        id: 1, 
-        title_es: "Investigación y toma de decisiones", title_en: "Research and decision making",
-        steps_es: ["Inicio", "Objetivo", "Contexto", "Desafío", "Ampliar", "Dolores", "Diagnosticar", "Mi Área", "Decidir", "Fin"],
-        steps_en: ["Start", "Objective", "Ground", "Challenge", "Widen", "Pains", "Diagnose", "My Area", "Decide", "Done"]
-      },
-      { 
-        id: 2, 
-        title_es: "Mi agente me ahorra tiempo", title_en: "My agent saves me time",
-        steps_es: ["Inicio", "Automatización", "Agentes", "Fin"],
-        steps_en: ["Start", "Automation", "Agents", "Done"]
-      },
-      { 
-        id: 3, 
-        title_es: "Datos → insights → comunicación", title_en: "Data → insights → communication",
-        steps_es: ["Inicio", "Datos", "Insights", "Presentación", "Fin"],
-        steps_en: ["Start", "Data", "Insights", "Presentation", "Done"]
-      },
-      { 
-        id: 4, 
-        title_es: "Vibe coding", title_en: "Vibe coding",
-        steps_es: ["Inicio", "Setup", "Código", "Revisión", "Fin"],
-        steps_en: ["Start", "Setup", "Code", "Review", "Done"]
+      body.light-mode {
+        --bg-color-start: #f1f5f9;
+        --bg-color-end: #e2e8f0;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --accent-blue: #0284c7;
+        --accent-blue-hover: #0369a1;
+        --nav-bg: rgba(255, 255, 255, 0.95);
+        --card-bg: rgba(255, 255, 255, 0.8);
+        --card-border: rgba(0, 0, 0, 0.1);
+        --wave-opacity: 0.3;
+        --btn-next-bg: linear-gradient(90deg, #0ea5e9 0%, #2563eb 100%);
       }
-    ];
 
-    function init() {
-      renderModules();
-      updateStaticTexts();
-      updateBottomNav();
-      
-      window.addEventListener('keydown', (e) => {
-        if (e.altKey || e.ctrlKey || e.metaKey) return;
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          Cantarell, sans-serif;
+        background: radial-gradient(
+          circle at top center,
+          var(--bg-color-start) 0%,
+          var(--bg-color-end) 80%
+        );
+        color: var(--text-main);
+        overflow: hidden;
+        height: 100vh;
+        transition:
+          background 0.5s ease,
+          color 0.5s ease;
+      }
 
-        if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          globalNavigateNext();
-        } else if (e.key === 'ArrowLeft') {
-          e.preventDefault();
-          globalNavigatePrev();
+      .app-container {
+        position: relative;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+      .invisible {
+        visibility: hidden !important;
+      }
+
+      /* Fondo Animado con líneas muy delgadas */
+      .animated-waves-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        overflow: hidden;
+        opacity: var(--wave-opacity);
+        transition: opacity 0.5s ease;
+      }
+      .waves {
+        width: 100%;
+        height: 100%;
+      }
+      .wave {
+        animation: wave-movement 15s infinite ease-in-out;
+        transform-origin: center;
+      }
+
+      .wave1 {
+        animation-duration: 28s;
+        stroke: var(--accent-blue);
+      }
+      .wave2 {
+        animation-duration: 32s;
+        animation-direction: reverse;
+        stroke: var(--accent-blue);
+      }
+      .wave3 {
+        animation-duration: 25s;
+        stroke: var(--accent-blue);
+      }
+      .wave4 {
+        animation-duration: 35s;
+        animation-direction: reverse;
+        stroke: var(--accent-blue);
+      }
+      .wave5 {
+        animation-duration: 30s;
+        stroke: var(--accent-blue);
+      }
+      .wave6 {
+        animation-duration: 22s;
+        animation-direction: reverse;
+        stroke: var(--accent-blue);
+      }
+      .wave8 {
+        animation-duration: 27s;
+        stroke: var(--accent-blue);
+      }
+      .wave9 {
+        animation-duration: 33s;
+        animation-direction: reverse;
+        stroke: var(--accent-blue);
+      }
+
+      .wave10 {
+        animation-duration: 31s;
+        stroke: #3b82f6;
+      }
+      .wave11 {
+        animation-duration: 26s;
+        animation-direction: reverse;
+        stroke: #60a5fa;
+      }
+      .wave7 {
+        animation-duration: 29s;
+        stroke: #facc15;
+      }
+
+      @keyframes wave-movement {
+        0% {
+          transform: translateX(0) scaleY(1);
         }
-      });
-    }
-
-    function globalNavigateNext() {
-      if (currentScreen === 'screen-home') {
-        showScreen('screen-modules');
-      } else if (currentScreen === 'screen-modules') {
-        startModule(1);
-      } else if (currentScreen === 'screen-content') {
-        handleNextStep();
-      } else if (currentScreen === 'screen-congrats') {
-        goToNextModule();
+        50% {
+          transform: translateX(-3%) scaleY(1.08);
+        }
+        100% {
+          transform: translateX(0) scaleY(1);
+        }
       }
-    }
 
-    function globalNavigatePrev() {
-      if (currentScreen === 'screen-content') {
-        handlePrevStep();
-      } else if (currentScreen === 'screen-modules' || currentScreen === 'screen-congrats') {
-        showScreen('screen-home');
+      /* HEADER Y BARRA SUPERIOR */
+      .app-header {
+        position: relative;
+        z-index: 10;
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
-    }
 
-    function toggleTheme() {
-      const body = document.body;
-      const icon = document.getElementById('theme-icon');
-      if (body.classList.contains('light-mode')) {
-        body.classList.remove('light-mode');
-        icon.innerText = '☀️';
-      } else {
-        body.classList.add('light-mode');
-        icon.innerText = '🌙';
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: opacity 0.2s;
       }
-    }
-
-    function toggleLanguage() {
-      currentLang = currentLang === 'es' ? 'en' : 'es';
-      document.getElementById('lang-indicator').innerText = currentLang.toUpperCase();
-      updateStaticTexts();
-      renderModules();
-      updateBottomNav();
-      if (currentScreen === 'screen-content') updateContentScreen();
-    }
-
-    function updateStaticTexts() {
-      const t = translations[currentLang];
-      document.getElementById('t-home-sub').innerText = t.homeSub;
-      document.getElementById('t-home-desc').innerText = t.homeDesc;
-      document.getElementById('t-home-btn').innerText = t.homeBtn;
-      document.getElementById('t-mod-eyebrow').innerText = t.modEyebrow;
-      document.getElementById('t-mod-title').innerText = t.modTitle;
-      document.getElementById('t-congrats-title').innerText = t.congratsTitle;
-      document.getElementById('t-congrats-text').innerText = t.congratsText;
-
-      // Actualizar texto del botón de felicitaciones dinámicamente si estamos en el último módulo
-      if (activeModule && activeModule.id === modulesData.length) {
-        document.getElementById('t-congrats-btn').innerText = t.congratsBtnHome;
-      } else {
-        document.getElementById('t-congrats-btn').innerText = t.congratsBtnNext;
+      .logo-container:hover {
+        opacity: 0.8;
       }
-    }
 
-    function renderModules() {
-      const container = document.getElementById('modules-container');
-      container.innerHTML = '';
-      modulesData.forEach(mod => {
-        const card = document.createElement('div');
-        card.className = 'module-card';
-        card.onclick = () => startModule(mod.id);
-        card.innerHTML = `
+      .tcs-logo-header {
+        height: 26px;
+        transition: filter 0.3s ease;
+      }
+      .tcs-inline-logo {
+        height: 50px;
+        vertical-align: middle;
+        transition: filter 0.3s ease;
+      }
+
+      body:not(.light-mode) .tcs-logo-header,
+      body:not(.light-mode) .tcs-inline-logo {
+        filter: brightness(0) invert(1);
+      }
+
+      .brand-cross {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        font-weight: bold;
+      }
+      .brand-gemini {
+        color: var(--accent-blue);
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      .top-controls {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .control-btn {
+        background: none;
+        border: none;
+        color: var(--text-main);
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+        padding: 5px;
+      }
+      .control-btn:hover {
+        opacity: 1;
+      }
+      .lang-text {
+        font-size: 0.9rem;
+        font-weight: bold;
+      }
+
+      /* CONTENIDO PRINCIPAL */
+      .main-content {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+        padding-bottom: 90px;
+        width: 100%;
+        box-sizing: border-box;
+        position: relative;
+        z-index: 10;
+      }
+      .screen-view {
+        width: 100%;
+        max-width: 1200px;
+      }
+
+      .btn-primary {
+        background-color: transparent;
+        border: 1px solid var(--text-main);
+        color: var(--text-main);
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .btn-primary:hover {
+        background-color: rgba(150, 150, 150, 0.2);
+      }
+
+      .highlight-gemini {
+        color: var(--accent-blue);
+        font-weight: 700;
+      }
+      .main-title {
+        font-size: 4rem;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+      }
+      .subtitle {
+        font-size: 3.5rem;
+        font-weight: 600;
+        margin: 0 0 20px 0;
+      }
+      .description {
+        font-size: 1.2rem;
+        color: var(--text-muted);
+        margin-bottom: 40px;
+      }
+
+      .section-eyebrow {
+        color: var(--accent-blue);
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+      }
+      .section-title {
+        font-size: 2.5rem;
+        margin-bottom: 50px;
+      }
+      .modules-grid {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .module-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 30px;
+        width: 250px;
+        text-align: left;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          border-color 0.2s;
+        backdrop-filter: blur(8px);
+      }
+      .module-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-blue);
+      }
+      .module-number {
+        background: var(--text-main);
+        color: var(--bg-color-start);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+      .module-card-title {
+        margin-top: 0;
+        font-size: 1.2rem;
+      }
+      .module-card-desc {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
+
+      .content-container {
+        background: var(--nav-bg);
+        padding: 50px;
+        border-radius: 16px;
+        border: 1px solid var(--card-border);
+        max-width: 800px;
+        margin: 0 auto;
+        backdrop-filter: blur(10px);
+      }
+      .content-title {
+        font-size: 2rem;
+        margin-bottom: 30px;
+      }
+      .content-body {
+        font-size: 1.2rem;
+        min-height: 200px;
+      }
+
+      .congrats-title {
+        font-size: 5rem;
+        margin-bottom: 20px;
+        animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+      .congrats-text {
+        font-size: 1.5rem;
+        color: var(--text-muted);
+        margin-bottom: 40px;
+      }
+      @keyframes pop-in {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .confetti-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 100;
+        overflow: hidden;
+      }
+      .confetti {
+        position: absolute;
+        top: -20px;
+        width: 10px;
+        height: 20px;
+        opacity: 0;
+        animation: fall linear forwards;
+      }
+      @keyframes fall {
+        0% {
+          transform: translateY(-10vh) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(110vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+
+      /* BARRA INFERIOR SIEMPRE VISIBLE */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 85px;
+        background-color: var(--nav-bg);
+        border-top: 1px solid var(--card-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 30px;
+        box-sizing: border-box;
+        z-index: 200;
+        backdrop-filter: blur(15px);
+      }
+
+      .nav-module-label {
+        font-weight: 700;
+        color: var(--accent-blue);
+        letter-spacing: 1px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        min-width: 120px;
+      }
+      .nav-divider {
+        color: var(--text-muted);
+        font-weight: 300;
+      }
+
+      .nav-progress-segments {
+        display: flex;
+        align-items: flex-start;
+        gap: 5px;
+        flex: 1;
+        max-width: 800px;
+        margin: 0 20px;
+      }
+      .step-segment {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        opacity: 0.5;
+        transition: all 0.3s;
+      }
+      .step-segment.active {
+        opacity: 1;
+      }
+      .step-segment.completed .step-line {
+        background-color: var(--accent-blue);
+      }
+
+      .step-line {
+        height: 4px;
+        background-color: var(--text-muted);
+        border-radius: 2px;
+        width: 100%;
+        transition: background-color 0.3s;
+      }
+      .step-segment.active .step-line {
+        background-color: var(--accent-blue);
+        box-shadow: 0 0 8px var(--accent-blue);
+      }
+
+      .step-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .step-segment.active .step-label {
+        color: var(--text-main);
+      }
+
+      .nav-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .nav-btn-back {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        color: var(--text-main);
+        width: 45px;
+        height: 45px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.2s;
+      }
+      .nav-btn-back:hover {
+        background: rgba(150, 150, 150, 0.2);
+      }
+
+      .nav-btn-next {
+        background: var(--btn-next-bg);
+        border: none;
+        color: white;
+        height: 45px;
+        padding: 0 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition:
+          transform 0.2s,
+          filter 0.2s;
+      }
+      .nav-btn-next:hover {
+        filter: brightness(1.1);
+        transform: scale(1.02);
+      }
+
+      .keyboard-hint {
+        position: fixed;
+        bottom: 95px;
+        right: 20px;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        background: var(--nav-bg);
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid var(--card-border);
+        opacity: 0.8;
+        z-index: 300;
+        pointer-events: none;
+      }
+    </style>
+    <link rel="stylesheet" href="presentacion/workshop.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Fondo Animado -->
+      <div class="animated-waves-container">
+        <svg
+          class="waves"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+        >
+          <path
+            class="wave wave1"
+            fill="none"
+            stroke="rgba(56, 189, 248, 0.4)"
+            stroke-width="0.3"
+            d="M-200,160 C150,300 350,0 720,160 C1090,320 1290,20 1640,160"
+          ></path>
+          <path
+            class="wave wave2"
+            fill="none"
+            stroke="rgba(56, 189, 248, 0.3)"
+            stroke-width="0.5"
+            d="M-200,120 C200,250 400,50 720,180 C1040,310 1240,80 1640,120"
+          ></path>
+          <path
+            class="wave wave3"
+            fill="none"
+            stroke="rgba(56, 189, 248, 0.5)"
+            stroke-width="0.3"
+            d="M-200,200 C250,80 450,280 720,140 C990,0 1190,350 1640,200"
+          ></path>
+          <path
+            class="wave wave4"
+            fill="none"
+            stroke="rgba(56, 189, 248, 0.2)"
+            stroke-width="0.6"
+            d="M-200,100 C300,350 500,-50 720,120 C940,290 1140,50 1640,100"
+          ></path>
+          <path
+            class="wave wave5"
+            fill="none"
+            stroke="rgba(125, 211, 252, 0.4)"
+            stroke-width="0.3"
+            d="M-200,240 C350,0 550,350 720,190 C890,30 1090,300 1640,240"
+          ></path>
+          <path
+            class="wave wave6"
+            fill="none"
+            stroke="rgba(14, 165, 233, 0.3)"
+            stroke-width="0.5"
+            d="M-200,180 C100,20 400,300 720,160 C1040,20 1340,300 1640,180"
+          ></path>
+          <path
+            class="wave wave8"
+            fill="none"
+            stroke="rgba(56, 189, 248, 0.3)"
+            stroke-width="0.3"
+            d="M-200,140 C280,320 480,-20 720,150 C960,320 1160,20 1640,140"
+          ></path>
+          <path
+            class="wave wave9"
+            fill="none"
+            stroke="rgba(56, 189, 248, 0.4)"
+            stroke-width="0.3"
+            d="M-200,220 C180,50 380,300 720,170 C1060,40 1260,280 1640,220"
+          ></path>
+
+          <path
+            class="wave wave10"
+            fill="none"
+            stroke="rgba(59, 130, 246, 0.3)"
+            stroke-width="0.4"
+            d="M-200,170 C150,50 450,350 720,150 C990,-50 1290,300 1640,170"
+          ></path>
+          <path
+            class="wave wave11"
+            fill="none"
+            stroke="rgba(37, 99, 235, 0.2)"
+            stroke-width="0.5"
+            d="M-200,130 C250,350 350,20 720,200 C1090,380 1190,50 1640,130"
+          ></path>
+
+          <path
+            class="wave wave7"
+            fill="none"
+            stroke="rgba(250, 204, 21, 0.7)"
+            stroke-width="0.8"
+            d="M-200,150 C250,300 450,20 720,160 C990,300 1190,40 1640,150"
+          ></path>
+        </svg>
+      </div>
+
+      <!-- HEADER -->
+      <header class="app-header">
+        <div
+          class="logo-container"
+          onclick="showScreen('screen-home')"
+          title="Ir al Inicio"
+        >
+          <span class="tcs-wordmark" aria-label="TCS">tcs</span>
+          <span class="brand-cross">✕</span>
+          <span class="brand-gemini">Gemini</span>
+        </div>
+
+        <div class="top-controls">
+          <button
+            class="control-btn"
+            onclick="showScreen('screen-modules')"
+            title="Menú de Módulos"
+          >
+            <span style="font-size: 1.4rem">⊞</span>
+          </button>
+          <button
+            class="control-btn timer-control"
+            onclick="toggleTimer()"
+            title="Iniciar o pausar temporizador"
+          >
+            <span id="timer">180:00</span
+            ><span id="timer-label">Iniciar 3 h</span>
+          </button>
+          <a
+            class="control-btn demo-link"
+            href="pagina/index.html"
+            target="_blank"
+            rel="noopener"
+            >Ver producto ↗</a
+          >
+          <button
+            class="control-btn"
+            onclick="toggleTheme()"
+            title="Cambiar Tema"
+          >
+            <span id="theme-icon">☀️</span>
+          </button>
+          <button
+            class="control-btn"
+            onclick="location.reload()"
+            title="Reiniciar Aplicación"
+          >
+            <span style="font-size: 1.4rem">↻</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- PANTALLAS DE CONTENIDO -->
+      <main class="main-content">
+        <!-- PANTALLA 1: INICIO -->
+        <div id="screen-home" class="screen-view">
+          <h1 class="main-title">
+            <span class="highlight-gemini">Gemini</span> ✕
+            <span class="tcs-wordmark hero-wordmark">tcs</span>
+          </h1>
+          <p class="section-eyebrow">
+            FORWARD ENGINEERING · DESARROLLADORES · 3 HORAS
+          </p>
+          <h2 class="subtitle" id="t-home-sub">Construye tu agente QA</h2>
+          <p class="description" id="t-home-desc">
+            Especifica, construye y demuestra una corrección con evidencia.
+          </p>
+          <div class="home-route">
+            <span>01 Agente QA</span><i>→</i
+            ><span>02 Automatización + revisor</span><i>→</i
+            ><span>03 Dashboard</span>
+          </div>
+          <button
+            class="btn-primary"
+            onclick="showScreen('screen-modules')"
+            id="t-home-btn"
+          >
+            Comenzar las experiencias →
+          </button>
+
+          <details class="intro-panel">
+            <summary>Apertura · 15 min · entorno, specs y skills</summary>
+            <div class="intro-grid">
+              <div>
+                <h3>Qué vamos a construir</h3>
+                <p>
+                  Un agente de QA. La calculadora es la aplicación que revisará.
+                  Encontraremos dos fallas, corregiremos el código y mostraremos
+                  el nuevo resultado.
+                </p>
+                <p>
+                  <strong>SDD</strong> · Spec → plan → tareas → código →
+                  verificación.
+                </p>
+                <p>
+                  <strong>Skills</strong> · Procedimientos reutilizables de
+                  Antigravity en <code>.agents/skills/</code>, cada uno con su
+                  <code>SKILL.md</code>.
+                </p>
+                <p>
+                  <strong>Agenda</strong> · Apertura 15 · Agente 45 · Flujo 45 ·
+                  Pausa 10 · Página 55 · Cierre 10.
+                </p>
+              </div>
+              <div>
+                <h3>Antes de empezar</h3>
+                <p>
+                  Python 3.12, Node 22+, Git, Antigravity y dependencias
+                  instaladas. La clave se configura en <code>.env</code>.
+                </p>
+                <p>
+                  El facilitador entrega el motor, las pruebas, las skills y la
+                  infraestructura. El equipo construye los agentes y la página.
+                </p>
+                <pre>
+python scripts/preparar_practica.py
+# Abre practica/equipo-01 en Antigravity</pre
+                >
+                <p>
+                  Para ensayar la solución completa ejecuta
+                  <code>.\iniciar.ps1</code>. El modo evidencia funciona con
+                  pruebas reales antes de configurar Gemini.
+                </p>
+              </div>
+            </div>
+          </details>
+        </div>
+        <!-- PANTALLA 2: SELECCIÓN DE MÓDULOS -->
+        <div id="screen-modules" class="screen-view hidden">
+          <p class="section-eyebrow" id="t-mod-eyebrow">EL RECORRIDO DE HOY</p>
+          <h2 class="section-title" id="t-mod-title">
+            Tres experiencias, un mismo producto
+          </h2>
+          <div class="modules-grid" id="modules-container"></div>
+        </div>
+
+        <!-- PANTALLA 3: PASOS / CONTENIDO -->
+        <div id="screen-content" class="screen-view hidden">
+          <div class="content-container">
+            <h2 class="content-title" id="content-header">Título</h2>
+            <div class="content-body" id="content-body">Contenido...</div>
+          </div>
+        </div>
+
+        <!-- PANTALLA 4: FELICITACIONES -->
+        <div id="screen-congrats" class="screen-view hidden">
+          <div id="confetti-layer" class="confetti-container"></div>
+          <h1 class="congrats-title" id="t-congrats-title">¡Felicitaciones!</h1>
+          <p class="congrats-text" id="t-congrats-text">
+            Acaban de completar el módulo con éxito.
+          </p>
+          <button
+            class="btn-primary"
+            onclick="goToNextModule()"
+            id="t-congrats-btn"
+          >
+            Ir al siguiente módulo →
+          </button>
+        </div>
+      </main>
+
+      <!-- BARRA INFERIOR DE NAVEGACIÓN -->
+      <nav class="bottom-nav" id="bottom-navigation">
+        <div class="nav-module-label">
+          <span id="nav-module-name">INICIO</span>
+          <span class="nav-divider">|</span>
+        </div>
+
+        <div class="nav-progress-segments" id="nav-progress-segments">
+          <!-- Segmentos del módulo -->
+        </div>
+
+        <div class="nav-actions">
+          <button
+            class="nav-btn-back invisible"
+            id="nav-btn-prev"
+            onclick="handlePrevStep()"
+            title="Anterior"
+          >
+            ←
+          </button>
+          <button
+            class="nav-btn-next invisible"
+            id="nav-btn-next"
+            onclick="handleNextStep()"
+          >
+            <span id="nav-next-text">Siguiente</span> →
+          </button>
+        </div>
+      </nav>
+
+      <div class="keyboard-hint" id="keyboard-hint">
+        Usa ⬅️ y ➡️ para navegar
+      </div>
+    </div>
+
+    <script src="presentacion/contenido.js"></script>
+    <script>
+      const currentLang = "es";
+      let currentStep = 0;
+      let currentScreen = "screen-home";
+      let activeModule = null;
+
+      const translations = {
+        es: {
+          homeSub: "Construye tu agente QA",
+          homeDesc:
+            "Especifica, construye y demuestra una corrección con evidencia.",
+          homeBtn: "Comenzar las experiencias →",
+          modEyebrow: "EL RECORRIDO DE HOY",
+          modTitle: "Tres experiencias, un mismo producto",
+          congratsTitle: "Evidencia lista",
+          congratsText: "Revisa el entregable antes de continuar.",
+          congratsBtnNext: "Ir al siguiente módulo →",
+          congratsBtnHome: "Volver al Inicio ↺",
+          btnFinish: "Finalizar",
+          module: "MÓDULO",
+          homeLabel: "INICIO",
+          modulesLabel: "MÓDULOS",
+          completedLabel: "COMPLETADO",
+        },
+      };
+
+      const modulesData = window.WORKSHOP_MODULES;
+
+      let secondsRemaining = 180 * 60;
+      let timerEnd = null;
+      function toggleTimer() {
+        if (timerEnd) {
+          secondsRemaining = Math.max(
+            0,
+            Math.ceil((timerEnd - Date.now()) / 1000),
+          );
+          timerEnd = null;
+        } else {
+          timerEnd = Date.now() + secondsRemaining * 1000;
+        }
+        document.getElementById("timer-label").textContent = timerEnd
+          ? "Pausar"
+          : "Continuar";
+      }
+      setInterval(() => {
+        if (!timerEnd) return;
+        secondsRemaining = Math.max(
+          0,
+          Math.ceil((timerEnd - Date.now()) / 1000),
+        );
+        const minutes = Math.floor(secondsRemaining / 60);
+        const seconds = String(secondsRemaining % 60).padStart(2, "0");
+        document.getElementById("timer").textContent = `${minutes}:${seconds}`;
+        if (secondsRemaining === 0) {
+          timerEnd = null;
+          document.getElementById("timer-label").textContent =
+            "Tiempo cumplido";
+        }
+      }, 1000);
+
+      function init() {
+        renderModules();
+        updateStaticTexts();
+        updateBottomNav();
+
+        window.addEventListener("keydown", (e) => {
+          if (e.altKey || e.ctrlKey || e.metaKey) return;
+          if (
+            e.target.closest(
+              'button, a, input, select, textarea, summary, [contenteditable], [role="button"]',
+            )
+          )
+            return;
+
+          if (e.key === "ArrowRight" || e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            globalNavigateNext();
+          } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            globalNavigatePrev();
+          }
+        });
+      }
+
+      function globalNavigateNext() {
+        if (currentScreen === "screen-home") {
+          showScreen("screen-modules");
+        } else if (currentScreen === "screen-modules") {
+          startModule(1);
+        } else if (currentScreen === "screen-content") {
+          handleNextStep();
+        } else if (currentScreen === "screen-congrats") {
+          goToNextModule();
+        }
+      }
+
+      function globalNavigatePrev() {
+        if (currentScreen === "screen-content") {
+          handlePrevStep();
+        } else if (
+          currentScreen === "screen-modules" ||
+          currentScreen === "screen-congrats"
+        ) {
+          showScreen("screen-home");
+        }
+      }
+
+      function toggleTheme() {
+        const body = document.body;
+        const icon = document.getElementById("theme-icon");
+        if (body.classList.contains("light-mode")) {
+          body.classList.remove("light-mode");
+          icon.innerText = "☀️";
+        } else {
+          body.classList.add("light-mode");
+          icon.innerText = "🌙";
+        }
+      }
+
+      function updateStaticTexts() {
+        const t = translations[currentLang];
+        document.getElementById("t-home-sub").innerText = t.homeSub;
+        document.getElementById("t-home-desc").innerText = t.homeDesc;
+        document.getElementById("t-home-btn").innerText = t.homeBtn;
+        document.getElementById("t-mod-eyebrow").innerText = t.modEyebrow;
+        document.getElementById("t-mod-title").innerText = t.modTitle;
+        document.getElementById("t-congrats-title").innerText = t.congratsTitle;
+        document.getElementById("t-congrats-text").innerText = t.congratsText;
+
+        // Actualizar texto del botón de felicitaciones dinámicamente si estamos en el último módulo
+        if (activeModule && activeModule.id === modulesData.length) {
+          document.getElementById("t-congrats-btn").innerText =
+            t.congratsBtnHome;
+        } else {
+          document.getElementById("t-congrats-btn").innerText =
+            t.congratsBtnNext;
+        }
+        if (currentScreen === "screen-congrats" && activeModule) {
+          const title = document.getElementById("t-congrats-title");
+          const text = document.getElementById("t-congrats-text");
+          if (activeModule.id === 2) {
+            title.textContent = "Pausa · 10 minutos";
+            text.textContent =
+              "Conserva la evidencia del flujo. Al volver construiremos la página que muestra sus resultados.";
+          } else if (activeModule.id === 3) {
+            title.textContent = "Cierre · 10 minutos";
+            text.textContent =
+              "Muestra la spec, una skill aplicada, el defecto, la ejecución automática con revisor y el dashboard después de la corrección. Demo de dos minutos por equipo, según el tiempo disponible.";
+          }
+        }
+      }
+
+      function renderModules() {
+        const container = document.getElementById("modules-container");
+        container.innerHTML = "";
+        modulesData.forEach((mod) => {
+          const card = document.createElement("div");
+          card.className = "module-card";
+          card.tabIndex = 0;
+          card.setAttribute("role", "button");
+          card.onclick = () => startModule(mod.id);
+          card.onkeydown = (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              startModule(mod.id);
+            }
+          };
+          card.innerHTML = `
           <div class="module-number">${mod.id}</div>
-          <h3 class="module-card-title">${currentLang === 'es' ? 'Módulo' : 'Module'} ${mod.id}</h3>
-          <p class="module-card-desc">${mod[`title_${currentLang}`]}</p>
+          <span class="module-time">${mod.minutes} MIN</span>
+          <h3 class="module-card-title">${mod.title_es}</h3>
+          <p class="module-card-desc">${mod.description}</p>
+          <span class="module-card-open">Abrir experiencia ↗</span>
         `;
-        container.appendChild(card);
-      });
-    }
+          container.appendChild(card);
+        });
+      }
 
-    function showScreen(screenId) {
-      currentScreen = screenId;
-      document.querySelectorAll('.screen-view').forEach(el => el.classList.add('hidden'));
-      document.getElementById(screenId).classList.remove('hidden');
-      
-      if(screenId !== 'screen-congrats') document.getElementById('confetti-layer').innerHTML = '';
-      updateBottomNav();
-    }
+      function showScreen(screenId) {
+        currentScreen = screenId;
+        document
+          .querySelectorAll(".screen-view")
+          .forEach((el) => el.classList.add("hidden"));
+        document.getElementById(screenId).classList.remove("hidden");
 
-    function startModule(id) {
-      activeModule = modulesData.find(m => m.id === id);
-      currentStep = 0;
-      updateContentScreen();
-      showScreen('screen-content');
-    }
+        if (screenId !== "screen-congrats")
+          document.getElementById("confetti-layer").innerHTML = "";
+        updateBottomNav();
+      }
 
-    function updateContentScreen() {
-      const steps = activeModule[`steps_${currentLang}`];
-      const stepName = steps[currentStep];
-      
-      document.getElementById('content-header').innerText = `${activeModule[`title_${currentLang}`]} - ${stepName}`;
-      document.getElementById('content-body').innerHTML = `<p>${currentLang === 'es' ? 'Contenido del paso:' : 'Step content:'} ${stepName}</p>`;
-      
-      updateBottomNav();
-    }
+      function startModule(id) {
+        activeModule = modulesData.find((m) => m.id === id);
+        currentStep = 0;
+        updateContentScreen();
+        showScreen("screen-content");
+      }
 
-    function updateBottomNav() {
-      const t = translations[currentLang];
-      const moduleNameEl = document.getElementById('nav-module-name');
-      const segmentsContainer = document.getElementById('nav-progress-segments');
-      const btnPrev = document.getElementById('nav-btn-prev');
-      const btnNext = document.getElementById('nav-btn-next');
-      const nextText = document.getElementById('nav-next-text');
+      function updateContentScreen() {
+        const step = activeModule.steps[currentStep];
+        document.getElementById("content-header").textContent = step.title;
+        const body = document.getElementById("content-body");
+        body.replaceChildren();
+        const meta = document.createElement("p");
+        meta.className = "step-meta";
+        meta.textContent = `EXPERIENCIA ${activeModule.id} · ${activeModule.minutes} MIN / ${step.label.toUpperCase()} · ${step.minutes} MIN`;
+        const grid = document.createElement("div");
+        grid.className = "step-grid";
+        const instruction = document.createElement("div");
+        instruction.className = "step-instructions";
+        instruction.innerHTML = step.body;
+        const done = document.createElement("div");
+        done.className = "step-done";
+        const doneLabel = document.createElement("strong");
+        doneLabel.textContent = "✓ Listo cuando";
+        const doneText = document.createElement("p");
+        doneText.textContent = step.done;
+        done.append(doneLabel, doneText);
+        instruction.append(done);
+        const prompt = document.createElement("div");
+        prompt.className = "prompt-panel";
+        const heading = document.createElement("div");
+        heading.className = "prompt-heading";
+        const label = document.createElement("strong");
+        label.textContent = "Prompt para Antigravity";
+        const copy = document.createElement("button");
+        copy.className = "copy-button";
+        copy.textContent = "Copiar";
+        const area = document.createElement("textarea");
+        area.readOnly = true;
+        area.setAttribute("aria-label", "Prompt para copiar a Antigravity");
+        area.value = step.prompt;
+        copy.onclick = async () => {
+          try {
+            await navigator.clipboard.writeText(step.prompt);
+            copy.textContent = "Copiado ✓";
+          } catch {
+            area.focus();
+            area.select();
+            copy.textContent = "Seleccionado · Ctrl+C";
+          }
+        };
+        heading.append(label, copy);
+        prompt.append(heading, area);
+        if (step.command) {
+          const commandLabel = document.createElement("p");
+          commandLabel.className = "command-label";
+          commandLabel.textContent = "Comando de comprobación";
+          const command = document.createElement("pre");
+          command.textContent = step.command;
+          prompt.append(commandLabel, command);
+        }
+        grid.append(instruction, prompt);
+        body.append(meta, grid);
+        document.querySelector(".main-content").scrollTop = 0;
+        updateBottomNav();
+      }
 
-      if (currentScreen === 'screen-content' && activeModule) {
-        const steps = activeModule[`steps_${currentLang}`];
-        moduleNameEl.innerText = `${t.module} ${activeModule.id}`;
+      function updateBottomNav() {
+        const t = translations[currentLang];
+        const moduleNameEl = document.getElementById("nav-module-name");
+        const segmentsContainer = document.getElementById(
+          "nav-progress-segments",
+        );
+        const btnPrev = document.getElementById("nav-btn-prev");
+        const btnNext = document.getElementById("nav-btn-next");
+        const nextText = document.getElementById("nav-next-text");
 
-        segmentsContainer.innerHTML = '';
-        steps.forEach((step, index) => {
-          const segment = document.createElement('div');
-          const shortName = step.length > 8 ? step.substring(0,7) + '...' : step;
-          
-          let classNames = 'step-segment';
-          if (index === currentStep) classNames += ' active';
-          if (index < currentStep) classNames += ' completed';
-          segment.className = classNames;
-          
-          segment.innerHTML = `
+        if (currentScreen === "screen-content" && activeModule) {
+          const steps = activeModule[`steps_${currentLang}`];
+          moduleNameEl.innerText = `${t.module} ${activeModule.id}`;
+
+          segmentsContainer.innerHTML = "";
+          steps.forEach((step, index) => {
+            const segment = document.createElement("div");
+            const shortName =
+              step.length > 8 ? step.substring(0, 7) + "..." : step;
+
+            let classNames = "step-segment";
+            if (index === currentStep) classNames += " active";
+            if (index < currentStep) classNames += " completed";
+            segment.className = classNames;
+
+            segment.innerHTML = `
             <div class="step-line"></div>
             <div class="step-label" title="${step}">${shortName}</div>
           `;
-          segmentsContainer.appendChild(segment);
-        });
+            segmentsContainer.appendChild(segment);
+          });
 
-        btnPrev.classList.remove('invisible');
-        btnNext.classList.remove('invisible');
+          btnPrev.classList.remove("invisible");
+          btnNext.classList.remove("invisible");
 
-        if (currentStep < steps.length - 1) {
-          nextText.innerText = steps[currentStep + 1];
+          if (currentStep < steps.length - 1) {
+            nextText.innerText = steps[currentStep + 1];
+          } else {
+            nextText.innerText = t.btnFinish;
+          }
         } else {
-          nextText.innerText = t.btnFinish;
-        }
+          segmentsContainer.innerHTML = "";
+          btnPrev.classList.add("invisible");
+          btnNext.classList.add("invisible");
 
-      } else {
-        segmentsContainer.innerHTML = '';
-        btnPrev.classList.add('invisible');
-        btnNext.classList.add('invisible');
-        
-        if (currentScreen === 'screen-home') {
-          moduleNameEl.innerText = t.homeLabel;
-        } else if (currentScreen === 'screen-modules') {
-          moduleNameEl.innerText = t.modulesLabel;
-        } else if (currentScreen === 'screen-congrats') {
-          moduleNameEl.innerText = t.completedLabel;
+          if (currentScreen === "screen-home") {
+            moduleNameEl.innerText = t.homeLabel;
+          } else if (currentScreen === "screen-modules") {
+            moduleNameEl.innerText = t.modulesLabel;
+          } else if (currentScreen === "screen-congrats") {
+            moduleNameEl.innerText = t.completedLabel;
+          }
         }
       }
-    }
 
-    function handleNextStep() {
-      const steps = activeModule[`steps_${currentLang}`];
-      if (currentStep < steps.length - 1) {
-        currentStep++;
-        updateContentScreen();
-      } else {
-        showScreen('screen-congrats');
-        updateStaticTexts();
-        generateConfetti();
+      function handleNextStep() {
+        const steps = activeModule[`steps_${currentLang}`];
+        if (currentStep < steps.length - 1) {
+          currentStep++;
+          updateContentScreen();
+        } else {
+          showScreen("screen-congrats");
+          updateStaticTexts();
+          generateConfetti();
+        }
       }
-    }
 
-    function handlePrevStep() {
-      if (currentStep > 0) {
-        currentStep--;
-        updateContentScreen();
-      } else {
-        showScreen('screen-modules');
+      function handlePrevStep() {
+        if (currentStep > 0) {
+          currentStep--;
+          updateContentScreen();
+        } else {
+          showScreen("screen-modules");
+        }
       }
-    }
 
-    // Navegar al siguiente módulo, o si es el último (Módulo 4), volver al Inicio
-    function goToNextModule() {
-      if (activeModule && activeModule.id < modulesData.length) {
-        startModule(activeModule.id + 1);
-      } else {
-        showScreen('screen-home');
+      // Navegar al siguiente módulo, o si es el último (Módulo 4), volver al Inicio
+      function goToNextModule() {
+        if (activeModule && activeModule.id < modulesData.length) {
+          startModule(activeModule.id + 1);
+        } else {
+          showScreen("screen-home");
+        }
       }
-    }
 
-    function generateConfetti() {
-      const colors = ['#38bdf8', '#3b82f6', '#818cf8', '#e2e8f0', '#0ea5e9'];
-      const container = document.getElementById('confetti-layer');
-      container.innerHTML = '';
-      for (let i = 0; i < 80; i++) {
-        const conf = document.createElement('div');
-        conf.className = 'confetti';
-        conf.style.left = Math.random() * 100 + '%';
-        conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        conf.style.animationDelay = Math.random() * 2 + 's';
-        conf.style.animationDuration = (2 + Math.random() * 3) + 's';
-        container.appendChild(conf);
+      function generateConfetti() {
+        const colors = ["#38bdf8", "#3b82f6", "#818cf8", "#e2e8f0", "#0ea5e9"];
+        const container = document.getElementById("confetti-layer");
+        container.innerHTML = "";
+        for (let i = 0; i < 80; i++) {
+          const conf = document.createElement("div");
+          conf.className = "confetti";
+          conf.style.left = Math.random() * 100 + "%";
+          conf.style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
+          conf.style.animationDelay = Math.random() * 2 + "s";
+          conf.style.animationDuration = 2 + Math.random() * 3 + "s";
+          container.appendChild(conf);
+        }
       }
-    }
 
-    init();
-  </script>
-</body>
+      init();
+    </script>
+  </body>
 </html>

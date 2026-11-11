@@ -1,0 +1,500 @@
+/* Adaptación del HTML original de la presentación para las tres experiencias. */
+:root {
+  --text-muted: #a1b1c3;
+}
+body.light-mode {
+  --text-muted: #475c70;
+}
+.app-header {
+  flex-shrink: 0;
+}
+.tcs-wordmark {
+  font-size: 30px;
+  font-weight: 750;
+  letter-spacing: -2px;
+  color: var(--text-main);
+}
+.hero-wordmark {
+  font-size: 65px;
+  letter-spacing: -4px;
+}
+.main-content {
+  display: block;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 20px 40px 120px;
+}
+.screen-view {
+  margin: 0 auto;
+}
+#screen-home {
+  padding-top: 5vh;
+}
+#screen-home .main-title {
+  margin: 0 0 20px;
+}
+.subtitle {
+  font-size: clamp(2rem, 4.5vw, 4rem);
+  letter-spacing: -1.7px;
+}
+.description {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+}
+.home-route {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 30px 0;
+}
+.home-route span {
+  padding: 8px 12px;
+  border: 1px solid var(--card-border);
+  border-radius: 5px;
+}
+.home-route i {
+  font-style: normal;
+  color: var(--accent-blue);
+}
+.intro-panel {
+  max-width: 1000px;
+  margin: 34px auto 0;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  text-align: left;
+  background: var(--card-bg);
+}
+.intro-panel > summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 16px 22px;
+  color: var(--text-muted);
+}
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 35px;
+  padding: 8px 25px 20px;
+}
+.intro-grid h3 {
+  font-size: 1rem;
+}
+.intro-grid p {
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+.intro-grid pre {
+  font-size: 0.75rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 12px;
+  background: var(--nav-bg);
+  border-radius: 6px;
+}
+.intro-grid code {
+  color: var(--accent-blue);
+  font-size: 0.8rem;
+}
+.control-btn {
+  font-size: 0.9rem;
+}
+.timer-control {
+  font-size: 0.8rem;
+  border: 1px solid var(--card-border);
+  padding: 7px 10px;
+  border-radius: 6px;
+}
+#timer {
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-blue);
+  font-family: Consolas, monospace;
+  font-size: 1rem;
+}
+#timer-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+.demo-link {
+  text-decoration: none;
+  font-size: 0.75rem;
+  color: var(--accent-blue);
+}
+.content-container {
+  max-width: 1180px;
+  padding: 30px 35px;
+  text-align: left;
+}
+.content-title {
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  margin: 5px 0 20px;
+  letter-spacing: -0.7px;
+}
+.content-body {
+  font-size: 1rem;
+  min-height: 0;
+}
+.step-meta {
+  font-size: 0.65rem;
+  letter-spacing: 1.3px;
+  color: var(--accent-blue);
+  margin: 0 0 24px;
+}
+.step-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 34px;
+}
+.step-instructions {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--text-muted);
+}
+.step-instructions > p:first-child {
+  margin-top: 0;
+}
+.step-instructions ol {
+  padding-left: 20px;
+}
+.step-instructions li {
+  margin-bottom: 8px;
+}
+.step-instructions strong {
+  color: var(--text-main);
+}
+code {
+  font-family: Consolas, monospace;
+  font-size: 0.86em;
+  overflow-wrap: anywhere;
+}
+.step-instructions code {
+  color: var(--accent-blue);
+  background: var(--card-bg);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.step-done {
+  margin-top: 23px;
+  border-left: 3px solid #7ed6b5;
+  padding: 10px 16px;
+  background: var(--card-bg);
+  border-radius: 0 6px 6px 0;
+}
+.step-done strong {
+  font-size: 0.75rem;
+  color: #86dab9;
+}
+body.light-mode .step-done strong {
+  color: #12664d;
+}
+.step-done p {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 5px 0;
+}
+.prompt-panel {
+  padding: 18px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  align-self: start;
+}
+.prompt-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+.prompt-heading strong {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.copy-button {
+  font: inherit;
+  font-size: 0.7rem;
+  padding: 5px 11px;
+  border-radius: 5px;
+  border: 1px solid var(--card-border);
+  color: var(--accent-blue);
+  background: var(--nav-bg);
+  cursor: pointer;
+}
+.prompt-panel textarea {
+  display: block;
+  width: 100%;
+  min-height: 245px;
+  resize: vertical;
+  background: transparent;
+  border: 0;
+  color: var(--text-main);
+  font-family: Consolas, monospace;
+  font-size: 0.79rem;
+  line-height: 1.7;
+  padding: 0;
+  box-sizing: border-box;
+}
+.command-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 18px;
+}
+.prompt-panel pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  background: var(--nav-bg);
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 0;
+}
+.module-card {
+  width: 290px;
+  position: relative;
+  padding: 30px;
+  box-sizing: border-box;
+}
+.module-time {
+  position: absolute;
+  top: 35px;
+  right: 28px;
+  color: var(--accent-blue);
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+}
+.module-card-title {
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+.module-card-desc {
+  line-height: 1.8;
+  font-size: 0.85rem;
+  min-height: 70px;
+}
+.module-card-open {
+  font-size: 0.75rem;
+  color: var(--accent-blue);
+}
+.section-title {
+  font-size: clamp(1.7rem, 3.2vw, 2.5rem);
+  margin-bottom: 35px;
+}
+.congrats-title {
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+.congrats-text {
+  font-size: 1rem;
+  line-height: 1.8;
+  max-width: 700px;
+  margin: 0 auto 30px;
+}
+.btn-primary {
+  font-size: 0.9rem;
+}
+.bottom-nav {
+  height: 80px;
+}
+.nav-btn-next {
+  font-size: 0.8rem;
+}
+.keyboard-hint {
+  bottom: 88px;
+  font-size: 0.65rem;
+}
+.waves {
+  pointer-events: none;
+}
+.module-card:focus-visible,
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--accent-blue);
+  outline-offset: 5px;
+}
+@media (max-width: 900px) {
+  .main-content {
+    padding: 20px 24px 120px;
+  }
+  .app-header {
+    padding: 18px 24px;
+  }
+  .step-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .prompt-panel textarea {
+    min-height: 180px;
+  }
+  .content-container {
+    padding: 25px;
+  }
+  .module-card {
+    width: 100%;
+    max-width: 650px;
+  }
+  .modules-grid {
+    gap: 15px;
+  }
+  .module-card-desc {
+    min-height: 0;
+  }
+  .home-route {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .home-route span {
+    font-size: 0.7rem;
+  }
+  .intro-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .top-controls {
+    gap: 12px;
+  }
+  .nav-progress-segments {
+    margin: 0 15px;
+  }
+  .nav-module-label {
+    min-width: 90px;
+    font-size: 0.75rem;
+  }
+  .bottom-nav {
+    padding: 0 15px;
+  }
+}
+@media (max-width: 550px) {
+  .app-header {
+    padding: 14px 16px;
+  }
+  .brand-gemini {
+    font-size: 0.9rem;
+  }
+  .brand-cross {
+    display: none;
+  }
+  .tcs-wordmark {
+    font-size: 26px;
+  }
+  .hero-wordmark {
+    font-size: 50px;
+  }
+  .top-controls {
+    gap: 8px;
+  }
+  #timer-label {
+    display: none;
+  }
+  .timer-control {
+    padding: 5px;
+  }
+  .demo-link {
+    font-size: 0.65rem;
+  }
+  .main-content {
+    padding: 14px 14px 105px;
+  }
+  #screen-home {
+    padding-top: 10px;
+  }
+  #screen-home .main-title {
+    font-size: 2.6rem;
+    margin-bottom: 18px;
+  }
+  .section-eyebrow {
+    font-size: 0.65rem;
+    line-height: 1.8;
+  }
+  .subtitle {
+    font-size: 2rem;
+    letter-spacing: -1px;
+  }
+  .description {
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+  .home-route {
+    margin: 20px 0;
+  }
+  .home-route i {
+    display: none;
+  }
+  .intro-panel {
+    margin-top: 25px;
+  }
+  .intro-panel > summary {
+    font-size: 0.75rem;
+    padding: 14px;
+  }
+  .intro-grid {
+    padding: 5px 16px 15px;
+  }
+  .content-container {
+    padding: 20px 16px;
+  }
+  .content-title {
+    font-size: 1.5rem;
+    line-height: 1.4;
+  }
+  .step-instructions {
+    font-size: 0.88rem;
+  }
+  .step-meta {
+    font-size: 0.55rem;
+    line-height: 1.8;
+  }
+  .prompt-panel {
+    padding: 14px;
+  }
+  .prompt-panel textarea {
+    font-size: 0.74rem;
+    min-height: 240px;
+  }
+  .nav-progress-segments {
+    display: none;
+  }
+  .nav-module-label {
+    font-size: 0.65rem;
+    min-width: 0;
+  }
+  .nav-divider {
+    display: none;
+  }
+  .bottom-nav {
+    padding: 0 14px;
+    height: 73px;
+  }
+  .nav-btn-next {
+    padding: 0 13px;
+    font-size: 0.73rem;
+  }
+  .keyboard-hint {
+    display: none;
+  }
+  .congrats-text {
+    font-size: 0.9rem;
+  }
+  .module-card {
+    padding: 23px;
+  }
+  .module-time {
+    top: 28px;
+    right: 23px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wave,
+  .confetti,
+  .congrats-title {
+    animation: none;
+  }
+  .control-btn,
+  .module-card {
+    transition: none;
+  }
+}
