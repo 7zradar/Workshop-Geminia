@@ -89,6 +89,29 @@ function validateReport(report) {
   ) {
     throw new Error("Los hallazgos no coinciden con los casos fallidos.");
   }
+  const context = report.context ?? [];
+  const known = new Set();
+  if (
+    !Array.isArray(context) ||
+    context.some(
+      (item) =>
+        typeof item?.source !== "string" ||
+        typeof item.title !== "string" ||
+        typeof item.excerpt !== "string",
+    )
+  ) {
+    throw new Error("El contexto recuperado del reporte no es válido.");
+  }
+  context.forEach((item) => known.add(item.source));
+  for (const finding of report.analysis.findings) {
+    const sources = finding.sources ?? [];
+    if (
+      !Array.isArray(sources) ||
+      sources.some((source) => typeof source !== "string" || !known.has(source))
+    ) {
+      throw new Error("Un hallazgo cita fuentes que no se recuperaron.");
+    }
+  }
   return report;
 }
 
@@ -179,6 +202,15 @@ function renderReport(report) {
       element("p", "", finding.description),
       element("small", "", finding.recommendation),
     );
+    for (const source of finding.sources ?? []) {
+      const item = (report.context ?? []).find((entry) => entry.source === source);
+      const details = element("details", "source");
+      details.append(
+        element("summary", "", `Fuente: ${source}`),
+        element("p", "", item ? item.excerpt : ""),
+      );
+      node.append(details);
+    }
     findings.append(node);
   }
   byId("review-heading").textContent =

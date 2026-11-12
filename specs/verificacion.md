@@ -31,6 +31,22 @@ Validación local del 11 de noviembre de 2026. Python 3.12, Node 24 y google-adk
 
 `python -m pytest -q` termina con **14 passed**. Las advertencias de SequentialAgent corresponden a la API de compatibilidad de la versión fijada y están documentadas en README.md.
 
+## Experiencia 4 opcional, RAG (T8)
+
+Validación local del 12 de noviembre de 2026. `python -m pytest -q` termina con **20 passed**.
+
+| Criterio | Comprobación | Resultado |
+|---|---|---|
+| R1, R2 | Búsqueda de operaciones gratuitas cobradas y de una consulta ajena | DEF-101 primero y lista vacía |
+| R3, R5, R8 | Modo evidencia sobre la versión defectuosa | QA-02 y QA-03 citan fuentes recuperadas y el veredicto sigue en 2/4, 50 % |
+| R4 | Fuente inventada | Rechazada por validación |
+| R6 | Cambio de documento de conocimiento | Identidad distinta; sin conocimiento la identidad original se conserva |
+| R7 | Dashboard en Chrome | Fuentes desplegables con extracto en cada hallazgo |
+| W10 | Presentación | Cuarta tarjeta Opcional, 20 minutos, 5 pasos con prompts, sin errores de JavaScript |
+| ADK | Runtime con modelo local inyectado | Tres herramientas, `{contexto?}` en el revisor y citas en el reporte |
+
+Pendiente: la llamada a Gemini con `buscar_contexto`. La cuota diaria gratuita de gemini-3.6-flash estaba agotada al momento de esta validación.
+
 ## Capturas
 
 - capturas/dashboard-con-fallas.jpg muestra 2 aprobadas, 2 fallidas y 50 %.

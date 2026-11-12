@@ -31,6 +31,7 @@ Python 3.12, Node 22 o superior y Git instalados. Dependencias y credenciales co
 | W7 | La página consume resultados de pruebas ejecutadas | JSON y dashboard |
 | W8 | El modo local y el modo Gemini se identifican siempre | Indicador de modo y reporte |
 | W9 | Los requisitos de la aplicación permanecen fijos al corregir un defecto | Hash de contrato y pruebas |
+| W10 | La Experiencia 4 de RAG es opcional, dura 20 minutos y queda fuera de los 180 | Presentación, specs/rag.md y pruebas |
 
 ## Decisiones
-La entrega se ejecuta localmente. La presentación conserva el esquema visual oscuro, la navegación por pasos y el cambio de tema del HTML original. El modo evidencia ejecuta las mismas pruebas reales sin requerir un modelo. Gemini se activa explícitamente después de configurar .env. Se utiliza un solo caso guiado para mantener el ritmo de tres horas.
+La entrega se ejecuta localmente. La presentación conserva el esquema visual oscuro, la navegación por pasos y el cambio de tema del HTML original. El modo evidencia ejecuta las mismas pruebas reales sin requerir un modelo. Gemini se activa explícitamente después de configurar .env. Se utiliza un solo caso guiado para mantener el ritmo de tres horas. La Experiencia 4 añade contexto con RAG local a la herramienta del agente QA. Es opcional, no cuenta en la agenda y se especifica en specs/rag.md.

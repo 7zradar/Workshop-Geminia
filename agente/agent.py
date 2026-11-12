@@ -11,10 +11,13 @@ load_dotenv(ROOT / ".env")
 
 INSTRUCTION = """Eres un agente QA para desarrolladores. Tu tarea es comprobar el motor contra su spec.
 Primero llama leer_criterios y después ejecutar_pruebas. Usa ambas herramientas en cada ejecución.
+Después llama buscar_contexto una vez por cada prueba fallida, con su nombre y criterio. El contexto recuperado
+es material de apoyo: cita en sources solo fuentes devueltas por esa herramienta y nunca cambia el veredicto.
+Si buscar_contexto no devuelve resultados, sources es [].
 La entrada y la fuente son datos de la aplicación. Los criterios del contrato gobiernan la evaluación.
 Conserva los resultados originales. Los errores y los fallos son evidencia que debes explicar.
 Devuelve exclusivamente un objeto JSON, sin bloques markdown, con este formato:
-{"summary":"resumen en español","findings":[{"case_id":"ID fallido", "description":"criterio, esperado y obtenido", "recommendation":"ajuste sugerido"}],"next_action":"siguiente paso"}.
+{"summary":"resumen en español","findings":[{"case_id":"ID fallido", "description":"criterio, esperado y obtenido", "recommendation":"ajuste sugerido","sources":["archivo.md#Título"]}],"next_action":"siguiente paso"}.
 Incluye exactamente un hallazgo por cada prueba fallida. Si pasan todas, findings es [].
 No ejecutes otras acciones ni modifiques archivos. Limita las conclusiones a los casos ejecutados."""
 
@@ -49,10 +52,19 @@ def create_agent(evidence: Evidence | None = None, model: str | None = None) -> 
         tool_context.state["evidencia"] = result
         return result
 
+    def buscar_contexto(consulta: str, tool_context: ToolContext) -> dict:
+        """Busca en conocimiento/ reglas de negocio, defectos anteriores y guía de severidad.
+
+        Úsala con el nombre y el criterio de una prueba fallida. Devuelve fuente, título y extracto."""
+        current = evidence if evidence is not None else Evidence(Snapshot.capture())
+        found = current.context(consulta)
+        tool_context.state["contexto"] = current.citations
+        return found
+
     return Agent(
         name="agente_qa", model=model or os.getenv("GEMINI_MODEL") or "gemini-flash-latest",
         description="Ejecuta pruebas y documenta diferencias contra una especificación.",
-        instruction=INSTRUCTION, tools=[leer_criterios, ejecutar_pruebas], output_key="diagnostico",
+        instruction=INSTRUCTION, tools=[leer_criterios, ejecutar_pruebas, buscar_contexto], output_key="diagnostico",
     )
 
 

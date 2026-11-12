@@ -1276,7 +1276,7 @@ python scripts/preparar_practica.py
         <div id="screen-modules" class="screen-view hidden">
           <p class="section-eyebrow" id="t-mod-eyebrow">EL RECORRIDO DE HOY</p>
           <h2 class="section-title" id="t-mod-title">
-            Tres experiencias, un mismo producto
+            Tres experiencias y una opcional, un mismo producto
           </h2>
           <div class="modules-grid" id="modules-container"></div>
         </div>
@@ -1532,6 +1532,64 @@ python scripts/preparar_practica.py
             },
           ],
         },
+        {
+          id: 4,
+          optional: true,
+          title_es: "Añade contexto con RAG",
+          title_en: "Add context with RAG",
+          minutes: 20,
+          description:
+            "Opcional. Una tercera herramienta recupera reglas y defectos anteriores para que cada hallazgo cite su fuente.",
+          steps: [
+            {
+              label: "Spec",
+              minutes: 4,
+              title: "Define qué contexto puede citar el agente",
+              body: "<p>Un agente que solo ve pruebas no sabe si un defecto ya ocurrió ni qué severidad tiene. RAG añade ese conocimiento: <strong>recupera</strong> fragmentos de <code>conocimiento/</code>, los <strong>aumenta</strong> en el contexto del modelo y <strong>genera</strong> un diagnóstico que cita su fuente.</p><ol><li>Abre los tres documentos de <code>conocimiento/</code>: reglas de negocio, historial de defectos y severidad. Son ficticios.</li><li>Invoca <code>/especificar</code> y exige que toda cita sea verificable.</li><li>Comprueba que la spec separa el veredicto, que dan las pruebas, del contexto, que solo apoya la explicación.</li></ol>",
+              prompt:
+                "/especificar Crea specs/rag.md. Añade una tercera herramienta buscar_contexto(consulta) al agente QA que recupera fragmentos de conocimiento/*.md por palabras clave, sin embeddings ni llamadas extra al modelo. Cada fragmento es una sección ## y su fuente es archivo.md#Título. Cada hallazgo añade sources con fuentes devueltas por la herramienta y el reporte añade context con los fragmentos recuperados. Criterios: la consulta 'operaciones gratuitas cobradas' devuelve DEF-101, una consulta ajena devuelve lista vacía, una fuente no recuperada hace rechazar el reporte y el veredicto no cambia. Espera la revisión antes de implementar.",
+              done: "Spec con herramienta, formato de fuente, rechazo de citas inventadas y límite del contexto.",
+            },
+            {
+              label: "Plan",
+              minutes: 3,
+              title: "Reparte el trabajo sin tocar el veredicto",
+              body: "<p>El kit ya incluye <code>conocimiento/</code>, <code>qa_core.search_knowledge</code> y <code>Evidence.context</code>. Falta conectar la búsqueda al agente, al esquema del hallazgo y al dashboard.</p><ol><li>Separa herramienta, esquema y dashboard.</li><li>Comprueba que el plan no modifica <code>contratos/</code> ni las pruebas.</li><li>Aprueba cuando cada tarea tenga su comprobación.</li></ol>",
+              prompt:
+                "/plan Lee specs/rag.md, qa_core.py y agente/agent.py. Escribe specs/rag-plan.md con T1 herramienta buscar_contexto en agente/agent.py que llama a Evidence.context y guarda evidence.citations en tool_context.state['contexto'], T2 campo sources: list[str] en Finding de flujo/agent.py más instrucciones del agente QA y del revisor con {contexto?}, T3 dashboard que muestre las fuentes de cada hallazgo con textContent y verificación. Incluye archivos y comprobación por tarea. Espera la revisión.",
+              done: "Plan con tres tareas pequeñas y sin cambios al contrato de pruebas.",
+            },
+            {
+              label: "Construir",
+              minutes: 7,
+              title: "Conecta la búsqueda y observa la llamada",
+              body: "<ol><li>Usa <code>/implementar</code> sobre T1 y revisa el diff.</li><li>Abre <code>adk web</code> y comprueba en Events que aparece <code>buscar_contexto</code> después de <code>ejecutar_pruebas</code>.</li><li>Repite con T2 y T3.</li><li>Ejecuta el flujo con Gemini y abre el reporte: cada hallazgo trae <code>sources</code> y el reporte trae <code>context</code>.</li></ol><p><strong>Cuota.</strong> Cada ejecución con Gemini usa unas 6 peticiones y el plan gratuito permite 20 por día y por modelo. Ensaya en pequeño o usa una clave por equipo. Si el modelo cita una fuente que no recuperó, el reporte se rechaza y se conserva el último válido.</p>",
+              prompt:
+                "/implementar T1 de specs/rag-plan.md. La herramienta recibe consulta: str y tool_context, usa Evidence.context y guarda las citas en el estado. Documenta con un docstring cuándo usarla. Ejecuta su verificación, muestra el diff y detente para la revisión. Después repetiremos con T2 y T3.",
+              command: "python procesar.py --mode gemini",
+              done: "Herramienta visible en la traza y hallazgos con fuentes recuperadas.",
+            },
+            {
+              label: "Verificar",
+              minutes: 4,
+              title: "Comprueba que cada cita existe",
+              body: "<ol><li>Abre el dashboard y expande <em>Fuente</em> en QA-02 y QA-03. Debe verse DEF-101 con su extracto.</li><li>Confirma que 2 de 4 y 50 % no cambiaron: el contexto no altera el veredicto.</li><li>Importa un reporte editado que cite <code>inventado.md#Falso</code>. El dashboard debe rechazarlo y conservar el anterior.</li><li>Cambia un documento de <code>conocimiento/</code> y comprueba que se genera un reporte nuevo.</li></ol>",
+              prompt:
+                "/verificar specs/rag.md. Comprueba R1 a R8: búsqueda, consulta sin relación, citas del reporte, rechazo de una fuente inventada, veredicto sin cambios, nueva huella al cambiar un documento y fuentes visibles en el dashboard. Entrega la tabla criterio, evidencia y resultado. Indica si la ejecución usó Gemini o el modo evidencia.",
+              command: "python -m pytest -q",
+              done: "Citas verificables, fuente inventada rechazada y veredicto intacto.",
+            },
+            {
+              label: "Reto",
+              minutes: 2,
+              title: "Amplía la memoria del agente",
+              body: "<p>Agrega a <code>conocimiento/historial-defectos.md</code> un defecto ficticio DEF-120 sobre el límite de 200 operaciones. Comprueba que el agente lo recupera cuando un criterio lo menciona y que una consulta sin relación sigue devolviendo lista vacía.</p><p>Una cita demuestra que existe respaldo en la base, no que la recomendación sea correcta. Esa comprobación sigue en las pruebas.</p>",
+              prompt:
+                "/especificar Añade en conocimiento/historial-defectos.md un defecto DEF-120 ficticio sobre el límite de 200 operaciones. Actualiza specs/rag.md con un criterio R9 que compruebe que se recupera con una consulta sobre ese límite y que una consulta ajena sigue sin resultados. Implementa y verifica.",
+              done: "Un documento nuevo recuperado con su fuente y una consulta ajena sin resultados.",
+            },
+          ],
+        },
       ];
       for (const module of window.WORKSHOP_MODULES) {
         module.steps_es = module.steps.map((step) => step.label);
@@ -1551,7 +1609,7 @@ python scripts/preparar_practica.py
             "Especifica, construye y demuestra una corrección con evidencia.",
           homeBtn: "Comenzar las experiencias →",
           modEyebrow: "EL RECORRIDO DE HOY",
-          modTitle: "Tres experiencias, un mismo producto",
+          modTitle: "Tres experiencias y una opcional, un mismo producto",
           congratsTitle: "Evidencia lista",
           congratsText: "Revisa el entregable antes de continuar.",
           congratsBtnNext: "Ir al siguiente módulo →",
@@ -1685,7 +1743,11 @@ python scripts/preparar_practica.py
           } else if (activeModule.id === 3) {
             title.textContent = "Cierre · 10 minutos";
             text.textContent =
-              "Muestra la spec, una skill aplicada, el defecto, la ejecución automática con revisor y el dashboard después de la corrección. Demo de dos minutos por equipo, según el tiempo disponible.";
+              "Muestra la spec, una skill aplicada, el defecto, la ejecución automática con revisor y el dashboard después de la corrección. Demo de dos minutos por equipo, según el tiempo disponible. Si queda tiempo, la Experiencia 4 es opcional y no forma parte de los 180 minutos.";
+          } else if (activeModule.id === 4) {
+            title.textContent = "Experiencia opcional completada";
+            text.textContent =
+              "El agente QA ahora cita reglas y defectos anteriores. Las pruebas siguen determinando el veredicto y cada fuente fue recuperada de conocimiento/.";
           }
         }
       }
@@ -1707,7 +1769,7 @@ python scripts/preparar_practica.py
           };
           card.innerHTML = `
           <div class="module-number">${mod.id}</div>
-          <span class="module-time">${mod.minutes} MIN</span>
+          <span class="module-time">${mod.optional ? "OPCIONAL · " : ""}${mod.minutes} MIN</span>
           <h3 class="module-card-title">${mod.title_es}</h3>
           <p class="module-card-desc">${mod.description}</p>
           <span class="module-card-open">Abrir experiencia ↗</span>
@@ -1742,7 +1804,7 @@ python scripts/preparar_practica.py
         body.replaceChildren();
         const meta = document.createElement("p");
         meta.className = "step-meta";
-        meta.textContent = `EXPERIENCIA ${activeModule.id} · ${activeModule.minutes} MIN / ${step.label.toUpperCase()} · ${step.minutes} MIN`;
+        meta.textContent = `EXPERIENCIA ${activeModule.id}${activeModule.optional ? " (OPCIONAL)" : ""} · ${activeModule.minutes} MIN / ${step.label.toUpperCase()} · ${step.minutes} MIN`;
         const grid = document.createElement("div");
         grid.className = "step-grid";
         const instruction = document.createElement("div");

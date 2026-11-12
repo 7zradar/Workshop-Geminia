@@ -72,3 +72,4 @@ Selecciona equipos según el tiempo disponible. Cada demo dura dos minutos y mue
 | Automatización y agente adicional | Vigilancia, QA y revisor |
 | Vibe coding | Dashboard construido desde spec |
 | Tres horas | 15 + 45 + 45 + 10 + 55 + 10 = 180 |
+| Experiencia 4 opcional | RAG local con `buscar_contexto`, 20 minutos fuera de los 180 |

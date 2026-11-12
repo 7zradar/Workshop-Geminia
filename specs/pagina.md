@@ -19,4 +19,4 @@ La página abre también como archivo local y permite importar un reporte JSON. 
 | P6 | Revisar modo | Ningún resultado local se presenta como Gemini |
 | P7 | Navegar con teclado y ancho de 375 px | Controles utilizables y sin desbordamiento horizontal |
 | P8 | Abrir presentación | Pasos completos de agente, flujo y vibe coding, prompts copiables |
-| P9 | Copiar solo WORKSHOP_GEMINI.html a una carpeta vacía y abrirlo | Tres experiencias y sus 17 pasos disponibles con estilos y contenido integrados |
+| P9 | Copiar solo WORKSHOP_GEMINI.html a una carpeta vacía y abrirlo | Tres experiencias con 17 pasos y una cuarta opcional con 5 pasos, con estilos y contenido integrados |

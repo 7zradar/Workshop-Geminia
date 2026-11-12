@@ -27,7 +27,7 @@ py -3.12 -m venv .venv
 
 El modo inicial es **evidencia**. Ejecuta las pruebas Node reales y genera un diagnóstico local. El dashboard identifica este modo en cada reporte. También puedes abrir WORKSHOP_GEMINI.html o pagina/index.html con doble clic. La presentación funciona como archivo local y el dashboard muestra un ejemplo guardado y permite importar JSON.
 
-WORKSHOP_GEMINI.html es autocontenido. Para compartir la presentación, descarga ese archivo con el control Download raw file de GitHub y ábrelo con doble clic. Los estilos, las tres experiencias y los 17 pasos están integrados en el HTML.
+WORKSHOP_GEMINI.html es autocontenido. Para compartir la presentación, descarga ese archivo con el control Download raw file de GitHub y ábrelo con doble clic. Los estilos, las tres experiencias con sus 17 pasos y la Experiencia 4 opcional de RAG están integrados en el HTML.
 
 ## Activar Gemini
 
@@ -113,3 +113,7 @@ Fuentes técnicas consultadas.
 - [Migración de workflows a skills](https://antigravity.google/docs/migration/workflows-to-skills)
 - [Inicio con ADK Python](https://adk.dev/get-started/python/)
 - [Flujos secuenciales ADK](https://adk.dev/agents/workflow-agents/sequential-agents/)
+
+## Experiencia 4 opcional: contexto con RAG
+
+El agente QA tiene una tercera herramienta, `buscar_contexto`, que recupera fragmentos de `conocimiento/` (reglas de negocio, historial de defectos y guía de severidad, todo ficticio). Cada hallazgo cita sus fuentes en `sources` y el reporte guarda los fragmentos recuperados en `context`. La búsqueda es local y determinista, no consume peticiones de Gemini. El reporte se rechaza si cita una fuente que no se recuperó en esa ejecución. Las pruebas siguen determinando el veredicto. La especificación está en specs/rag.md y la experiencia en la presentación, con prompts y pasos. Cambiar un documento de `conocimiento/` genera un reporte nuevo por contenido y modo.
