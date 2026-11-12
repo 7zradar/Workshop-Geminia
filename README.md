@@ -61,7 +61,9 @@ python scripts/preparar_practica.py --equipo equipo-01
 
 Abre practica/equipo-01 en Antigravity. El kit trae el motor, contratos, infraestructura, workflow y skills. Los equipos redactan sus specs e implementan agente/, flujo/ y pagina/. Configura el entorno y la clave en la carpeta de práctica antes de la sesión. El archivo .env de la solución no se copia al kit.
 
-El guion detallado está en [Taller_QA_Gemini.md](Taller_QA_Gemini.md) y los pasos utilizables en [WORKSHOP_GEMINI.html](WORKSHOP_GEMINI.html).
+La [guía paso a paso](Guia_paso_a_paso_QA.md) detalla carpetas, terminales, acciones y resultados para realizar las tres experiencias. El [guion breve](Taller_QA_Gemini.md) resume los tiempos y la [presentación](WORKSHOP_GEMINI.html) contiene los prompts copiables.
+
+El segundo reto dispone de `python scripts/probar_revisor.py`, que presenta al revisor evidencia real de fallas y un diagnóstico de éxito intencionalmente inconsistente. Requiere Gemini configurado y el flujo implementado, y guarda el resultado en salida/reto-revisor.json.
 
 ## Specs y skills
 

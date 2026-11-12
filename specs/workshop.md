@@ -31,6 +31,8 @@ Python 3.12, Node 22 o superior y Git instalados. Dependencias y credenciales co
 | W7 | La página consume resultados de pruebas ejecutadas | JSON y dashboard |
 | W8 | El modo local y el modo Gemini se identifican siempre | Indicador de modo y reporte |
 | W9 | Los requisitos de la aplicación permanecen fijos al corregir un defecto | Hash de contrato y pruebas |
+| W10 | Una guía aparte detalla el recorrido del HTML | Preparación, acciones por paso, comandos, resultados, retos y recuperación |
+| W11 | Los pasos respetan el orden de construcción | El bloque 2 verifica el JSON y el bloque 3 construye el dashboard; el quinto caso explica sus nuevos totales |
 
 ## Decisiones
 La entrega se ejecuta localmente. La presentación conserva el esquema visual oscuro, la navegación por pasos y el cambio de tema del HTML original. El modo evidencia ejecuta las mismas pruebas reales sin requerir un modelo. Gemini se activa explícitamente después de configurar .env. Se utiliza un solo caso guiado para mantener el ritmo de tres horas.

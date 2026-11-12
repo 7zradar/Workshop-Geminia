@@ -3,6 +3,7 @@ import os
 
 from dotenv import load_dotenv
 from google.adk.agents import Agent
+from google.adk.models.base_llm import BaseLlm
 from google.adk.tools.tool_context import ToolContext
 
 from qa_core import ROOT, Evidence, Snapshot
@@ -19,9 +20,9 @@ Incluye exactamente un hallazgo por cada prueba fallida. Si pasan todas, finding
 No ejecutes otras acciones ni modifiques archivos. Limita las conclusiones a los casos ejecutados."""
 
 
-def create_agent(evidence: Evidence | None = None, model: str | None = None) -> Agent:
+def create_agent(evidence: Evidence | None = None, model: str | BaseLlm | None = None) -> Agent:
     def leer_criterios(tool_context: ToolContext) -> dict:
-        """Lee la especificación y los cuatro casos del contrato de QA de esta ejecución."""
+        """Lee la especificación y los casos del contrato de QA de esta ejecución."""
         if evidence is not None:
             return evidence.criteria()
         current = Evidence(Snapshot.capture())

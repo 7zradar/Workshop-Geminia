@@ -2,6 +2,7 @@ import os
 from typing import Literal
 
 from google.adk.agents import Agent, SequentialAgent
+from google.adk.models.base_llm import BaseLlm
 from pydantic import BaseModel, ConfigDict, Field
 
 from agente.agent import create_agent
@@ -28,7 +29,7 @@ class Review(BaseModel):
     observations: list[str] = Field(description="Comprobaciones de consistencia o problemas detectados.")
 
 
-def create_pipeline(evidence: Evidence | None, model: str):
+def create_pipeline(evidence: Evidence | None, model: str | BaseLlm):
     qa = create_agent(evidence, model)
     reviewer = Agent(
         name="revisor_qa", model=model,

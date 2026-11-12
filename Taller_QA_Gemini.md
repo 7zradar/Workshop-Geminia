@@ -1,5 +1,7 @@
 # Agente QA con Gemini y Antigravity
 
+Para realizar cada paso con comandos, carpetas, verificaciones y recuperación, utiliza la [guía paso a paso](Guia_paso_a_paso_QA.md).
+
 ## Propósito y materiales
 
 Workshop práctico de 180 minutos para desarrolladores. Cada equipo construye un agente QA, un flujo con un revisor y un dashboard. SDD y skills se aplican durante las tres experiencias.
@@ -19,11 +21,11 @@ Explica qué hace el agente QA y qué aplicación revisa. Ejecuta el caso QA-03 
 ## Experiencia 1, 45 minutos
 
 1. Spec, 8 minutos. Usa /especificar para definir entradas, herramientas y salida del agente. Revisa los criterios de specs/agente-qa.md.
-2. Skill, 4 minutos. Edita verificar/SKILL.md para exigir ID y evidencia de cada falla. Muestra su aplicación.
+2. Skill, 4 minutos. Edita verificar/SKILL.md para comprobar las huellas source_hash y contract_hash junto con los datos de cada falla. Muestra su aplicación.
 3. Plan, 5 minutos. Usa Planning o /plan. Revisa herramientas, agente y verificación. El kit provee qa_core.py y el runner.
 4. Construcción, 15 minutos. Implementa una tarea por vez. El agente exporta create_agent(evidence, model=None) y root_agent. Usa leer_criterios y ejecutar_pruebas. Esta última guarda evidencia en el estado.
 5. Verificación, 10 minutos. En adk web observa las llamadas. Contrasta QA-02 y QA-03 con el contrato. Distingue llamada real a Gemini de ensayo local.
-6. Reto, 3 minutos. Agrega 11 operaciones y 0 transferencias, esperado 27.50. Registra primero el criterio.
+6. Reto, 3 minutos. Como extensión agrega 11 operaciones y 0 transferencias, esperado 27.50. Registra primero el criterio. Con cinco casos, el resultado inicial es 40 % y el corregido 100 %.
 
 Entrega de este bloque con spec, plan, agente y evidencia de herramientas.
 
@@ -32,9 +34,9 @@ Entrega de este bloque con spec, plan, agente y evidencia de herramientas.
 1. Spec, 8 minutos. Define disparadores, entrada, segundo agente, resultado y errores. Repetir un contenido no debe duplicar el historial.
 2. Plan, 5 minutos. Reutiliza create_agent. Define modelos Analysis y Review y create_pipeline(evidence, model) según las interfaces de procesar.py.
 3. Construcción, 15 minutos. Conecta QA y revisor. El revisor recibe diagnostico y evidencia y devuelve decision y observations. Ejecuta python procesar.py --mode gemini.
-4. Automatización, 10 minutos. Inicia servidor.py y comprueba la vigilancia. Corrige operacionesCobradas con Math.max(0, operaciones - 10). Guardar el archivo dispara otra revisión. El workflow de GitHub está preparado como alternativa reproducible.
-5. Verificación, 5 minutos. Compara 50 % y 100 %. La huella de fuente cambia y la del contrato permanece. Repite para comprobar identidad.
-6. Reto, 2 minutos. Comprueba que el revisor observe un diagnóstico que declare éxito cuando un caso falla.
+4. Automatización, 10 minutos. Inicia servidor.py en el puerto 8767 y comprueba la vigilancia. Consulta el JSON en una segunda terminal. Corrige operacionesCobradas con Math.max(0, operaciones - 10). Guardar el archivo dispara otra revisión. El dashboard del equipo se construye en el siguiente bloque.
+5. Verificación, 5 minutos. Compara 50 % y 100 % con el contrato base, o 40 % y 100 % con cinco casos. La huella de fuente cambia y la del mismo contrato permanece. Repite para comprobar identidad.
+6. Reto, 2 minutos. Ejecuta python scripts/probar_revisor.py con Gemini configurado. Comprueba OBSERVADO ante un diagnóstico que declare éxito cuando un caso falla.
 
 Entrega de este bloque con dos agentes, ejecución automática y reporte JSON.
 

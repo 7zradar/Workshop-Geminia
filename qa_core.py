@@ -106,7 +106,7 @@ def local_analysis(result: dict) -> dict:
             for test in failures
         ],
         "next_action": "Corregir los casos fallidos y volver a ejecutar QA." if failures
-                       else "Conservar la evidencia. Los cuatro casos ejecutados cumplen sus criterios.",
+                       else f"Conservar la evidencia. Los {result['summary']['total']} casos ejecutados cumplen sus criterios.",
     }
 
 

@@ -253,3 +253,37 @@ def test_presentation_has_no_required_external_assets(tmp_path):
     parser = AssetParser()
     parser.feed(copied.read_text(encoding="utf-8"))
     assert parser.dependencies == []
+
+
+def test_fifth_case_updates_report_totals(tmp_path):
+    from dataclasses import replace
+
+    initial = snapshot_version("con-error")
+    cases = json.loads(initial.cases)
+    cases.append({"id": "QA-05", "name": "Primera operación adicional", "criterion": "25 + 2.50 = 27.50",
+                  "input": {"operaciones": 11, "interbancarias": 0}, "expected": 27.50})
+    extended = replace(initial, cases=json.dumps(cases).encode())
+    bad = run_pipeline(extended, output=tmp_path)
+    fixed = run_pipeline(replace(extended, source=snapshot_version("corregida").source), output=tmp_path)
+    assert bad["summary"] == {"total": 5, "passed": 2, "failed": 3, "percentage": 40}
+    assert fixed["summary"] == {"total": 5, "passed": 5, "failed": 0, "percentage": 100}
+    assert bad["contract_hash"] == fixed["contract_hash"]
+
+
+def test_reviewer_challenge_uses_isolated_agent():
+    import asyncio
+    from google.adk.models.base_llm import BaseLlm
+    from google.adk.models.llm_response import LlmResponse
+    from google.genai import types
+    from scripts.probar_revisor import run_challenge
+
+    class LocalReviewer(BaseLlm):
+        async def generate_content_async(self, llm_request, stream=False):
+            text = json.dumps({"decision": "OBSERVADO", "observations": ["QA-03 falló y el diagnóstico indica éxito."]})
+            yield LlmResponse(content=types.Content(role="model", parts=[types.Part(text=text)]))
+
+    result = asyncio.run(run_challenge(LocalReviewer(model="modelo-local-de-prueba")))
+    assert result["passed"] is True
+    assert result["mode"] == "prueba_local"
+    assert "QA-03" in result["failed_case_ids"]
+    assert result["evidence_summary"]["failed"] >= 2

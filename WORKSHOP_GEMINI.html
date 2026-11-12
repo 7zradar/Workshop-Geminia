@@ -1365,9 +1365,9 @@ python scripts/preparar_practica.py
               label: "Skill",
               minutes: 4,
               title: "Haz explícita la forma de trabajar",
-              body: "<p>Abre <code>.agents/skills/verificar/SKILL.md</code>. Identifica su <code>name</code>, <code>description</code> y procedimiento. Las skills guían a Antigravity durante la construcción. El agente QA que vas a crear ejecutará sus propias herramientas ADK.</p><ol><li>Agrega a la skill la obligación de incluir el ID y la evidencia de cada caso fallido.</li><li>Invócala por nombre en una petición.</li><li>Comprueba que el resultado siga ese formato.</li></ol>",
+              body: "<p>Abre <code>.agents/skills/verificar/SKILL.md</code>. Identifica su <code>name</code>, <code>description</code> y procedimiento. Las skills guían a Antigravity durante la construcción. El agente QA que vas a crear ejecutará sus propias herramientas ADK.</p><ol><li>Agrega una comprobación de las huellas <code>source_hash</code> y <code>contract_hash</code> en la evidencia.</li><li>Invócala por nombre en una petición.</li><li>Comprueba que el resultado siga ese formato.</li></ol>",
               prompt:
-                "Revisa la skill verificar de este workspace. Añade una comprobación para que cada defecto incluya su ID, el criterio, el valor esperado y el valor obtenido. Aplica esta skill cuando verifiquemos el agente. Conserva las expectativas del contrato de pruebas.",
+                "Revisa la skill verificar de este workspace. Añade una comprobación para que la evidencia incluya source_hash y contract_hash, además del ID, criterio, esperado y obtenido de cada falla. Aplica esta skill cuando verifiquemos el agente. Conserva las expectativas del contrato de pruebas.",
               done: "Una skill real editada y su aplicación identificada en la conversación.",
             },
             {
@@ -1393,17 +1393,17 @@ python scripts/preparar_practica.py
               label: "Verificar",
               minutes: 10,
               title: "Muestra la ejecución, no solo la respuesta",
-              body: "<ol><li>Pide al agente revisar la versión actual.</li><li>En Events identifica <code>leer_criterios</code> y <code>ejecutar_pruebas</code>.</li><li>Comprueba QA-02 esperado 25, obtenido 50 y QA-03 esperado 74, obtenido 99.</li><li>Relaciona cada hallazgo con la tabla de la spec.</li></ol><p>La solución tiene modo evidencia para ensayar sin clave. El ensayo de los dos agentes usa <code>--mode gemini</code> después de configurar la clave.</p>",
+              body: "<ol><li>En ADK Web elige <code>agente</code> y pide revisar la versión actual.</li><li>En Events identifica <code>leer_criterios</code> y <code>ejecutar_pruebas</code>.</li><li>Comprueba QA-02 esperado 25, obtenido 50 y QA-03 esperado 74, obtenido 99.</li><li>Relaciona cada hallazgo con la tabla de la spec.</li></ol><p>Este bloque prueba un agente. En el segundo construiremos el flujo de dos agentes. Puedes comprobar las herramientas sin modelo con <code>node scripts/ejecutar-pruebas.mjs</code>.</p>",
               prompt:
                 "/verificar specs/agente-qa.md. Comprueba las dos herramientas, la cobertura de los dos casos fallidos y que el agente conserve esperado y obtenido. Entrega la tabla criterio, evidencia y resultado. Indica si la prueba llamó a Gemini o se ejecutó localmente.",
-              command: "python procesar.py --mode evidencia",
+              command: "adk web --port 8000",
               done: "Dos defectos reproducibles y evidencia de cómo se obtuvieron.",
             },
             {
               label: "Reto",
               minutes: 3,
               title: "Un caso límite que el agente pueda explicar",
-              body: "<p>Agrega una prueba para 11 operaciones y 0 transferencias. La especificación exige 27.50. El agente debe incorporar el resultado y conservar su ID.</p><p>Si la implementación falla, corrige el motor contra el criterio acordado. Una ambigüedad de requisitos se registra primero en la spec.</p>",
+              body: "<p>Como extensión, agrega QA-05 para 11 operaciones y 0 transferencias. La especificación exige 27.50 y la versión con error obtiene 52.50.</p><p>Con este quinto caso, la versión inicial tiene 2/5 aprobadas y muestra 40 %. La corregida tendrá 5/5 y 100 %. Usa estos nuevos totales en las verificaciones siguientes. El recorrido base conserva cuatro casos.</p><p>Si la implementación falla, corrige el motor contra el criterio acordado.</p>",
               prompt:
                 "/especificar Añade QA-05 con 11 operaciones y 0 transferencias, esperado 27.50. Actualiza la spec antes de agregar el caso al contrato y repetir la verificación. Explica qué límite cubre.",
               done: "Un caso adicional que cubre el primer valor después del tramo gratuito.",
@@ -1450,17 +1450,17 @@ python scripts/preparar_practica.py
               label: "Automatizar",
               minutes: 10,
               title: "Guardar el código dispara una revisión",
-              body: "<ol><li>Inicia el servidor y comprueba que la vigilancia está activa.</li><li>Abre el dashboard con el facilitador.</li><li>Corrige la operación cobrada con <code>Math.max(0, operaciones - 10)</code> y guarda el archivo.</li><li>Espera la ejecución con disparador <code>cambio</code>.</li></ol><p>En GitHub, agrega GOOGLE_API_KEY como secret y GEMINI_MODEL como variable. El workflow incluido sube el reporte como artefacto. Una ejecución con defectos termina en rojo y conserva el reporte.</p>",
+              body: "<ol><li>En la carpeta de práctica inicia el servidor en el puerto 8767 y comprueba su vigilancia con <code>/api/status</code>.</li><li>En otra terminal consulta <code>salida/ultimo.json</code>. La página del equipo se construirá en el bloque 3.</li><li>Corrige la operación cobrada con <code>Math.max(0, operaciones - 10)</code> y guarda el archivo.</li><li>Espera el reporte con disparador <code>cambio</code>.</li></ol><p>El facilitador puede mostrar su dashboard de referencia. El workflow de GitHub incluido permite repetir el flujo con secrets y un artefacto descargable.</p>",
               prompt:
                 "Lee specs/flujo.md y revisa .github/workflows/qa.yml. Explica qué cambio lo dispara, dónde se configura la clave y cómo se conserva el artefacto cuando una prueba falla. Comprueba la vigilancia local guardando una corrección en app/calculadora.mjs.",
-              command: "python servidor.py --mode gemini",
+              command: "python servidor.py --mode gemini --port 8767",
               done: "Cambio de código seguido de ejecución automática y reporte nuevo.",
             },
             {
               label: "Verificar",
               minutes: 5,
               title: "Compara antes y después",
-              body: "<p>La versión inicial tiene 2/4 aprobadas. La corregida tiene 4/4. Comprueba que la huella del código cambió y la del contrato se conservó. Repite la misma versión y verifica que el historial conserve un único registro por contenido y modo.</p>",
+              body: "<p>Con el contrato base, la versión inicial tiene 2/4 aprobadas y la corregida 4/4. Si añadiste QA-05, compara 2/5 y 5/5. Comprueba que la huella del código cambió y la del contrato se conservó entre las dos versiones del mismo contrato. Repite la misma versión y verifica un único registro por contenido y modo.</p>",
               prompt:
                 "/verificar specs/flujo.md. Comprueba el disparador cambio, el segundo agente, la correspondencia del reporte con las pruebas, la identidad por contenido y la conservación del último reporte ante errores. Muestra evidencia por criterio.",
               done: "Falla reproducida, corrección verificada y repetición sin duplicados.",
@@ -1469,9 +1469,10 @@ python scripts/preparar_practica.py
               label: "Reto",
               minutes: 2,
               title: "Pon a prueba al revisor",
-              body: "<p>Propón un diagnóstico que afirme que todo pasó cuando existe una prueba fallida. El revisor debe marcarlo OBSERVADO y explicar qué ID contradice esa afirmación.</p><p>Después de este bloque corresponde una pausa de 10 minutos.</p>",
+              body: "<p>Ejecuta <code>python scripts/probar_revisor.py</code>. El script usa pruebas reales de la versión con error y presenta al segundo agente un diagnóstico que afirma que todo pasó. El revisor debe marcarlo OBSERVADO y explicar la contradicción.</p><p>Requiere la clave Gemini de la práctica y el flujo implementado. El resultado queda en <code>salida/reto-revisor.json</code>. Después corresponde una pausa de 10 minutos.</p>",
               prompt:
                 "Comprueba el revisor con evidencia donde QA-03 falla y un diagnóstico que dice que todas las pruebas pasaron. Debe devolver OBSERVADO y mencionar la contradicción concreta.",
+              command: "python scripts/probar_revisor.py",
               done: "El revisor detecta un diagnóstico que contradice los resultados originales.",
             },
           ],
@@ -1506,10 +1507,10 @@ python scripts/preparar_practica.py
               label: "Construir",
               minutes: 20,
               title: "Deja que Antigravity escriba y revisa el diff",
-              body: "<ol><li>Implementa cada tarea con la skill correspondiente.</li><li>Prueba primero un reporte guardado de la versión defectuosa.</li><li>Conecta la página al servidor y ejecuta QA.</li><li>Solicita los cambios de alcance actualizando la spec.</li></ol><p>Al abrir directamente el HTML se muestra un ejemplo guardado y se puede importar JSON. La automatización se usa con el servidor iniciado.</p>",
+              body: "<ol><li>Implementa cada tarea con la skill correspondiente.</li><li>Prueba primero un reporte guardado de la versión defectuosa.</li><li>Usa el servidor del bloque 2 y abre <code>http://127.0.0.1:8767/</code> para ver la página del equipo.</li><li>Solicita los cambios de alcance actualizando la spec.</li></ol><p>El servidor puede seguir activo mientras guardas HTML, CSS y JavaScript. La solución completa del facilitador también admite un ejemplo guardado e importación de JSON.</p>",
               prompt:
                 "/implementar T1 de specs/pagina-plan.md. Usa HTML, CSS y JavaScript sin frameworks. Valida el contrato antes de reemplazar los datos visibles. Haz que el filtro conserve los contadores globales y muestra siempre el origen de la ejecución. Revisa el diff antes de avanzar a las siguientes tareas.",
-              command: "python servidor.py",
+              command: "python servidor.py --mode gemini --port 8767",
               done: "Dashboard que carga y presenta el reporte de QA.",
             },
             {

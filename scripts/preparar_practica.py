@@ -12,7 +12,7 @@ def prepare(destination: Path) -> None:
         shutil.copytree(ROOT / directory, destination / directory)
     shutil.copy2(ROOT / "demo/version-con-error.mjs", destination / "app/calculadora.mjs")
     (destination / "scripts").mkdir()
-    for name in ("ejecutar-pruebas.mjs",):
+    for name in ("ejecutar-pruebas.mjs", "probar_revisor.py"):
         shutil.copy2(ROOT / "scripts" / name, destination / "scripts" / name)
     (destination / "specs").mkdir()
     for name in ("aplicacion.md", "workshop.md"):
