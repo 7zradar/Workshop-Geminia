@@ -19,114 +19,63 @@ El HTML marca el recorrido y contiene los prompts. Durante cada paso abres Antig
 
 El mismo agente QA del primer bloque participa en el flujo del segundo. En el tercero construyes una página para ver sus resultados.
 
-## 2. Prepara la solución y la práctica antes del evento
+## 2. Preparación previa con un solo comando
 
-### 2.1 Obtén la versión del taller
+### 2.1 Descarga y requisitos que comprueba TI
 
-Si empiezas desde una carpeta vacía, abre PowerShell y descarga la rama del workshop.
+Descarga el [ZIP del repositorio completo](https://github.com/7zradar/Workshop-Geminia/archive/refs/heads/codex/qa-workshop.zip) y extráelo. Para construir los entregables no basta con descargar solo el HTML. Si ya tienes la rama codex/qa-workshop, utiliza tu copia actualizada.
 
-```powershell
-git clone --branch codex/qa-workshop --single-branch https://github.com/7zradar/Workshop-Geminia.git
-Set-Location Workshop-Geminia
-```
+Antes del evento necesitas Antigravity con sesión iniciada, Python 3.12 y Node 22 o superior. El preparador no instala herramientas del sistema: si falta Python o Node indica qué debe instalar TI. Con el ZIP no necesitas instalar Git. También necesitas conexión para instalar las dependencias Python.
 
-Si ya tienes el repositorio, abre tu copia de codex/qa-workshop y revisa que contiene esta guía. Antes de actualizar una copia con trabajo propio, revisa sus cambios con git status.
+### 2.2 Ejecuta una sola preparación
 
-Para mostrar las diapositivas puedes descargar únicamente WORKSHOP_GEMINI.html y abrirlo con doble clic. Para construir el agente y la automatización utiliza el repositorio completo.
-
-### 2.2 Prepara el entorno de la solución completa
-
-Comprueba las herramientas.
+Abre PowerShell en la carpeta que contiene preparar-workshop.ps1 y ejecuta:
 
 ```powershell
-py -3.12 --version
-node --version
-git --version
+powershell -NoProfile -File .\preparar-workshop.ps1
 ```
 
-Crea el entorno e instala las dependencias desde la raíz del repositorio.
+Este comando comprueba Python y Node, crea practica/equipo-01, prepara su entorno .venv, instala las dependencias y verifica las tres skills y las pruebas locales. No necesitas ejecutar pip, crear ni activar .venv manualmente. No solicita la API key ni llama a Gemini. Los agentes y la página quedan por construir.
 
-```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-```
+Espera **PREPARACION COMPLETA**. En el kit nuevo se esperan cuatro pruebas, dos aprobadas y dos fallidas: 50 %. Las fallas intencionales acreditan que el runner funciona. El informe está en practica/equipo-01/salida/preparacion.json.
 
-Activa el entorno en cada terminal donde vayas a ejecutar los comandos del taller.
+Si la preparación se interrumpe, resuelve el mensaje y repite el mismo comando. Reutiliza las dependencias preparadas y completa solo archivos ausentes de un kit identificado; conserva código, contratos, skills y .env existentes. Si esa carpeta contiene trabajo previo sin la marca del preparador, elige otro nombre, por ejemplo agregando `-Equipo equipo-02` al mismo comando. No sobrescribe una carpeta ajena.
 
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
+Si la política corporativa bloquea scripts o descargas, comparte el mensaje con TI antes del taller. El preparador no cambia la política de ejecución, no instala Python ni Node y no modifica credenciales.
 
-Los comandos siguientes usan python y adk con ese entorno activo. Si tu equipo impide la activación de PowerShell, utiliza directamente .\.venv\Scripts\python.exe en lugar de python, y .\.venv\Scripts\adk.exe en lugar de adk.
+### 2.3 Abre la práctica en Antigravity
 
-Prepara el archivo de configuración local si todavía no existe.
+Abre la carpeta exacta indicada al finalizar: practica/equipo-01. Comprueba que puedes leer specs/aplicacion.md, contratos/casos.json y las tres skills. La infraestructura ya está lista. Construirás agente/agent.py, flujo/agent.py y pagina/index.html con los prompts del HTML.
 
-```powershell
-if (-not (Test-Path -LiteralPath .env)) {
-    Copy-Item -LiteralPath .env.example -Destination .env
-}
-```
+**La API key se configura después de construir el primer agente, antes de ejecutarlo con Gemini.** En ese momento abre el .env de esta práctica y completa GOOGLE_API_KEY una sola vez. El agente QA, el revisor y RAG reutilizan esa configuración. No necesitas una clave diferente por agente ni volver a introducirla en cada bloque.
 
-Abre .env en el editor y configura GOOGLE_API_KEY con tu clave. Revisa GEMINI_MODEL en tu cuenta de AI Studio. Conserva la clave en este archivo local y usa el secreto correspondiente cuando configures GitHub Actions.
+Los comandos cortos taller.ps1 usan directamente el entorno de la práctica. Antigravity puede ejecutarlos en su terminal. No necesitas activar .venv en cada terminal.
 
-### 2.3 Ensaya la referencia del facilitador
+| Momento | Acción en la carpeta de práctica |
+|---|---|
+| Agente construido y clave configurada | `.\taller.ps1 agente` abre ADK Web en http://127.0.0.1:8000 |
+| Flujo construido | `.\taller.ps1 flujo` ejecuta QA y revisor una vez |
+| Automatización | `.\taller.ps1 automatizar` inicia la vigilancia en el puerto 8767 |
+| Reto del revisor | `.\taller.ps1 revisor` ejecuta el diagnóstico inconsistente |
+| Dashboard construido | Abrir http://127.0.0.1:8767/ usando el servidor ya iniciado |
 
-Desde la solución completa, ejecuta las comprobaciones locales.
+### 2.4 Referencia del facilitador
 
-```powershell
-python -m pytest -q
-node scripts/ejecutar-pruebas.mjs
-```
+La raíz del repositorio contiene la solución completa. Para ensayar esa referencia, usa `.\iniciar.ps1`: prepara su entorno y abre el servidor en el puerto 8765, en modo evidencia. La presentación está en http://127.0.0.1:8765/presentacion. El HTML también abre por sí solo con doble clic.
 
-La suite pytest comprueba la infraestructura. El comando Node comprueba el motor y termina con exit code 1 si detecta los defectos intencionales. En la versión inicial muestra cuatro pruebas, dos aprobadas y dos fallidas.
+La referencia y la práctica son proyectos separados. La preparación no copia la clave de la referencia a los participantes. Como facilitador, ensaya una llamada real antes del evento usando tu propia configuración. Las comprobaciones adicionales de pytest y las alternativas de comandos pertenecen a la validación del facilitador y no a la preparación manual del participante.
 
-Con la clave configurada, ensaya el flujo real antes de la sesión.
-
-```powershell
-python procesar.py --mode gemini
-```
-
-Abre salida/ultimo.json y comprueba mode igual a gemini, llamadas a las herramientas en trace y resultado del revisor en review. Este comando usa el flujo completo que ya está implementado en la referencia del facilitador.
-
-Para ensayar los resultados y la interfaz con análisis local utiliza el modo evidencia.
-
-```powershell
-python procesar.py --mode evidencia
-```
-
-Inicia la referencia del facilitador y conserva esa terminal abierta.
-
-```powershell
-python servidor.py --mode evidencia --port 8765
-```
-
-Abre la presentación en [puerto 8765](http://127.0.0.1:8765/presentacion) y el [dashboard de referencia](http://127.0.0.1:8765/). El modo evidencia ejecuta las pruebas reales y produce un análisis local identificado. El ensayo con Gemini debe completarse con la configuración real antes del evento.
-
-### 2.4 Crea un kit inicial por equipo
-
-En otra terminal, desde la raíz de la solución, ejecuta lo siguiente.
-
-```powershell
-python scripts/preparar_practica.py --equipo equipo-01
-```
-
-Abre practica/equipo-01 como workspace de Antigravity, inicia sesión y selecciona un modelo Gemini en el panel del agente. El kit contiene el motor, contratos, skills, infraestructura y workflow. Los archivos agente/agent.py, flujo/agent.py y pagina/index.html serán construidos por el equipo.
-
-Dentro de la carpeta de práctica crea otro entorno, instala requirements.txt y prepara su propio .env siguiendo el paso 2.2. Comprueba que las tres skills aparecen o que Antigravity puede leer sus SKILL.md. Si ya tenías un kit anterior, verifica que scripts/probar_revisor.py esté disponible y cópialo desde la referencia si hace falta.
-
-Para otro equipo usa otro nombre, por ejemplo equipo-02. El preparador conserva el trabajo de una carpeta existente y solicita otro nombre.
-
-### 2.5 Mantén claras las carpetas y las terminales
+### 2.5 Carpetas y terminales durante el taller
 
 | Lugar | Uso | Puerto |
 |---|---|---|
 | Raíz de la solución completa | Referencia y demostración del facilitador | 8765 |
-| practica/equipo-01 | Archivos que construyen los participantes | Workspace del equipo |
+| practica/equipo-01 | Workspace que abre el participante en Antigravity | Sin servidor propio hasta ejecutarlo |
 | Terminal A de la práctica | ADK Web durante el primer bloque | 8000 |
-| Terminal A de la práctica, después de detener ADK Web | Servidor y vigilancia del segundo y tercer bloque | 8767 |
-| Terminal B de la práctica | Ejecutar comandos y consultar resultados | Sin servidor propio |
+| Terminal A tras detener ADK Web con Ctrl+C | Vigilancia del bloque 2 y dashboard del bloque 3 | 8767 |
+| Terminal B de la práctica | Ejecución puntual del flujo y reto del revisor | Sin servidor propio |
 
-Activa el entorno de la práctica también en la terminal B. Las direcciones 127.0.0.1 apuntan al equipo donde se abre el navegador. Cada participante ejecuta su servidor en su computadora.
+El servidor se inicia una vez en el bloque 2 y sigue funcionando mientras construyes el dashboard. Las direcciones 127.0.0.1 apuntan al equipo donde se abre el navegador. Cada participante ejecuta su práctica en su computadora. Specs, skills y vibe coding se aplican desde el primer módulo.
 
 ## 3. Cómo llevar el ritmo de las tres horas
 
@@ -218,26 +167,21 @@ Antes de pulsar Proceed, comprueba que el plan reutiliza qa_core.py y contempla 
 2. Revisa el diff y el resultado de la comprobación.
 3. Solicita T2 y luego T3 por separado.
 4. Comprueba que existe agente/agent.py y que el modelo se obtiene de GEMINI_MODEL.
-5. Desde la raíz de la práctica ejecuta lo siguiente en la terminal A.
+5. Pide a Antigravity comprobar localmente las herramientas. En este paso todavía no hace falta la API key.
 
-```powershell
-adk web --port 8000
-```
-
-Abre la dirección que imprima ADK Web y elige agente. En el chat escribe esta petición.
-
-```text
-Revisa el motor actual contra la especificación. Consulta los criterios,
-ejecuta las pruebas y explica los casos fallidos con esperado y obtenido.
-```
-
-El agente debe consultar las dos herramientas y construir su diagnóstico a partir del resultado real. Conserva la terminal de ADK Web abierta durante la comprobación.
-
-**Avanza cuando** puedes ver el agente y sus herramientas ejecutadas. La validación de este punto con Gemini necesita la clave configurada en la práctica.
+**Avanza cuando** agente/agent.py está implementado y sus herramientas ejecutan las comprobaciones locales. La primera llamada a Gemini corresponde al siguiente paso.
 
 ### 5.5 Verificar, diez minutos
 
 **En el HTML** abre «Muestra la ejecución, no solo la respuesta».
+
+El agente ya está construido. Abre el .env de la práctica y configura GOOGLE_API_KEY una sola vez. Revisa GEMINI_MODEL si necesitas elegir otro modelo disponible. Después inicia la interfaz en la terminal A de la práctica:
+
+```powershell
+.\taller.ps1 agente
+```
+
+Abre http://127.0.0.1:8000, elige agente y pide revisar el motor actual contra la especificación, consultando criterios y ejecutando las pruebas. Conserva esa terminal abierta durante la comprobación.
 
 1. En ADK Web abre Events y localiza leer_criterios y ejecutar_pruebas.
 2. Abre la respuesta de la herramienta y revisa QA-02 y QA-03.
@@ -323,18 +267,10 @@ Pega el prompt de planificación. Revisa que las tareas escriban specs/flujo-pla
 4. En la carpeta de práctica ejecuta el flujo.
 
 ```powershell
-python procesar.py --mode gemini
+.\taller.ps1 flujo
 ```
 
-Consulta el resultado con PowerShell.
-
-```powershell
-$reporteQA = Get-Content -LiteralPath .\salida\ultimo.json -Raw | ConvertFrom-Json
-$reporteQA.mode
-$reporteQA.summary
-$reporteQA.review
-$reporteQA.trace
-```
+Abre salida/ultimo.json con Antigravity y localiza mode, summary, review y trace. Reutiliza el .env del bloque 1.
 
 Con el contrato base y el motor defectuoso, el reporte tiene total 4, passed 2, failed 2 y percentage 50. Debes ver los actores agente_qa y revisor_qa en la traza de una ejecución Gemini.
 
@@ -343,7 +279,7 @@ VALIDADO significa que el diagnóstico es consistente con la evidencia. Puede ap
 Para ensayar los resultados y la persistencia local puedes ejecutar el modo evidencia. Su revisión local aparece identificada en el JSON.
 
 ```powershell
-python procesar.py --mode evidencia
+.\taller.ps1 flujo -Modo evidencia
 ```
 
 **Avanza cuando** el flujo genera el JSON y la revisión cumple su esquema.
@@ -355,14 +291,10 @@ python procesar.py --mode evidencia
 En la terminal A de la práctica inicia el servidor. La vigilancia está activa por defecto.
 
 ```powershell
-python servidor.py --mode gemini --port 8767
+.\taller.ps1 automatizar
 ```
 
-En la terminal B comprueba su estado.
-
-```powershell
-Invoke-RestMethod -Uri http://127.0.0.1:8767/api/status
-```
+Abre http://127.0.0.1:8767/api/status en el navegador para comprobar su estado.
 
 El campo watch debe ser True. Cuando la ejecución inicial termine, running pasa a False y error debe estar vacío. En este bloque puedes revisar el JSON directamente. El dashboard del equipo se construirá en la siguiente experiencia.
 
@@ -372,14 +304,7 @@ El campo watch debe ser True. Cuando la ejecución inicial termine, running pasa
 4. Revisa que operacionesCobradas quede definido con Math.max(0, operaciones - 10).
 5. Guarda el archivo y espera que finalice la nueva revisión.
 
-Consulta el reporte actualizado.
-
-```powershell
-$reporteQA = Invoke-RestMethod -Uri http://127.0.0.1:8767/api/report
-$reporteQA.trigger
-$reporteQA.summary
-$reporteQA.review
-```
+Abre salida/ultimo.json con Antigravity y revisa trigger, summary y review. También puedes abrir http://127.0.0.1:8767/api/report en el navegador.
 
 Debes obtener trigger igual a cambio y 100 % de aprobación. Durante la ejecución Gemini pueden transcurrir varios segundos. Comprueba /api/status antes de concluir que el flujo falló.
 
@@ -395,8 +320,7 @@ El facilitador puede mostrar su dashboard de referencia en el puerto 8765 mientr
 4. En la terminal B repite la misma ejecución con el mismo modo.
 
 ```powershell
-python procesar.py --mode gemini
-Invoke-RestMethod -Uri http://127.0.0.1:8767/api/history
+.\taller.ps1 flujo
 ```
 
 El archivo y el registro del mismo ID se actualizan. El historial conserva un registro por combinación de contenido y modo. Las ejecuciones en modo evidencia y Gemini tienen identidades diferentes.
@@ -410,7 +334,7 @@ Pega el prompt /verificar del HTML y conserva la tabla de criterios con su evide
 Este reto aísla al segundo agente para comprobar si observa un diagnóstico que contradice las pruebas. El kit incluye un comando preparado.
 
 ```powershell
-python scripts/probar_revisor.py
+.\taller.ps1 revisor
 ```
 
 El comando ejecuta pruebas reales sobre demo/version-con-error.mjs. Presenta al revisor un diagnóstico que afirma que todas pasaron y contiene findings vacío. Utiliza el mismo revisor de create_pipeline, con una sesión independiente.
@@ -599,10 +523,10 @@ Usa `/plan` y crea `specs/rag-plan.md` con tres tareas: conectar `buscar_context
 Invoca `/implementar` para cada tarea. La herramienta utiliza `Evidence.context`; los hallazgos incluyen `sources` y el reporte `context`. Renderiza las fuentes con `textContent`. En ADK Web pide revisar el motor con errores y abre Events para observar `buscar_contexto` después de las pruebas. Ejecuta desde la raíz de la práctica, con el entorno activo:
 
 ```powershell
-python procesar.py --mode gemini
+.\taller.ps1 flujo
 ```
 
-**Avanza cuando** el reporte identifica `mode: gemini`, las llamadas a herramientas y las fuentes recuperadas. Si la clave o cuota no están disponibles, usa `--mode evidencia` para comprobar la recuperación local y deja pendiente la llamada real al modelo.
+**Avanza cuando** el reporte identifica `mode: gemini`, las llamadas a herramientas y las fuentes recuperadas. Si la clave o cuota no están disponibles, usa `.\taller.ps1 flujo -Modo evidencia` para comprobar la recuperación local y deja pendiente la llamada real al modelo.
 
 ### Paso 4. Verificación, cuatro minutos
 

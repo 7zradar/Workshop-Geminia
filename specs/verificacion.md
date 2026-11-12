@@ -57,6 +57,24 @@ Pendiente: la llamada a Gemini con `buscar_contexto`. No se configuró una clave
 
 La comprobación de vigilancia detectó una lectura concurrente del historial durante una escritura atómica en Windows. Se sincronizó read_history con el mismo bloqueo usado por persist_report y las 24 pruebas finalizaron correctamente.
 
+## Preparación con un comando (T10)
+
+Validación local del 12 de noviembre de 2026 con Windows PowerShell 5.1. La suite completa termina con **30 passed**, con las tres advertencias ya conocidas de SequentialAgent.
+
+| Criterio | Comprobación | Resultado |
+|---|---|---|
+| E1, E2, E3 | Preparación completa en una copia dentro de una ruta con espacios | Kit inicial, venv nueva, dependencias instaladas, tres skills y 2/4 pruebas; clave vacía y ningún agente ni página resueltos |
+| E4 | Repetir tras editar motor, skill, agente y .env | Archivos conservados y 4/4 pruebas de la versión corregida; pip reutiliza dependencias y comprueba las versiones requeridas |
+| E5 | Reanudar una preparación interrumpida y recuperar un archivo ausente | Continúa sobre la venv y agrega lo ausente sin reemplazar el trabajo |
+| E6 | Intentar reanudar una carpeta ajena | Rechazo y archivos anteriores conservados |
+| E7 | Simular ausencia de Python y Node | Mensaje para TI, salida 1, sin crear la práctica ni instalar herramientas |
+| E8 | Lanzar antes de construir el agente o pedir modo evidencia para el revisor | Mensaje del módulo pendiente o modo incompatible, sin ejecución inesperada |
+| E8 | Ejecutar taller.ps1 flujo -Modo evidencia en una práctica preparada con agentes de referencia | Reporte real en modo evidencia, 4/4, sin activar el entorno manualmente y sin Gemini |
+| E9, W13 | HTML en navegador integrado | Comando previo único, API key después de la construcción y reutilización del servidor en el bloque 3 |
+| Compatibilidad | Parser de Windows PowerShell 5.1 | Scripts sin errores de sintaxis |
+
+Los ensayos completos usan una copia temporal dentro de practica/, ignorada por Git, con las herramientas del sistema ya instaladas. Los registros locales quedan en salida/ensayo-preparacion*.log y no se publican. La preparación instala dependencias Python; la instalación de Python, Node, Antigravity y la autorización de políticas corporativas se deja a TI según lo solicitado. La clave y el acceso real a Gemini siguen pendientes de la configuración del facilitador y de cada equipo.
+
 ## Capturas
 
 - capturas/dashboard-con-fallas.jpg muestra 2 aprobadas, 2 fallidas y 50 %.
@@ -66,6 +84,7 @@ La comprobación de vigilancia detectó una lectura concurrente del historial du
 - capturas/guia-recorrido-retos.jpg registra el último reto después de recorrer las tres experiencias.
 - capturas/presentacion-rag-integrada.jpg muestra los tres módulos base y la cuarta experiencia opcional.
 - capturas/dashboard-rag-integrado.jpg muestra el extracto recuperado de DEF-101 en el hallazgo QA-02.
+- capturas/preparacion-un-comando.jpg muestra el comando único y los requisitos de preparación en el HTML.
 
 ## Validaciones pendientes
 

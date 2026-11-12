@@ -17,7 +17,9 @@ El producto es un agente de QA. La calculadora de comisiones PYME es exclusivame
 | 02:50 | 10 | Demostraciones y cierre | Evidencia del antes y después |
 
 ## Condiciones de entrada
-Python 3.12, Node 22 o superior y Git instalados. Dependencias y credenciales comprobadas antes del taller. El facilitador entrega motor, contratos de prueba, skills y workflow. Los participantes construyen agente, flujo y dashboard en una carpeta de práctica, usando la solución completa como referencia de recuperación.
+Antigravity con sesión iniciada, Python 3.12 y Node 22 o superior instalados. Git es opcional si se descarga el repositorio como ZIP. Antes del taller, un comando (`powershell -NoProfile -File .\preparar-workshop.ps1`) crea el kit, instala dependencias y comprueba herramientas, skills y pruebas sin solicitar la API key. Si faltan Python o Node, informa qué debe instalar TI. El participante configura su clave una sola vez después de construir el primer agente y antes de su primera ejecución con Gemini. El facilitador ensaya previamente el acceso al modelo con su propia configuración.
+
+El facilitador entrega motor, contratos de prueba, skills y workflow. Los participantes construyen agente, flujo y dashboard en una carpeta de práctica, usando la solución completa como referencia de recuperación. Specs, skills y vibe coding se aplican desde el módulo 1.
 
 ## Criterios de aceptación
 | ID | Criterio | Verificación |
@@ -35,6 +37,7 @@ Python 3.12, Node 22 o superior y Git instalados. Dependencias y credenciales co
 | W11 | Los pasos respetan el orden de construcción | El bloque 2 verifica el JSON y el bloque 3 construye el dashboard; el quinto caso explica sus nuevos totales |
 
 | W12 | La Experiencia 4 de RAG es opcional, dura 20 minutos y queda fuera de los 180 | Presentación, specs/rag.md y pruebas |
+| W13 | El participante prepara su entorno con un comando y configura su clave una sola vez tras construir el agente | specs/entorno.md, scripts, HTML y prueba completa de preparación |
 
 ## Decisiones
 La entrega se ejecuta localmente. La presentación conserva el esquema visual oscuro, la navegación por pasos y el cambio de tema del HTML original. El modo evidencia ejecuta las mismas pruebas reales sin requerir un modelo. Gemini se activa explícitamente después de configurar .env. Se utiliza un solo caso guiado para mantener el ritmo de tres horas. La Experiencia 4 añade contexto con RAG local a la herramienta del agente QA. Es opcional, no cuenta en la agenda y se especifica en specs/rag.md.

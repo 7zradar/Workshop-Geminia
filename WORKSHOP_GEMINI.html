@@ -1252,21 +1252,39 @@
               <div>
                 <h3>Antes de empezar</h3>
                 <p>
-                  Python 3.12, Node 22+, Git, Antigravity y dependencias
-                  instaladas. La clave se configura en <code>.env</code>.
+                  Descarga el repositorio completo y extrae el ZIP. Necesitas
+                  Antigravity con sesión iniciada, Python 3.12 y Node 22+.
+                  Si faltan Python o Node, el preparador indica qué instalar con TI.
+                  No necesitas Git si descargaste el ZIP.
                 </p>
                 <p>
                   El facilitador entrega el motor, las pruebas, las skills y la
                   infraestructura. El equipo construye los agentes y la página.
                 </p>
                 <pre>
-python scripts/preparar_practica.py
-# Abre practica/equipo-01 en Antigravity</pre
+powershell -NoProfile -File .\preparar-workshop.ps1</pre
                 >
                 <p>
-                  Para ensayar la solución completa ejecuta
-                  <code>.\iniciar.ps1</code>. El modo evidencia funciona con
-                  pruebas reales antes de configurar Gemini.
+                  Ejecuta ese único comando en PowerShell, dentro del repositorio,
+                  antes del taller. Crea la práctica, prepara <code>.venv</code>,
+                  instala las dependencias y comprueba tres skills y las pruebas
+                  locales. El kit nuevo debe mostrar 2/4 y 50 % por el bug preparado.
+                  Si se interrumpe, repite el mismo comando: conserva tu trabajo.
+                </p>
+                <p>
+                  Al ver <strong>PREPARACION COMPLETA</strong>, abre
+                  <code>practica/equipo-01</code> en Antigravity y sigue los prompts.
+                  Los agentes y la página los construirás tú.
+                  <strong>La API key se configura una sola vez, después de construir
+                  el primer agente y antes de ejecutarlo con Gemini.</strong>
+                  No actives el entorno manualmente: los comandos cortos
+                  <code>taller.ps1</code> lo usan por ti.
+                </p>
+                <p>
+                  La preparación instala paquetes Python y necesita conexión.
+                  Si TI restringe scripts o descargas, comparte el mensaje con TI.
+                  Para la demostración del facilitador usa <code>.\iniciar.ps1</code>.
+                  Specs, skills y vibe coding se aplican desde el módulo 1.
                 </p>
               </div>
             </div>
@@ -1383,20 +1401,19 @@ python scripts/preparar_practica.py
               label: "Construir",
               minutes: 15,
               title: "Construye una tarea y observa su resultado",
-              body: "<ol><li>Usa <code>/implementar</code> sobre T1. Revisa el diff.</li><li>Repite con T2 y T3.</li><li>El modelo se lee de <code>GEMINI_MODEL</code> y la clave de <code>.env</code>.</li><li>Abre <code>adk web</code> desde la raíz de la práctica y elige <code>agente</code>.</li></ol><p>Si tu equipo necesita recuperarse, compara con la solución completa que entregó el facilitador.</p>",
+              body: "<ol><li>Usa <code>/implementar</code> sobre T1. Revisa el diff.</li><li>Repite con T2 y T3.</li><li>Comprueba localmente las herramientas con Antigravity. Todavía no necesitas la API key.</li><li>Deja <code>agente/agent.py</code> listo para la primera ejecución del siguiente paso.</li></ol><p>Si tu equipo necesita recuperarse, compara con la solución completa que entregó el facilitador.</p>",
               prompt:
                 "/implementar T1 de specs/agente-plan.md. Reutiliza Evidence del kit, con docstrings claros y argumentos tipados. Ejecuta su verificación y muestra el diff. Al terminar, detente para que el equipo revise. Repetiremos después con las tareas restantes.",
-              command: "adk web",
-              done: "Agente visible y herramientas conectadas al runner real.",
+              done: "Agente implementado y herramientas comprobadas localmente, listo para ejecutarlo con Gemini.",
             },
             {
               label: "Verificar",
               minutes: 10,
               title: "Muestra la ejecución, no solo la respuesta",
-              body: "<ol><li>En ADK Web elige <code>agente</code> y pide revisar la versión actual.</li><li>En Events identifica <code>leer_criterios</code> y <code>ejecutar_pruebas</code>.</li><li>Comprueba QA-02 esperado 25, obtenido 50 y QA-03 esperado 74, obtenido 99.</li><li>Relaciona cada hallazgo con la tabla de la spec.</li></ol><p>Este bloque prueba un agente. En el segundo construiremos el flujo de dos agentes. Puedes comprobar las herramientas sin modelo con <code>node scripts/ejecutar-pruebas.mjs</code>.</p>",
+              body: "<ol><li>El agente ya está construido. Configura ahora <code>GOOGLE_API_KEY</code> una sola vez en el <code>.env</code> de tu práctica; conserva <code>GEMINI_MODEL</code> o revisa el modelo disponible en tu cuenta.</li><li>Ejecuta el comando de abajo desde la terminal de Antigravity, en <code>practica/equipo-01</code>. Abre <code>http://127.0.0.1:8000</code>, elige <code>agente</code> y pide revisar la versión actual.</li><li>En Events identifica <code>leer_criterios</code> y <code>ejecutar_pruebas</code>.</li><li>Comprueba QA-02 esperado 25, obtenido 50 y QA-03 esperado 74, obtenido 99; relaciónalos con la spec.</li></ol><p>El comando usa el entorno ya preparado. Deja esta terminal abierta durante la prueba. Si no tienes clave o cuota, pide a Antigravity comprobar las herramientas localmente y registra la llamada a Gemini como pendiente.</p>",
               prompt:
                 "/verificar specs/agente-qa.md. Comprueba las dos herramientas, la cobertura de los dos casos fallidos y que el agente conserve esperado y obtenido. Entrega la tabla criterio, evidencia y resultado. Indica si la prueba llamó a Gemini o se ejecutó localmente.",
-              command: "adk web --port 8000",
+              command: ".\\taller.ps1 agente",
               done: "Dos defectos reproducibles y evidencia de cómo se obtuvieron.",
             },
             {
@@ -1440,20 +1457,20 @@ python scripts/preparar_practica.py
               label: "Construir",
               minutes: 15,
               title: "Añade una revisión verificable",
-              body: "<ol><li>Implementa las tareas del flujo con <code>/implementar</code>.</li><li>Configura la clave en <code>.env</code>.</li><li>Ejecuta el flujo con Gemini.</li><li>Abre el reporte y localiza herramientas, diagnóstico y respuesta del revisor.</li></ol><p>La revisión debe cubrir todos los casos fallidos y señalar cualquier conclusión sin respaldo.</p>",
+              body: "<ol><li>Implementa las tareas del flujo con <code>/implementar</code>.</li><li>Usa el mismo <code>.env</code> del bloque 1. No vuelvas a configurar la clave.</li><li>En otra terminal de la práctica ejecuta el comando de abajo para probar ambos agentes.</li><li>Abre el reporte y localiza herramientas, diagnóstico y respuesta del revisor.</li></ol><p>La revisión debe cubrir todos los casos fallidos y señalar cualquier conclusión sin respaldo.</p>",
               prompt:
                 "/implementar T1 de specs/flujo-plan.md. Define los modelos esperados por procesar.py y verifica su validación. Después implementaremos el pipeline y su comprobación. Conserva la evidencia de las herramientas y limita los hallazgos a los casos fallidos.",
-              command: "python procesar.py --mode gemini",
+              command: ".\\taller.ps1 flujo",
               done: "Dos agentes ejecutados y un reporte estructurado con su traza.",
             },
             {
               label: "Automatizar",
               minutes: 10,
               title: "Guardar el código dispara una revisión",
-              body: "<ol><li>En la carpeta de práctica inicia el servidor en el puerto 8767 y comprueba su vigilancia con <code>/api/status</code>.</li><li>En otra terminal consulta <code>salida/ultimo.json</code>. La página del equipo se construirá en el bloque 3.</li><li>Corrige la operación cobrada con <code>Math.max(0, operaciones - 10)</code> y guarda el archivo.</li><li>Espera el reporte con disparador <code>cambio</code>.</li></ol><p>El facilitador puede mostrar su dashboard de referencia. El workflow de GitHub incluido permite repetir el flujo con secrets y un artefacto descargable.</p>",
+              body: "<ol><li>Detén ADK Web con Ctrl+C en su terminal. Desde la carpeta de práctica ejecuta el comando de abajo una vez: inicia el servidor en el puerto 8767 y deja la vigilancia activa.</li><li>Consulta <code>http://127.0.0.1:8767/api/status</code> y abre <code>salida/ultimo.json</code> con Antigravity. La página se construirá en el bloque 3.</li><li>Corrige la operación cobrada con <code>Math.max(0, operaciones - 10)</code> y guarda el archivo.</li><li>Espera el reporte con disparador <code>cambio</code>. Conserva esta terminal abierta también para el dashboard.</li></ol><p>El facilitador puede mostrar su dashboard de referencia. GitHub Actions queda como extensión posterior.</p>",
               prompt:
                 "Lee specs/flujo.md y revisa .github/workflows/qa.yml. Explica qué cambio lo dispara, dónde se configura la clave y cómo se conserva el artefacto cuando una prueba falla. Comprueba la vigilancia local guardando una corrección en app/calculadora.mjs.",
-              command: "python servidor.py --mode gemini --port 8767",
+              command: ".\\taller.ps1 automatizar",
               done: "Cambio de código seguido de ejecución automática y reporte nuevo.",
             },
             {
@@ -1469,18 +1486,18 @@ python scripts/preparar_practica.py
               label: "Reto",
               minutes: 2,
               title: "Pon a prueba al revisor",
-              body: "<p>Ejecuta <code>python scripts/probar_revisor.py</code>. El script usa pruebas reales de la versión con error y presenta al segundo agente un diagnóstico que afirma que todo pasó. El revisor debe marcarlo OBSERVADO y explicar la contradicción.</p><p>Requiere la clave Gemini de la práctica y el flujo implementado. El resultado queda en <code>salida/reto-revisor.json</code>. Después corresponde una pausa de 10 minutos.</p>",
+              body: "<p>En otra terminal de la práctica ejecuta <code>.\\taller.ps1 revisor</code>. Usa pruebas reales de la versión con error y presenta al segundo agente un diagnóstico que afirma que todo pasó. El revisor debe marcarlo OBSERVADO y explicar la contradicción.</p><p>Reutiliza la clave ya configurada y requiere el flujo implementado. El resultado queda en <code>salida/reto-revisor.json</code>. Después corresponde una pausa de 10 minutos.</p>",
               prompt:
                 "Comprueba el revisor con evidencia donde QA-03 falla y un diagnóstico que dice que todas las pruebas pasaron. Debe devolver OBSERVADO y mencionar la contradicción concreta.",
-              command: "python scripts/probar_revisor.py",
+              command: ".\\taller.ps1 revisor",
               done: "El revisor detecta un diagnóstico que contradice los resultados originales.",
             },
           ],
         },
         {
           id: 3,
-          title_es: "Construye el dashboard con vibe coding",
-          title_en: "Build the dashboard with vibe coding",
+          title_es: "Construye el dashboard de resultados",
+          title_en: "Build the results dashboard",
           minutes: 55,
           description:
             "De la spec de interfaz a una página que muestra el reporte real del agente.",
@@ -1510,7 +1527,6 @@ python scripts/preparar_practica.py
               body: "<ol><li>Implementa cada tarea con la skill correspondiente.</li><li>Prueba primero un reporte guardado de la versión defectuosa.</li><li>Usa el servidor del bloque 2 y abre <code>http://127.0.0.1:8767/</code> para ver la página del equipo.</li><li>Solicita los cambios de alcance actualizando la spec.</li></ol><p>El servidor puede seguir activo mientras guardas HTML, CSS y JavaScript. La solución completa del facilitador también admite un ejemplo guardado e importación de JSON.</p>",
               prompt:
                 "/implementar T1 de specs/pagina-plan.md. Usa HTML, CSS y JavaScript sin frameworks. Valida el contrato antes de reemplazar los datos visibles. Haz que el filtro conserve los contadores globales y muestra siempre el origen de la ejecución. Revisa el diff antes de avanzar a las siguientes tareas.",
-              command: "python servidor.py --mode gemini --port 8767",
               done: "Dashboard que carga y presenta el reporte de QA.",
             },
             {
@@ -1564,10 +1580,10 @@ python scripts/preparar_practica.py
               label: "Construir",
               minutes: 7,
               title: "Conecta la búsqueda y observa la llamada",
-              body: "<ol><li>Usa <code>/implementar</code> sobre T1 y revisa el diff.</li><li>Abre <code>adk web</code> y comprueba en Events que aparece <code>buscar_contexto</code> después de <code>ejecutar_pruebas</code>.</li><li>Repite con T2 y T3.</li><li>Ejecuta el flujo con Gemini y abre el reporte: cada hallazgo trae <code>sources</code> y el reporte trae <code>context</code>.</li></ol><p><strong>Cuota.</strong> Las llamadas y los límites dependen del modelo y de la cuota de cada proyecto. Comprueba la cuota antes del taller y ensaya con la clave de cada equipo. Si el modelo cita una fuente que no recuperó, el reporte se rechaza y se conserva el último válido.</p>",
+              body: "<ol><li>Usa <code>/implementar</code> sobre T1 y revisa el diff.</li><li>Abre <code>.\\taller.ps1 agente</code> con la misma clave del bloque 1 y comprueba en Events que aparece <code>buscar_contexto</code> después de <code>ejecutar_pruebas</code>.</li><li>Repite con T2 y T3.</li><li>Ejecuta el flujo con Gemini y abre el reporte: cada hallazgo trae <code>sources</code> y el reporte trae <code>context</code>.</li></ol><p><strong>Cuota.</strong> Las llamadas y los límites dependen del modelo y de la cuota de cada proyecto. Comprueba la cuota antes del taller y ensaya con la clave de cada equipo. Si el modelo cita una fuente que no recuperó, el reporte se rechaza y se conserva el último válido.</p>",
               prompt:
                 "/implementar T1 de specs/rag-plan.md. La herramienta recibe consulta: str y tool_context, usa Evidence.context y guarda las citas en el estado. Documenta con un docstring cuándo usarla. Ejecuta su verificación, muestra el diff y detente para la revisión. Después repetiremos con T2 y T3.",
-              command: "python procesar.py --mode gemini",
+              command: ".\\taller.ps1 flujo",
               done: "Herramienta visible en la traza y hallazgos con fuentes recuperadas.",
             },
             {
@@ -1577,7 +1593,6 @@ python scripts/preparar_practica.py
               body: "<ol><li>Abre el dashboard y expande <em>Fuente</em> en QA-02 y QA-03. Debe verse DEF-101 con su extracto.</li><li>Confirma que 2 de 4 y 50 % no cambiaron: el contexto no altera el veredicto.</li><li>Importa un reporte editado que cite <code>inventado.md#Falso</code>. El dashboard debe rechazarlo y conservar el anterior.</li><li>Cambia un documento de <code>conocimiento/</code> y comprueba que se genera un reporte nuevo.</li></ol>",
               prompt:
                 "/verificar specs/rag.md. Comprueba R1 a R8: búsqueda, consulta sin relación, citas del reporte, rechazo de una fuente inventada, veredicto sin cambios, nueva huella al cambiar un documento y fuentes visibles en el dashboard. Entrega la tabla criterio, evidencia y resultado. Indica si la ejecución usó Gemini o el modo evidencia.",
-              command: "python -m pytest -q",
               done: "Citas verificables, fuente inventada rechazada y veredicto intacto.",
             },
             {

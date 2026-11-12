@@ -10,7 +10,9 @@ La aplicación bajo prueba es la calculadora ficticia del paquete de casos. El m
 
 ## Preparación previa
 
-Ejecuta iniciar.ps1, comprueba Node y Python, configura la clave en .env y ensaya una llamada real con Gemini antes del evento. Verifica que Antigravity descubre las tres skills. Crea un kit por equipo con scripts/preparar_practica.py y prepara el entorno de cada carpeta. Conserva la solución completa para recuperar un equipo que se retrase.
+Cada participante ejecuta `powershell -NoProfile -File .\preparar-workshop.ps1` antes del evento. Comprueba Python y Node, prepara el kit y sus dependencias y verifica las skills y pruebas locales sin pedir la clave. Si faltan herramientas del sistema, informa qué instalar con TI. El participante abre la carpeta indicada en Antigravity y construye los entregables con el HTML. Configura la clave una vez, después de construir el agente, antes de su primera ejecución con Gemini.
+
+Como facilitador, usa iniciar.ps1 para ensayar la solución completa con tu propia configuración y comprobar una llamada real antes del evento. Conserva esa referencia para recuperar un equipo que se retrase. Specs, skills y vibe coding se aplican desde el módulo 1.
 
 Lleva las dos versiones del motor, la spec y los casos. La presentación HTML contiene los prompts completos para copiar durante la sesión.
 
@@ -24,7 +26,7 @@ Explica qué hace el agente QA y qué aplicación revisa. Ejecuta el caso QA-03 
 2. Skill, 4 minutos. Edita verificar/SKILL.md para comprobar las huellas source_hash y contract_hash junto con los datos de cada falla. Muestra su aplicación.
 3. Plan, 5 minutos. Usa Planning o /plan. Revisa herramientas, agente y verificación. El kit provee qa_core.py y el runner.
 4. Construcción, 15 minutos. Implementa una tarea por vez. El agente exporta create_agent(evidence, model=None) y root_agent. Usa leer_criterios y ejecutar_pruebas. Esta última guarda evidencia en el estado.
-5. Verificación, 10 minutos. En adk web observa las llamadas. Contrasta QA-02 y QA-03 con el contrato. Distingue llamada real a Gemini de ensayo local.
+5. Verificación, 10 minutos. Configura la clave una vez e inicia `.\taller.ps1 agente`. En ADK Web observa las llamadas. Contrasta QA-02 y QA-03 con el contrato. Distingue llamada real a Gemini de ensayo local.
 6. Reto, 3 minutos. Como extensión agrega 11 operaciones y 0 transferencias, esperado 27.50. Registra primero el criterio. Con cinco casos, el resultado inicial es 40 % y el corregido 100 %.
 
 Entrega de este bloque con spec, plan, agente y evidencia de herramientas.
@@ -33,10 +35,10 @@ Entrega de este bloque con spec, plan, agente y evidencia de herramientas.
 
 1. Spec, 8 minutos. Define disparadores, entrada, segundo agente, resultado y errores. Repetir un contenido no debe duplicar el historial.
 2. Plan, 5 minutos. Reutiliza create_agent. Define modelos Analysis y Review y create_pipeline(evidence, model) según las interfaces de procesar.py.
-3. Construcción, 15 minutos. Conecta QA y revisor. El revisor recibe diagnostico y evidencia y devuelve decision y observations. Ejecuta python procesar.py --mode gemini.
-4. Automatización, 10 minutos. Inicia servidor.py en el puerto 8767 y comprueba la vigilancia. Consulta el JSON en una segunda terminal. Corrige operacionesCobradas con Math.max(0, operaciones - 10). Guardar el archivo dispara otra revisión. El dashboard del equipo se construye en el siguiente bloque.
+3. Construcción, 15 minutos. Conecta QA y revisor. El revisor recibe diagnostico y evidencia y devuelve decision y observations. Ejecuta `.\taller.ps1 flujo` con la configuración del bloque anterior.
+4. Automatización, 10 minutos. Inicia `.\taller.ps1 automatizar` en el puerto 8767 y comprueba la vigilancia. Abre el JSON con Antigravity. Corrige operacionesCobradas con Math.max(0, operaciones - 10). Guardar el archivo dispara otra revisión. Conserva el servidor para el dashboard del bloque 3.
 5. Verificación, 5 minutos. Compara 50 % y 100 % con el contrato base, o 40 % y 100 % con cinco casos. La huella de fuente cambia y la del mismo contrato permanece. Repite para comprobar identidad.
-6. Reto, 2 minutos. Ejecuta python scripts/probar_revisor.py con Gemini configurado. Comprueba OBSERVADO ante un diagnóstico que declare éxito cuando un caso falla.
+6. Reto, 2 minutos. Ejecuta `.\taller.ps1 revisor` con Gemini configurado. Comprueba OBSERVADO ante un diagnóstico que declare éxito cuando un caso falla.
 
 Entrega de este bloque con dos agentes, ejecución automática y reporte JSON.
 
@@ -72,6 +74,6 @@ Selecciona equipos según el tiempo disponible. Cada demo dura dos minutos y mue
 | Skills | Tres SKILL.md y una modificación durante el ejercicio |
 | Agente | Dos herramientas con ejecución real |
 | Automatización y agente adicional | Vigilancia, QA y revisor |
-| Vibe coding | Dashboard construido desde spec |
+| Vibe coding | Construcción asistida desde el módulo 1, guiada por specs y skills |
 | Tres horas | 15 + 45 + 45 + 10 + 55 + 10 = 180 |
 | Experiencia 4 opcional | RAG local con `buscar_contexto`, 20 minutos fuera de los 180 |

@@ -4,7 +4,30 @@ Tres horas para desarrolladores de TCS. Construye un agente QA, reutilízalo en 
 
 El agente es de QA. La calculadora ficticia de cuenta PYME es la aplicación que revisa. La demo parte con dos defectos verificables y permite aplicar la corrección al código real, disparar otra ejecución y comparar sus resultados.
 
-## Abrir la demostración
+## Participante: prepara todo con un comando antes del taller
+
+Descarga el [ZIP de esta rama](https://github.com/7zradar/Workshop-Geminia/archive/refs/heads/codex/qa-workshop.zip), extráelo y abre PowerShell en la carpeta que contiene preparar-workshop.ps1. Necesitas Antigravity con sesión iniciada, Python 3.12 y Node 22 o superior. Si falta Python o Node, el script indica qué debe instalar TI; no instala herramientas del sistema. Git no es necesario al usar el ZIP.
+
+```powershell
+powershell -NoProfile -File .\preparar-workshop.ps1
+```
+
+Espera **PREPARACION COMPLETA** y abre la carpeta indicada, `practica/equipo-01`, en Antigravity. El comando crea el kit inicial, prepara `.venv`, instala las dependencias y verifica ADK, las tres skills y las pruebas locales. El kit nuevo muestra 2/4 y 50 % por el bug intencional. No pide una API key ni llama a Gemini. Los agentes y el dashboard quedan por construir con los prompts del HTML.
+
+Si se interrumpe, repite el mismo comando. Conserva código, contratos, skills y `.env` de un kit identificado, agrega solo archivos ausentes y reutiliza dependencias cuando siguen válidas. Para otra práctica agrega `-Equipo equipo-02`. Una carpeta previa sin la marca del preparador se conserva y requiere elegir otro nombre. La preparación necesita acceso al repositorio de paquetes Python; si TI restringe scripts o descargas, comparte el error antes del evento. El script no cambia la política de PowerShell.
+
+**Configura GOOGLE_API_KEY una sola vez en el `.env` de la práctica después de construir el primer agente y antes de su primera ejecución con Gemini.** Los dos agentes y RAG reutilizan esa configuración. No necesitas activar el entorno manualmente: los siguientes comandos usan el entorno ya preparado.
+
+| Momento del taller | Comando desde la práctica |
+|---|---|
+| Primera ejecución del agente construido | `.\taller.ps1 agente` |
+| Ejecutar QA y revisor construidos | `.\taller.ps1 flujo` |
+| Iniciar vigilancia para los bloques 2 y 3 | `.\taller.ps1 automatizar` |
+| Reto del revisor | `.\taller.ps1 revisor` |
+
+En el bloque 3 abre http://127.0.0.1:8767/ usando el servidor que ya está funcionando. El HTML mantiene la agenda de 180 minutos. Specs, skills y vibe coding se usan desde el primer módulo. La [spec del entorno](specs/entorno.md) detalla el comportamiento del preparador.
+
+## Facilitador: abrir la demostración
 
 Instala Python 3.12 y Node 22 o superior. En PowerShell, desde la carpeta del repositorio ejecuta lo siguiente.
 
@@ -29,7 +52,7 @@ El modo inicial es **evidencia**. Ejecuta las pruebas Node reales y genera un di
 
 WORKSHOP_GEMINI.html es autocontenido. Para compartir la presentación, descarga ese archivo con el control Download raw file de GitHub y ábrelo con doble clic. Los estilos, las tres experiencias con sus 17 pasos y la Experiencia 4 opcional de RAG están integrados en el HTML.
 
-## Activar Gemini
+## Facilitador: activar Gemini en la referencia
 
 1. Copia .env.example a .env y configura GOOGLE_API_KEY.
 2. Revisa GEMINI_MODEL con tu cuenta de AI Studio. El valor inicial usa el alias gemini-flash-latest.
@@ -53,17 +76,11 @@ La demostración local funciona antes de configurar Gemini. Las llamadas al mode
 
 ## Realizar el workshop
 
-La solución de este repositorio sirve como referencia del facilitador. Para que cada equipo construya sus entregables desde un kit inicial, genera una carpeta independiente.
-
-```powershell
-python scripts/preparar_practica.py --equipo equipo-01
-```
-
-Abre practica/equipo-01 en Antigravity. El kit trae el motor, contratos, infraestructura, workflow y skills. Los equipos redactan sus specs e implementan agente/, flujo/ y pagina/. Configura el entorno y la clave en la carpeta de práctica antes de la sesión. El archivo .env de la solución no se copia al kit.
+La solución de este repositorio sirve como referencia del facilitador. Cada participante utiliza la preparación de un comando indicada al inicio y abre su práctica en Antigravity. El kit trae el motor, contratos, infraestructura, workflow y skills. Los equipos redactan sus specs e implementan agente/, flujo/ y pagina/. La clave se configura después de construir el primer agente. El archivo .env de la solución no se copia al kit.
 
 La [guía paso a paso](Guia_paso_a_paso_QA.md) detalla carpetas, terminales, acciones y resultados para realizar las tres experiencias. El [guion breve](Taller_QA_Gemini.md) resume los tiempos y la [presentación](WORKSHOP_GEMINI.html) contiene los prompts copiables.
 
-El segundo reto dispone de `python scripts/probar_revisor.py`, que presenta al revisor evidencia real de fallas y un diagnóstico de éxito intencionalmente inconsistente. Requiere Gemini configurado y el flujo implementado, y guarda el resultado en salida/reto-revisor.json.
+El segundo reto se ejecuta con `.\taller.ps1 revisor`, que presenta al revisor evidencia real de fallas y un diagnóstico de éxito intencionalmente inconsistente. Requiere Gemini configurado y el flujo implementado, y guarda el resultado en salida/reto-revisor.json.
 
 ## Specs y skills
 

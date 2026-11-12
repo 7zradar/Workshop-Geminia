@@ -11,6 +11,10 @@ on:
       - 'qa_core.py'
       - 'procesar.py'
       - 'scripts/**'
+      - 'preparar-workshop.ps1'
+      - 'taller.ps1'
+      - 'requirements.txt'
+      - 'tests/**'
       - '.github/workflows/qa.yml'
   workflow_dispatch:
     inputs:
