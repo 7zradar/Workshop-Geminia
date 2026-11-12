@@ -577,3 +577,41 @@ workflow_dispatch necesita que la definición del workflow esté también en la 
 Se recorrieron las tres experiencias del HTML. Se aclaró el uso de JSON en el segundo bloque, los puertos de práctica y los totales del quinto caso. La infraestructura dispone de una comprobación local de cinco casos y una prueba del runtime del revisor aislado con un modelo de prueba identificado.
 
 La llamada a Gemini real y la evaluación semántica del reto del revisor quedan pendientes de la clave y el ensayo previo del facilitador. El recorrido de las diapositivas y las pruebas locales permiten preparar esos pasos con evidencia explícita.
+
+## 13. Experiencia 4 opcional: RAG, 20 minutos adicionales
+
+El taller base termina a las tres horas. Esta extensión se prepara como material posterior o requiere ampliar la sesión a tres horas y veinte minutos. El HTML la identifica como opcional. La solución completa del facilitador ya incluye la tercera herramienta; los equipos la añaden después de construir las dos herramientas base.
+
+### Paso 1. Especificación, cuatro minutos
+
+En la carpeta de práctica, abre `conocimiento/reglas-negocio.md`, `conocimiento/historial-defectos.md` y `conocimiento/severidad.md`. Son documentos ficticios. Define con `/especificar` el archivo `specs/rag.md`: buscar por palabras clave, devolver fuente y extracto, citar solo fuentes recuperadas y mantener el veredicto determinado por las pruebas. El núcleo `qa_core.py` del kit ya incluye la búsqueda.
+
+**Avanza cuando** la consulta «operaciones gratuitas cobradas» debe devolver DEF-101 y una consulta ajena debe producir una lista vacía.
+
+### Paso 2. Plan, tres minutos
+
+Usa `/plan` y crea `specs/rag-plan.md` con tres tareas: conectar `buscar_contexto(consulta, tool_context)` al agente, añadir `sources` al esquema e instrucciones del revisor y mostrar las fuentes en el dashboard. Revisa que las consultas usen el conocimiento capturado al leer los criterios y acumulen citas en `tool_context.state['contexto']`. Una nueva ejecución reinicia esa lista.
+
+**Avanza cuando** cada tarea identifica archivos y comprobación, y conserva el contrato de pruebas.
+
+### Paso 3. Implementación, siete minutos
+
+Invoca `/implementar` para cada tarea. La herramienta utiliza `Evidence.context`; los hallazgos incluyen `sources` y el reporte `context`. Renderiza las fuentes con `textContent`. En ADK Web pide revisar el motor con errores y abre Events para observar `buscar_contexto` después de las pruebas. Ejecuta desde la raíz de la práctica, con el entorno activo:
+
+```powershell
+python procesar.py --mode gemini
+```
+
+**Avanza cuando** el reporte identifica `mode: gemini`, las llamadas a herramientas y las fuentes recuperadas. Si la clave o cuota no están disponibles, usa `--mode evidencia` para comprobar la recuperación local y deja pendiente la llamada real al modelo.
+
+### Paso 4. Verificación, cuatro minutos
+
+Restaura la versión con errores si ya la corregiste. Con los cuatro casos base deben seguir fallando QA-02 y QA-03, con 50 % aprobado. Si añadiste QA-05 tendrás cinco casos, tres fallas y 40 %. Comprueba que las fuentes de cada hallazgo aparecen en `context` y que el dashboard muestra sus extractos. Una fuente inventada debe provocar rechazo del reporte y conservar el último válido. Cambiar un documento debe generar otra identidad sin cambiar el motor ni el contrato.
+
+**Avanza cuando** puedes explicar qué probaron las pruebas y qué información adicional aportó la base de conocimiento.
+
+### Paso 5. Reto, dos minutos
+
+Añade un documento o una sección `## DEF-120` con un defecto ficticio sobre el límite de 200 operaciones. Agrega un criterio de aceptación con un ID libre y verifica que una consulta sobre ese límite recupera la nueva fuente. Repite con una consulta ajena. Usa `/especificar`, revisa el plan y aplica `/verificar` para dejar evidencia del cambio.
+
+**Entrega de la extensión**: spec, plan, tres herramientas, reporte con citas y dashboard con extractos. La recuperación por palabras clave está comprobada localmente. La calidad de las explicaciones de Gemini se valida al configurar la clave.

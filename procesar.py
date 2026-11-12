@@ -46,7 +46,7 @@ async def gemini_analysis(evidence: Evidence) -> tuple[dict, dict, list[dict], s
         raw_review = session.state["revision"]
         review = (Review.model_validate_json(raw_review) if isinstance(raw_review, str)
                   else Review.model_validate(raw_review)).model_dump()
-        validate_analysis(analysis, evidence.result)
+        validate_analysis(analysis, evidence.result, evidence.citations)
         return analysis, review, trace, model
     finally:
         await runner.close()
@@ -62,17 +62,19 @@ def run_pipeline(snapshot: Snapshot | None = None, mode: str = "evidencia",
     elif mode == "evidencia":
         evidence.criteria()
         result = evidence.tests()
-        analysis = local_analysis(result)
-        validate_analysis(analysis, result)
+        analysis = local_analysis(
+            result, lambda query: [item["source"] for item in evidence.context(query)["results"][:2]])
+        validate_analysis(analysis, result, evidence.citations)
         review = {"decision": "VALIDADO", "observations": [
             "Comprobación local de correspondencia entre casos fallidos y hallazgos.",
             "El modo evidencia usa pruebas reales y un diagnóstico determinista.",
-        ]}
+        ] + (["Las fuentes citadas provienen de la recuperación local sobre conocimiento/."]
+             if evidence.citations else [])}
         trace = evidence.trace + [{"actor": "revision_local", "event": "completed", "name": "consistencia"}]
         model = ""
     else:
         raise ValueError("Modo inválido. Elija evidencia o gemini.")
-    report = build_report(snapshot, result, analysis, review, trace, mode, trigger, model)
+    report = build_report(snapshot, result, analysis, review, trace, mode, trigger, model, evidence.citations)
     persist_report(report, output or ROOT / "salida")
     return report
 

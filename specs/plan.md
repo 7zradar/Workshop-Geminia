@@ -13,7 +13,9 @@ Plan derivado de la propuesta de tres horas aprobada en esta conversación. Caso
 | T7 | WORKSHOP_GEMINI.html, tests/, README.md | Presentación autocontenida comprobada como único archivo en una carpeta vacía |
 | T8 | Guia_paso_a_paso_QA.md, WORKSHOP_GEMINI.html, README.md, scripts/probar_revisor.py, qa_core.py, agente/, flujo/, tests/ | Recorrido de las tres experiencias, guía operativa, revisor aislado y totales del quinto caso |
 
+| T9 | specs/rag.md, conocimiento/, qa_core.py, agente/, flujo/, procesar.py, pagina/, WORKSHOP_GEMINI.html, Guia_paso_a_paso_QA.md, .github/workflows/qa.yml (Experiencia 4 opcional) | Criterios R1 a R10, contexto acumulado y estable por ejecución, disparo por conocimiento y demostración en el dashboard |
+
 ## Estado
-T1 a T8 implementadas y verificadas localmente. Pasan 16 pruebas de infraestructura. Las tres skills pasan su validador. La presentación y el dashboard se comprobaron en navegador, incluyendo el cambio automático de 50 % a 100 %. La presentación integra estilos y contenido en un único HTML. La guía independiente desarrolla los 17 pasos y sus tres retos.
+T1 a T9 implementadas y verificadas localmente. Pasan 24 pruebas de infraestructura e integración. Las tres skills pasan su validador. La presentación y el dashboard se comprobaron en navegador, incluyendo el cambio automático de 50 % a 100 %. La presentación integra estilos y contenido en un único HTML. La guía independiente desarrolla los 17 pasos y sus tres retos, más los cinco pasos opcionales de RAG.
 
 La validación con Gemini real requiere la clave que aportará el usuario. El workflow de GitHub está preparado para configurar y ensayar en el repositorio. El detalle de evidencia está en specs/verificacion.md.

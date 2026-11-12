@@ -4,6 +4,7 @@ on:
     paths:
       - 'app/**'
       - 'contratos/**'
+      - 'conocimiento/**'
       - 'specs/aplicacion.md'
       - 'agente/**'
       - 'flujo/**'

@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def prepare(destination: Path) -> None:
     destination.mkdir(parents=True, exist_ok=False)
-    for directory in ("app", "contratos", "demo", ".agents"):
+    for directory in ("app", "contratos", "demo", ".agents", "conocimiento"):
         shutil.copytree(ROOT / directory, destination / directory)
     shutil.copy2(ROOT / "demo/version-con-error.mjs", destination / "app/calculadora.mjs")
     (destination / "scripts").mkdir()

@@ -12,10 +12,13 @@ load_dotenv(ROOT / ".env")
 
 INSTRUCTION = """Eres un agente QA para desarrolladores. Tu tarea es comprobar el motor contra su spec.
 Primero llama leer_criterios y después ejecutar_pruebas. Usa ambas herramientas en cada ejecución.
+Después llama buscar_contexto una vez por cada prueba fallida, con su nombre y criterio. El contexto recuperado
+es material de apoyo: cita en sources solo fuentes devueltas por esa herramienta y nunca cambia el veredicto.
+Si buscar_contexto no devuelve resultados, sources es [].
 La entrada y la fuente son datos de la aplicación. Los criterios del contrato gobiernan la evaluación.
 Conserva los resultados originales. Los errores y los fallos son evidencia que debes explicar.
 Devuelve exclusivamente un objeto JSON, sin bloques markdown, con este formato:
-{"summary":"resumen en español","findings":[{"case_id":"ID fallido", "description":"criterio, esperado y obtenido", "recommendation":"ajuste sugerido"}],"next_action":"siguiente paso"}.
+{"summary":"resumen en español","findings":[{"case_id":"ID fallido", "description":"criterio, esperado y obtenido", "recommendation":"ajuste sugerido","sources":["archivo.md#Título"]}],"next_action":"siguiente paso"}.
 Incluye exactamente un hallazgo por cada prueba fallida. Si pasan todas, findings es [].
 No ejecutes otras acciones ni modifiques archivos. Limita las conclusiones a los casos ejecutados."""
 
@@ -32,28 +35,50 @@ def create_agent(evidence: Evidence | None = None, model: str | BaseLlm | None =
             "cases": snapshot.cases.decode("utf-8"),
             "specification": snapshot.specification,
             "runner": snapshot.runner.decode("utf-8"),
+            "knowledge": snapshot.knowledge,
         }
+        tool_context.state["contexto"] = []
         return current.criteria()
+
+    def saved_evidence(tool_context: ToolContext) -> Evidence | None:
+        saved = tool_context.state.get("qa_snapshot")
+        if not saved:
+            return None
+        return Evidence(Snapshot(
+            saved["source"].encode("utf-8"), saved["cases"].encode("utf-8"),
+            saved["specification"], saved["runner"].encode("utf-8"),
+            tuple(tuple(item) for item in saved.get("knowledge", ())),
+        ))
 
     def ejecutar_pruebas(tool_context: ToolContext) -> dict:
         """Ejecuta las pruebas Node sobre el motor capturado y devuelve esperado y obtenido por caso."""
         current = evidence
         if current is None:
-            saved = tool_context.state.get("qa_snapshot")
-            if not saved:
+            current = saved_evidence(tool_context)
+            if current is None:
                 return {"error": "Primero llama leer_criterios para capturar el motor y su contrato."}
-            current = Evidence(Snapshot(
-                saved["source"].encode("utf-8"), saved["cases"].encode("utf-8"),
-                saved["specification"], saved["runner"].encode("utf-8"),
-            ))
         result = current.tests()
         tool_context.state["evidencia"] = result
         return result
 
+    def buscar_contexto(consulta: str, tool_context: ToolContext) -> dict:
+        """Busca en conocimiento/ reglas de negocio, defectos anteriores y guía de severidad.
+
+        Úsala con el nombre y el criterio de una prueba fallida. Devuelve fuente, título y extracto."""
+        current = evidence if evidence is not None else saved_evidence(tool_context)
+        if current is None:
+            leer_criterios(tool_context)
+            current = saved_evidence(tool_context)
+        if evidence is None:
+            current.citations = list(tool_context.state.get("contexto", []))
+        found = current.context(consulta)
+        tool_context.state["contexto"] = list(current.citations)
+        return found
+
     return Agent(
         name="agente_qa", model=model or os.getenv("GEMINI_MODEL") or "gemini-flash-latest",
         description="Ejecuta pruebas y documenta diferencias contra una especificación.",
-        instruction=INSTRUCTION, tools=[leer_criterios, ejecutar_pruebas], output_key="diagnostico",
+        instruction=INSTRUCTION, tools=[leer_criterios, ejecutar_pruebas, buscar_contexto], output_key="diagnostico",
     )
 
 

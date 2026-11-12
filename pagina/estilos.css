@@ -680,6 +680,22 @@ summary {
   color: var(--muted);
   margin-top: 5px;
 }
+.finding .source {
+  margin-top: 8px;
+  padding: 6px 8px;
+  border-left: 3px solid var(--teal);
+  background: #fff;
+  border-radius: 3px;
+}
+.finding .source summary {
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--teal);
+}
+.finding .source p {
+  margin-top: 5px;
+  color: var(--muted);
+}
 .next-action {
   font-size: 11px;
   color: var(--teal);

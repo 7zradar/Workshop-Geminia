@@ -25,7 +25,7 @@ Python 3.12, Node 22 o superior y Git instalados. Dependencias y credenciales co
 | W1 | Las seis actividades suman exactamente 180 minutos | Agenda y presentación |
 | W2 | Cada experiencia incluye spec, plan, implementación y verificación | Prompts y entregables |
 | W3 | Se muestra y modifica al menos una skill real con SKILL.md | Skill verificar y ejercicio |
-| W4 | Se crea un agente QA con dos herramientas | agente/agent.py y traza |
+| W4 | En la práctica base se crea un agente QA con dos herramientas | agente/agent.py y traza; la referencia completa añade buscar_contexto para la extensión RAG |
 | W5 | La automatización reutiliza el agente QA y añade un revisor | flujo/agent.py |
 | W6 | Guardar un cambio dispara la ejecución local | Vigilancia de archivos y trigger cambio |
 | W7 | La página consume resultados de pruebas ejecutadas | JSON y dashboard |
@@ -34,5 +34,7 @@ Python 3.12, Node 22 o superior y Git instalados. Dependencias y credenciales co
 | W10 | Una guía aparte detalla el recorrido del HTML | Preparación, acciones por paso, comandos, resultados, retos y recuperación |
 | W11 | Los pasos respetan el orden de construcción | El bloque 2 verifica el JSON y el bloque 3 construye el dashboard; el quinto caso explica sus nuevos totales |
 
+| W12 | La Experiencia 4 de RAG es opcional, dura 20 minutos y queda fuera de los 180 | Presentación, specs/rag.md y pruebas |
+
 ## Decisiones
-La entrega se ejecuta localmente. La presentación conserva el esquema visual oscuro, la navegación por pasos y el cambio de tema del HTML original. El modo evidencia ejecuta las mismas pruebas reales sin requerir un modelo. Gemini se activa explícitamente después de configurar .env. Se utiliza un solo caso guiado para mantener el ritmo de tres horas.
+La entrega se ejecuta localmente. La presentación conserva el esquema visual oscuro, la navegación por pasos y el cambio de tema del HTML original. El modo evidencia ejecuta las mismas pruebas reales sin requerir un modelo. Gemini se activa explícitamente después de configurar .env. Se utiliza un solo caso guiado para mantener el ritmo de tres horas. La Experiencia 4 añade contexto con RAG local a la herramienta del agente QA. Es opcional, no cuenta en la agenda y se especifica en specs/rag.md.

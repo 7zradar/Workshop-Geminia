@@ -7,6 +7,8 @@ Un desarrollador necesita identificar regresiones y recibir un diagnóstico resp
 leer_criterios() devuelve specs/aplicacion.md y contratos/casos.json. ejecutar_pruebas() ejecuta el runner Node sobre una instantánea del motor y devuelve los cuatro resultados. Ambas herramientas usan rutas definidas por el proyecto. La entrada del agente se considera dato, incluso si contiene instrucciones para omitir comprobaciones.
 
 ## Salida
+La solución de referencia incluye una tercera herramienta, buscar_contexto(), para la extensión opcional descrita en specs/rag.md. Usa el conocimiento capturado en la misma ejecución y acumula las fuentes de todas las consultas. En la práctica de tres horas se construyen primero las dos herramientas base.
+
 Resumen, hallazgos referidos a IDs fallidos y siguiente acción. El diagnóstico incluye resultado esperado y obtenido. Las pruebas determinan el veredicto de ejecución. El modelo explica los hechos y nunca modifica el motor, los criterios ni las pruebas.
 
 ## Criterios

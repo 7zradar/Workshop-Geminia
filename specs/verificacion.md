@@ -32,7 +32,30 @@ Validación local del 11 de noviembre de 2026, ampliada el 12 de noviembre con l
 | Reto 1 | Agregar QA-05 en una instantánea de prueba | Cinco casos, 40 % inicial y 100 % corregido |
 | Reto 2 | Ejecutar el revisor aislado con un modelo local inyectado | Sesión recibe evidencia real y diagnóstico inconsistente; salida estructurada identificada como prueba_local |
 
-`python -m pytest -q` termina con **16 passed**. Las advertencias de SequentialAgent corresponden a la API de compatibilidad de la versión fijada y están documentadas en README.md.
+La versión anterior a integrar RAG tenía **16 pruebas aprobadas**. La versión integrada termina con **24 passed** al ejecutar `python -m pytest -q`. Las advertencias de SequentialAgent corresponden a la API de compatibilidad de la versión fijada y están documentadas en README.md.
+
+## Experiencia 4 opcional, RAG (T9)
+
+Validación de la integración del 12 de noviembre de 2026. `python -m pytest -q` termina con **24 passed**, con tres advertencias de deprecación de SequentialAgent.
+
+| Criterio | Comprobación | Resultado |
+|---|---|---|
+| R1, R2 | Búsqueda de operaciones gratuitas cobradas y de una consulta ajena | DEF-101 primero y lista vacía |
+| R3, R5, R8 | Modo evidencia sobre la versión defectuosa | QA-02 y QA-03 citan fuentes recuperadas y el veredicto sigue en 2/4, 50 % |
+| R4 | Fuente inventada | Rechazada por validación |
+| R6 | Cambio de documento de conocimiento | Identidad distinta; sin conocimiento la identidad original se conserva |
+| R7 | Dashboard en navegador integrado | Fuentes desplegables con extracto en cada hallazgo |
+| W12 | Presentación | Cuarta tarjeta Opcional, 20 minutos, 5 pasos con prompts, sin errores de JavaScript |
+| ADK | Runtime con modelo local inyectado | Tres herramientas, `{contexto?}` en el revisor y citas en el reporte |
+
+| R9 | Consultas sucesivas en herramientas del agente | Instantánea de conocimiento conservada, fuentes acumuladas sin duplicados y reinicio en la siguiente ejecución |
+| R6 | Cambio exclusivo en conocimiento/ durante vigilancia | Nuevo reporte con trigger cambio, misma fuente, mismo contrato y mismos resultados |
+| R10 | Revisión del workflow | conocimiento/** incluido en push.paths |
+| W12, P8 | Recorrido en navegador de los cinco pasos opcionales | Spec, plan, construcción, verificación y reto accesibles; temporizador base en 180 minutos |
+
+Pendiente: la llamada a Gemini con `buscar_contexto`. No se configuró una clave para este ensayo. El runtime ADK se comprobó con un modelo local inyectado.
+
+La comprobación de vigilancia detectó una lectura concurrente del historial durante una escritura atómica en Windows. Se sincronizó read_history con el mismo bloqueo usado por persist_report y las 24 pruebas finalizaron correctamente.
 
 ## Capturas
 
@@ -41,6 +64,8 @@ Validación local del 11 de noviembre de 2026, ampliada el 12 de noviembre con l
 - capturas/presentacion-agente.jpg muestra la spec, instrucciones y prompt copiable de la primera experiencia.
 - capturas/presentacion-autocontenida.jpg muestra las tres tarjetas después de integrar los recursos en el HTML.
 - capturas/guia-recorrido-retos.jpg registra el último reto después de recorrer las tres experiencias.
+- capturas/presentacion-rag-integrada.jpg muestra los tres módulos base y la cuarta experiencia opcional.
+- capturas/dashboard-rag-integrado.jpg muestra el extracto recuperado de DEF-101 en el hallazgo QA-02.
 
 ## Validaciones pendientes
 
