@@ -229,3 +229,27 @@ def test_change_during_run_preserves_both_snapshots(monkeypatch, tmp_path):
     finally:
         release_first.set()
         coordinator.stop.set()
+
+
+def test_presentation_has_no_required_external_assets(tmp_path):
+    from html.parser import HTMLParser
+
+    class AssetParser(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.dependencies = []
+
+        def handle_starttag(self, tag, attributes):
+            values = dict(attributes)
+            if tag == "script" and values.get("src"):
+                self.dependencies.append(values["src"])
+            if tag == "link" and "stylesheet" in values.get("rel", "").split():
+                self.dependencies.append(values.get("href"))
+            if tag in ("img", "iframe") and values.get("src"):
+                self.dependencies.append(values["src"])
+
+    copied = tmp_path / "WORKSHOP_GEMINI.html"
+    shutil.copy2(ROOT / "WORKSHOP_GEMINI.html", copied)
+    parser = AssetParser()
+    parser.feed(copied.read_text(encoding="utf-8"))
+    assert parser.dependencies == []

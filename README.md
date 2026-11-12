@@ -27,6 +27,8 @@ py -3.12 -m venv .venv
 
 El modo inicial es **evidencia**. Ejecuta las pruebas Node reales y genera un diagnóstico local. El dashboard identifica este modo en cada reporte. También puedes abrir WORKSHOP_GEMINI.html o pagina/index.html con doble clic. La presentación funciona como archivo local y el dashboard muestra un ejemplo guardado y permite importar JSON.
 
+WORKSHOP_GEMINI.html es autocontenido. Para compartir la presentación, descarga ese archivo con el control Download raw file de GitHub y ábrelo con doble clic. Los estilos, las tres experiencias y los 17 pasos están integrados en el HTML.
+
 ## Activar Gemini
 
 1. Copia .env.example a .env y configura GOOGLE_API_KEY.

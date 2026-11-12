@@ -26,14 +26,17 @@ Validación local del 11 de noviembre de 2026. Python 3.12, Node 24 y google-adk
 | P7 | Navegación por teclado | Tab desde ejecutar QA llega al filtro y el foco es visible |
 | ADK Web | GET list-apps | Reconoce agente y flujo |
 | Kit inicial | Preparación y repetición sobre el mismo destino | Inicia con bug y evita sobrescribir el trabajo existente |
+| P9 | HTML copiado a una carpeta temporal y analizado | Estilos, contenido y scripts integrados, sin recursos externos obligatorios |
+| P8, P9 | Recorrido del HTML integrado en la vista HTTP | Tres tarjetas y 17 pasos accesibles |
 
-`python -m pytest -q` termina con **13 passed**. Las advertencias de SequentialAgent corresponden a la API de compatibilidad de la versión fijada y están documentadas en README.md.
+`python -m pytest -q` termina con **14 passed**. Las advertencias de SequentialAgent corresponden a la API de compatibilidad de la versión fijada y están documentadas en README.md.
 
 ## Capturas
 
 - capturas/dashboard-con-fallas.jpg muestra 2 aprobadas, 2 fallidas y 50 %.
 - capturas/dashboard-corregido.jpg muestra 4 aprobadas, 0 fallidas y 100 %.
 - capturas/presentacion-agente.jpg muestra la spec, instrucciones y prompt copiable de la primera experiencia.
+- capturas/presentacion-autocontenida.jpg muestra las tres tarjetas después de integrar los recursos en el HTML.
 
 ## Validaciones pendientes
 

@@ -550,7 +550,508 @@
         pointer-events: none;
       }
     </style>
-    <link rel="stylesheet" href="presentacion/workshop.css" />
+    <style>
+      /* Adaptación del HTML original de la presentación para las tres experiencias. */
+      :root {
+        --text-muted: #a1b1c3;
+      }
+      body.light-mode {
+        --text-muted: #475c70;
+      }
+      .app-header {
+        flex-shrink: 0;
+      }
+      .tcs-wordmark {
+        font-size: 30px;
+        font-weight: 750;
+        letter-spacing: -2px;
+        color: var(--text-main);
+      }
+      .hero-wordmark {
+        font-size: 65px;
+        letter-spacing: -4px;
+      }
+      .main-content {
+        display: block;
+        overflow-y: auto;
+        min-height: 0;
+        padding: 20px 40px 120px;
+      }
+      .screen-view {
+        margin: 0 auto;
+      }
+      #screen-home {
+        padding-top: 5vh;
+      }
+      #screen-home .main-title {
+        margin: 0 0 20px;
+      }
+      .subtitle {
+        font-size: clamp(2rem, 4.5vw, 4rem);
+        letter-spacing: -1.7px;
+      }
+      .description {
+        font-size: 1.1rem;
+        margin-bottom: 25px;
+      }
+      .home-route {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin: 30px 0;
+      }
+      .home-route span {
+        padding: 8px 12px;
+        border: 1px solid var(--card-border);
+        border-radius: 5px;
+      }
+      .home-route i {
+        font-style: normal;
+        color: var(--accent-blue);
+      }
+      .intro-panel {
+        max-width: 1000px;
+        margin: 34px auto 0;
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        text-align: left;
+        background: var(--card-bg);
+      }
+      .intro-panel > summary {
+        cursor: pointer;
+        font-size: 0.85rem;
+        padding: 16px 22px;
+        color: var(--text-muted);
+      }
+      .intro-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 35px;
+        padding: 8px 25px 20px;
+      }
+      .intro-grid h3 {
+        font-size: 1rem;
+      }
+      .intro-grid p {
+        font-size: 0.85rem;
+        line-height: 1.65;
+        color: var(--text-muted);
+      }
+      .intro-grid pre {
+        font-size: 0.75rem;
+        white-space: pre-wrap;
+        word-break: break-word;
+        padding: 12px;
+        background: var(--nav-bg);
+        border-radius: 6px;
+      }
+      .intro-grid code {
+        color: var(--accent-blue);
+        font-size: 0.8rem;
+      }
+      .control-btn {
+        font-size: 0.9rem;
+      }
+      .timer-control {
+        font-size: 0.8rem;
+        border: 1px solid var(--card-border);
+        padding: 7px 10px;
+        border-radius: 6px;
+      }
+      #timer {
+        font-variant-numeric: tabular-nums;
+        color: var(--accent-blue);
+        font-family: Consolas, monospace;
+        font-size: 1rem;
+      }
+      #timer-label {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+      }
+      .demo-link {
+        text-decoration: none;
+        font-size: 0.75rem;
+        color: var(--accent-blue);
+      }
+      .content-container {
+        max-width: 1180px;
+        padding: 30px 35px;
+        text-align: left;
+      }
+      .content-title {
+        font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+        margin: 5px 0 20px;
+        letter-spacing: -0.7px;
+      }
+      .content-body {
+        font-size: 1rem;
+        min-height: 0;
+      }
+      .step-meta {
+        font-size: 0.65rem;
+        letter-spacing: 1.3px;
+        color: var(--accent-blue);
+        margin: 0 0 24px;
+      }
+      .step-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 34px;
+      }
+      .step-instructions {
+        font-size: 0.95rem;
+        line-height: 1.8;
+        color: var(--text-muted);
+      }
+      .step-instructions > p:first-child {
+        margin-top: 0;
+      }
+      .step-instructions ol {
+        padding-left: 20px;
+      }
+      .step-instructions li {
+        margin-bottom: 8px;
+      }
+      .step-instructions strong {
+        color: var(--text-main);
+      }
+      code {
+        font-family: Consolas, monospace;
+        font-size: 0.86em;
+        overflow-wrap: anywhere;
+      }
+      .step-instructions code {
+        color: var(--accent-blue);
+        background: var(--card-bg);
+        padding: 2px 4px;
+        border-radius: 3px;
+      }
+      .step-done {
+        margin-top: 23px;
+        border-left: 3px solid #7ed6b5;
+        padding: 10px 16px;
+        background: var(--card-bg);
+        border-radius: 0 6px 6px 0;
+      }
+      .step-done strong {
+        font-size: 0.75rem;
+        color: #86dab9;
+      }
+      body.light-mode .step-done strong {
+        color: #12664d;
+      }
+      .step-done p {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin: 5px 0;
+      }
+      .prompt-panel {
+        padding: 18px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        align-self: start;
+      }
+      .prompt-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+      .prompt-heading strong {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+      .copy-button {
+        font: inherit;
+        font-size: 0.7rem;
+        padding: 5px 11px;
+        border-radius: 5px;
+        border: 1px solid var(--card-border);
+        color: var(--accent-blue);
+        background: var(--nav-bg);
+        cursor: pointer;
+      }
+      .prompt-panel textarea {
+        display: block;
+        width: 100%;
+        min-height: 245px;
+        resize: vertical;
+        background: transparent;
+        border: 0;
+        color: var(--text-main);
+        font-family: Consolas, monospace;
+        font-size: 0.79rem;
+        line-height: 1.7;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .command-label {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        margin-top: 18px;
+      }
+      .prompt-panel pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-size: 0.8rem;
+        line-height: 1.7;
+        background: var(--nav-bg);
+        padding: 12px;
+        border-radius: 5px;
+        margin-bottom: 0;
+      }
+      .module-card {
+        width: 290px;
+        position: relative;
+        padding: 30px;
+        box-sizing: border-box;
+      }
+      .module-time {
+        position: absolute;
+        top: 35px;
+        right: 28px;
+        color: var(--accent-blue);
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+      }
+      .module-card-title {
+        font-size: 1.1rem;
+        line-height: 1.5;
+      }
+      .module-card-desc {
+        line-height: 1.8;
+        font-size: 0.85rem;
+        min-height: 70px;
+      }
+      .module-card-open {
+        font-size: 0.75rem;
+        color: var(--accent-blue);
+      }
+      .section-title {
+        font-size: clamp(1.7rem, 3.2vw, 2.5rem);
+        margin-bottom: 35px;
+      }
+      .congrats-title {
+        font-size: clamp(2rem, 5vw, 4rem);
+      }
+      .congrats-text {
+        font-size: 1rem;
+        line-height: 1.8;
+        max-width: 700px;
+        margin: 0 auto 30px;
+      }
+      .btn-primary {
+        font-size: 0.9rem;
+      }
+      .bottom-nav {
+        height: 80px;
+      }
+      .nav-btn-next {
+        font-size: 0.8rem;
+      }
+      .keyboard-hint {
+        bottom: 88px;
+        font-size: 0.65rem;
+      }
+      .waves {
+        pointer-events: none;
+      }
+      .module-card:focus-visible,
+      button:focus-visible,
+      a:focus-visible,
+      summary:focus-visible,
+      textarea:focus-visible {
+        outline: 3px solid var(--accent-blue);
+        outline-offset: 5px;
+      }
+      @media (max-width: 900px) {
+        .main-content {
+          padding: 20px 24px 120px;
+        }
+        .app-header {
+          padding: 18px 24px;
+        }
+        .step-grid {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+        .prompt-panel textarea {
+          min-height: 180px;
+        }
+        .content-container {
+          padding: 25px;
+        }
+        .module-card {
+          width: 100%;
+          max-width: 650px;
+        }
+        .modules-grid {
+          gap: 15px;
+        }
+        .module-card-desc {
+          min-height: 0;
+        }
+        .home-route {
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .home-route span {
+          font-size: 0.7rem;
+        }
+        .intro-grid {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        .top-controls {
+          gap: 12px;
+        }
+        .nav-progress-segments {
+          margin: 0 15px;
+        }
+        .nav-module-label {
+          min-width: 90px;
+          font-size: 0.75rem;
+        }
+        .bottom-nav {
+          padding: 0 15px;
+        }
+      }
+      @media (max-width: 550px) {
+        .app-header {
+          padding: 14px 16px;
+        }
+        .brand-gemini {
+          font-size: 0.9rem;
+        }
+        .brand-cross {
+          display: none;
+        }
+        .tcs-wordmark {
+          font-size: 26px;
+        }
+        .hero-wordmark {
+          font-size: 50px;
+        }
+        .top-controls {
+          gap: 8px;
+        }
+        #timer-label {
+          display: none;
+        }
+        .timer-control {
+          padding: 5px;
+        }
+        .demo-link {
+          font-size: 0.65rem;
+        }
+        .main-content {
+          padding: 14px 14px 105px;
+        }
+        #screen-home {
+          padding-top: 10px;
+        }
+        #screen-home .main-title {
+          font-size: 2.6rem;
+          margin-bottom: 18px;
+        }
+        .section-eyebrow {
+          font-size: 0.65rem;
+          line-height: 1.8;
+        }
+        .subtitle {
+          font-size: 2rem;
+          letter-spacing: -1px;
+        }
+        .description {
+          font-size: 0.9rem;
+          line-height: 1.7;
+        }
+        .home-route {
+          margin: 20px 0;
+        }
+        .home-route i {
+          display: none;
+        }
+        .intro-panel {
+          margin-top: 25px;
+        }
+        .intro-panel > summary {
+          font-size: 0.75rem;
+          padding: 14px;
+        }
+        .intro-grid {
+          padding: 5px 16px 15px;
+        }
+        .content-container {
+          padding: 20px 16px;
+        }
+        .content-title {
+          font-size: 1.5rem;
+          line-height: 1.4;
+        }
+        .step-instructions {
+          font-size: 0.88rem;
+        }
+        .step-meta {
+          font-size: 0.55rem;
+          line-height: 1.8;
+        }
+        .prompt-panel {
+          padding: 14px;
+        }
+        .prompt-panel textarea {
+          font-size: 0.74rem;
+          min-height: 240px;
+        }
+        .nav-progress-segments {
+          display: none;
+        }
+        .nav-module-label {
+          font-size: 0.65rem;
+          min-width: 0;
+        }
+        .nav-divider {
+          display: none;
+        }
+        .bottom-nav {
+          padding: 0 14px;
+          height: 73px;
+        }
+        .nav-btn-next {
+          padding: 0 13px;
+          font-size: 0.73rem;
+        }
+        .keyboard-hint {
+          display: none;
+        }
+        .congrats-text {
+          font-size: 0.9rem;
+        }
+        .module-card {
+          padding: 23px;
+        }
+        .module-time {
+          top: 28px;
+          right: 23px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .wave,
+        .confetti,
+        .congrats-title {
+          animation: none;
+        }
+        .control-btn,
+        .module-card {
+          transition: none;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="app-container">
@@ -840,7 +1341,203 @@ python scripts/preparar_practica.py
       </div>
     </div>
 
-    <script src="presentacion/contenido.js"></script>
+    <script>
+      /* Guion de tres horas. Cada paso contiene instrucciones utilizables y su evidencia. */
+      window.WORKSHOP_MODULES = [
+        {
+          id: 1,
+          title_es: "Construye tu agente QA",
+          title_en: "Build your QA agent",
+          minutes: 45,
+          description:
+            "De una especificación a dos herramientas y un diagnóstico verificable.",
+          steps: [
+            {
+              label: "Spec",
+              minutes: 8,
+              title: "Define qué debe comprobar el agente",
+              body: "<p>El agente es de QA. Su aplicación bajo prueba es un motor de cálculo pequeño, con un bug preparado. Abre <code>specs/aplicacion.md</code> y <code>contratos/casos.json</code>. Con 20 operaciones y 4 transferencias, el criterio exige 74 y el motor inicial devuelve 99.</p><ol><li>Abre tu carpeta de práctica en Antigravity.</li><li>Invoca la skill <code>/especificar</code> y revisa los criterios antes de generar código.</li><li>Comprueba que cada hallazgo conserve el ID de la prueba y su evidencia.</li></ol>",
+              prompt:
+                "/especificar Crea specs/agente-qa.md. Construiremos un agente QA en Python con ADK. Lee specs/aplicacion.md y contratos/casos.json. Define dos herramientas, leer_criterios() y ejecutar_pruebas(), que usen qa_core.Evidence sobre una Snapshot. El agente debe ejecutar ambas, explicar esperado y obtenido y devolver summary, findings [{case_id, description, recommendation}] y next_action. Incluye criterios para la versión defectuosa (2 fallas, 50 %), corregida (0 fallas, 100 %) y trazabilidad. La spec debe distinguir modo evidencia de llamadas reales a Gemini. Espera la revisión del equipo antes de implementar.",
+              done: "Spec revisada con entradas, dos herramientas, salida y criterios de aceptación.",
+            },
+            {
+              label: "Skill",
+              minutes: 4,
+              title: "Haz explícita la forma de trabajar",
+              body: "<p>Abre <code>.agents/skills/verificar/SKILL.md</code>. Identifica su <code>name</code>, <code>description</code> y procedimiento. Las skills guían a Antigravity durante la construcción. El agente QA que vas a crear ejecutará sus propias herramientas ADK.</p><ol><li>Agrega a la skill la obligación de incluir el ID y la evidencia de cada caso fallido.</li><li>Invócala por nombre en una petición.</li><li>Comprueba que el resultado siga ese formato.</li></ol>",
+              prompt:
+                "Revisa la skill verificar de este workspace. Añade una comprobación para que cada defecto incluya su ID, el criterio, el valor esperado y el valor obtenido. Aplica esta skill cuando verifiquemos el agente. Conserva las expectativas del contrato de pruebas.",
+              done: "Una skill real editada y su aplicación identificada en la conversación.",
+            },
+            {
+              label: "Plan",
+              minutes: 5,
+              title: "Revisa el plan antes de construir",
+              body: "<p>Usa Planning o <code>/plan</code>. Revisa qué archivos propone tocar Antigravity y cómo verificará cada tarea. El kit ya proporciona el runner, la persistencia y el servidor.</p><ol><li>Separa herramientas, agente y verificación.</li><li>Comprueba que reutilice <code>qa_core.py</code>.</li><li>Comenta el plan y apruébalo cuando cubra los criterios.</li></ol>",
+              prompt:
+                '/plan Lee specs/agente-qa.md. Escribe specs/agente-plan.md con T1 herramientas, T2 agente y T3 verificación. Usa qa_core.Evidence y Snapshot, y exporta create_agent(evidence, model=None) y root_agent desde agente/agent.py. La herramienta ejecutar_pruebas debe guardar el resultado en tool_context.state["evidencia"]. El agente guarda el diagnóstico JSON en output_key "diagnostico". Incluye archivos y verificación por tarea. Espera la revisión antes de implementar.',
+              done: "Plan revisado con tareas pequeñas y comprobaciones observables.",
+            },
+            {
+              label: "Construir",
+              minutes: 15,
+              title: "Construye una tarea y observa su resultado",
+              body: "<ol><li>Usa <code>/implementar</code> sobre T1. Revisa el diff.</li><li>Repite con T2 y T3.</li><li>El modelo se lee de <code>GEMINI_MODEL</code> y la clave de <code>.env</code>.</li><li>Abre <code>adk web</code> desde la raíz de la práctica y elige <code>agente</code>.</li></ol><p>Si tu equipo necesita recuperarse, compara con la solución completa que entregó el facilitador.</p>",
+              prompt:
+                "/implementar T1 de specs/agente-plan.md. Reutiliza Evidence del kit, con docstrings claros y argumentos tipados. Ejecuta su verificación y muestra el diff. Al terminar, detente para que el equipo revise. Repetiremos después con las tareas restantes.",
+              command: "adk web",
+              done: "Agente visible y herramientas conectadas al runner real.",
+            },
+            {
+              label: "Verificar",
+              minutes: 10,
+              title: "Muestra la ejecución, no solo la respuesta",
+              body: "<ol><li>Pide al agente revisar la versión actual.</li><li>En Events identifica <code>leer_criterios</code> y <code>ejecutar_pruebas</code>.</li><li>Comprueba QA-02 esperado 25, obtenido 50 y QA-03 esperado 74, obtenido 99.</li><li>Relaciona cada hallazgo con la tabla de la spec.</li></ol><p>La solución tiene modo evidencia para ensayar sin clave. El ensayo de los dos agentes usa <code>--mode gemini</code> después de configurar la clave.</p>",
+              prompt:
+                "/verificar specs/agente-qa.md. Comprueba las dos herramientas, la cobertura de los dos casos fallidos y que el agente conserve esperado y obtenido. Entrega la tabla criterio, evidencia y resultado. Indica si la prueba llamó a Gemini o se ejecutó localmente.",
+              command: "python procesar.py --mode evidencia",
+              done: "Dos defectos reproducibles y evidencia de cómo se obtuvieron.",
+            },
+            {
+              label: "Reto",
+              minutes: 3,
+              title: "Un caso límite que el agente pueda explicar",
+              body: "<p>Agrega una prueba para 11 operaciones y 0 transferencias. La especificación exige 27.50. El agente debe incorporar el resultado y conservar su ID.</p><p>Si la implementación falla, corrige el motor contra el criterio acordado. Una ambigüedad de requisitos se registra primero en la spec.</p>",
+              prompt:
+                "/especificar Añade QA-05 con 11 operaciones y 0 transferencias, esperado 27.50. Actualiza la spec antes de agregar el caso al contrato y repetir la verificación. Explica qué límite cubre.",
+              done: "Un caso adicional que cubre el primer valor después del tramo gratuito.",
+            },
+          ],
+        },
+        {
+          id: 2,
+          title_es: "Automatiza y añade un revisor",
+          title_en: "Automate and add a reviewer",
+          minutes: 45,
+          description:
+            "El mismo agente se ejecuta con un disparador y un segundo agente revisa la evidencia.",
+          steps: [
+            {
+              label: "Spec",
+              minutes: 8,
+              title: "Define el flujo y su segundo agente",
+              body: "<p>Especifica un flujo <strong>cambio de código → agente QA → agente revisor → reporte JSON</strong>. El revisor recibe todos los resultados y comprueba que el diagnóstico corresponda a las fallas reales.</p><p>Los resultados de las pruebas determinan si el motor cumple. La revisión se refiere a la consistencia del reporte.</p>",
+              prompt:
+                "/especificar Crea specs/flujo.md. Reutiliza el agente QA anterior y añade un revisor ADK sin herramientas. Recibe diagnostico y evidencia en el estado, y devuelve decision VALIDADO u OBSERVADO y observations. Disparadores: cambio local en app/calculadora.mjs, ejecución manual y push en GitHub Actions. Registra una fila lógica por combinación de fuente, contrato y modo. Conserva el último reporte válido ante errores y muestra su origen. Incluye criterios de repetición y cambio automático.",
+              done: "Spec con dos agentes, disparador, errores y contrato del reporte.",
+            },
+            {
+              label: "Plan",
+              minutes: 5,
+              title: "Reutiliza el agente que ya construiste",
+              body: "<p>El kit incluye <code>procesar.py</code> y <code>servidor.py</code>. Implementa <code>flujo/agent.py</code> usando las interfaces de esos archivos. Revisa que el segundo agente reciba la evidencia completa.</p>",
+              prompt:
+                '/plan Lee specs/flujo.md y procesar.py. Propón T1 modelos Analysis y Review con Pydantic, T2 create_pipeline(evidence, model) que conecta create_agent del módulo anterior y un revisor con SequentialAgent, T3 verificación del flujo. El QA usa output_key diagnostico y el revisor output_key revision. El revisor lee {diagnostico} y {evidencia}, usa output_schema Review e include_contents="none". Reutiliza la infraestructura del kit.',
+              done: "El plan conecta ambos agentes mediante estado compartido.",
+            },
+            {
+              label: "Construir",
+              minutes: 15,
+              title: "Añade una revisión verificable",
+              body: "<ol><li>Implementa las tareas del flujo con <code>/implementar</code>.</li><li>Configura la clave en <code>.env</code>.</li><li>Ejecuta el flujo con Gemini.</li><li>Abre el reporte y localiza herramientas, diagnóstico y respuesta del revisor.</li></ol><p>La revisión debe cubrir todos los casos fallidos y señalar cualquier conclusión sin respaldo.</p>",
+              prompt:
+                "/implementar T1 de specs/flujo-plan.md. Define los modelos esperados por procesar.py y verifica su validación. Después implementaremos el pipeline y su comprobación. Conserva la evidencia de las herramientas y limita los hallazgos a los casos fallidos.",
+              command: "python procesar.py --mode gemini",
+              done: "Dos agentes ejecutados y un reporte estructurado con su traza.",
+            },
+            {
+              label: "Automatizar",
+              minutes: 10,
+              title: "Guardar el código dispara una revisión",
+              body: "<ol><li>Inicia el servidor y comprueba que la vigilancia está activa.</li><li>Abre el dashboard con el facilitador.</li><li>Corrige la operación cobrada con <code>Math.max(0, operaciones - 10)</code> y guarda el archivo.</li><li>Espera la ejecución con disparador <code>cambio</code>.</li></ol><p>En GitHub, agrega GOOGLE_API_KEY como secret y GEMINI_MODEL como variable. El workflow incluido sube el reporte como artefacto. Una ejecución con defectos termina en rojo y conserva el reporte.</p>",
+              prompt:
+                "Lee specs/flujo.md y revisa .github/workflows/qa.yml. Explica qué cambio lo dispara, dónde se configura la clave y cómo se conserva el artefacto cuando una prueba falla. Comprueba la vigilancia local guardando una corrección en app/calculadora.mjs.",
+              command: "python servidor.py --mode gemini",
+              done: "Cambio de código seguido de ejecución automática y reporte nuevo.",
+            },
+            {
+              label: "Verificar",
+              minutes: 5,
+              title: "Compara antes y después",
+              body: "<p>La versión inicial tiene 2/4 aprobadas. La corregida tiene 4/4. Comprueba que la huella del código cambió y la del contrato se conservó. Repite la misma versión y verifica que el historial conserve un único registro por contenido y modo.</p>",
+              prompt:
+                "/verificar specs/flujo.md. Comprueba el disparador cambio, el segundo agente, la correspondencia del reporte con las pruebas, la identidad por contenido y la conservación del último reporte ante errores. Muestra evidencia por criterio.",
+              done: "Falla reproducida, corrección verificada y repetición sin duplicados.",
+            },
+            {
+              label: "Reto",
+              minutes: 2,
+              title: "Pon a prueba al revisor",
+              body: "<p>Propón un diagnóstico que afirme que todo pasó cuando existe una prueba fallida. El revisor debe marcarlo OBSERVADO y explicar qué ID contradice esa afirmación.</p><p>Después de este bloque corresponde una pausa de 10 minutos.</p>",
+              prompt:
+                "Comprueba el revisor con evidencia donde QA-03 falla y un diagnóstico que dice que todas las pruebas pasaron. Debe devolver OBSERVADO y mencionar la contradicción concreta.",
+              done: "El revisor detecta un diagnóstico que contradice los resultados originales.",
+            },
+          ],
+        },
+        {
+          id: 3,
+          title_es: "Construye el dashboard con vibe coding",
+          title_en: "Build the dashboard with vibe coding",
+          minutes: 55,
+          description:
+            "De la spec de interfaz a una página que muestra el reporte real del agente.",
+          steps: [
+            {
+              label: "Spec",
+              minutes: 10,
+              title: "Especifica lo que la página debe demostrar",
+              body: "<p>El dashboard es el producto visible de la revisión. Abre <code>salida/ultimo.json</code> y usa ese contrato real. Debe mostrar totales, porcentaje, hallazgos, revisión y evidencia de cada caso.</p><p>Escribe primero los criterios. Con cuatro pruebas y dos fallas debe mostrar 50 %. Al cargar la versión corregida, 100 %.</p>",
+              prompt:
+                "/especificar Crea specs/pagina.md para un dashboard QA con HTML, CSS y JavaScript. Usa el contrato real de salida/ultimo.json. Incluye total, aprobadas, fallidas, porcentaje, lista filtrable de casos con esperado y obtenido, diagnóstico, revisión y traza. Permite importar JSON y conserva los datos ante un archivo inválido. Distingue modo evidencia y Gemini. Responsive desde 375 px y usable con teclado. Los controles locales usan las rutas existentes de servidor.py. No expongas claves en la página.",
+              done: "Spec de interfaz con datos reales y casos comprobables.",
+            },
+            {
+              label: "Plan",
+              minutes: 8,
+              title: "Define una construcción que puedas revisar",
+              body: "<p>Revisa la skill <code>implementar</code> y el plan de la página. Empieza por validar el JSON y calcular el resumen, continúa con la tabla y termina con controles y accesibilidad.</p>",
+              prompt:
+                "/plan Lee specs/pagina.md y servidor.py. Escribe specs/pagina-plan.md. Divide el trabajo en validación y renderizado de JSON, interfaz y filtros, integración local y verificación visual. Reutiliza las rutas /api/report, /api/status, /api/run y /api/history. Renderiza textos importados con textContent. Incluye el comportamiento cuando el servidor no está disponible.",
+              done: "Plan con archivos, contrato de datos y comprobaciones por tarea.",
+            },
+            {
+              label: "Construir",
+              minutes: 20,
+              title: "Deja que Antigravity escriba y revisa el diff",
+              body: "<ol><li>Implementa cada tarea con la skill correspondiente.</li><li>Prueba primero un reporte guardado de la versión defectuosa.</li><li>Conecta la página al servidor y ejecuta QA.</li><li>Solicita los cambios de alcance actualizando la spec.</li></ol><p>Al abrir directamente el HTML se muestra un ejemplo guardado y se puede importar JSON. La automatización se usa con el servidor iniciado.</p>",
+              prompt:
+                "/implementar T1 de specs/pagina-plan.md. Usa HTML, CSS y JavaScript sin frameworks. Valida el contrato antes de reemplazar los datos visibles. Haz que el filtro conserve los contadores globales y muestra siempre el origen de la ejecución. Revisa el diff antes de avanzar a las siguientes tareas.",
+              command: "python servidor.py",
+              done: "Dashboard que carga y presenta el reporte de QA.",
+            },
+            {
+              label: "Verificar",
+              minutes: 12,
+              title: "Comprueba la página contra la spec",
+              body: "<ol><li>En el navegador comprueba 4 pruebas, 2 fallas y 50 %.</li><li>Filtra fallidos y abre esperado y obtenido.</li><li>Aplica la corrección y espera el nuevo reporte automático.</li><li>Importa un JSON inválido y conserva el último resultado visible.</li><li>Recorre los controles con Tab y verifica el ancho de 375 px.</li></ol>",
+              prompt:
+                "/verificar specs/pagina.md. Comprueba en el navegador los reportes defectuoso y corregido, el filtro, importación inválida, teclado y ancho móvil. Toma capturas y entrega un walkthrough que vincule criterio y evidencia. Registra las validaciones pendientes, incluidas las que requieren Gemini real.",
+              done: "Walkthrough con resultados, capturas y criterios cumplidos.",
+            },
+            {
+              label: "Reto",
+              minutes: 5,
+              title: "Cuenta la historia con evidencia",
+              body: "<p>Agrega una mejora definida en la spec, como filtrar casos por ID o comparar dos ejecuciones. Prepara una demo de dos minutos.</p><ol><li>Muestra la spec y una skill aplicada.</li><li>Abre un hallazgo y su evidencia.</li><li>Muestra la automatización y el segundo agente.</li><li>Termina con el dashboard después de corregir el bug.</li></ol>",
+              prompt:
+                "/especificar Añade un filtro por ID de caso al dashboard. Define su criterio, actualiza el plan, implementa el cambio y verifica que los totales globales se conserven.",
+              done: "Entrega con tres specs, skills usadas, dos agentes, automatización y página.",
+            },
+          ],
+        },
+      ];
+      for (const module of window.WORKSHOP_MODULES) {
+        module.steps_es = module.steps.map((step) => step.label);
+        module.steps_en = module.steps_es;
+      }
+    </script>
     <script>
       const currentLang = "es";
       let currentStep = 0;
