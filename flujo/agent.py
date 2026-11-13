@@ -1,33 +1,14 @@
 import os
-from typing import Literal
 
 from google.adk.agents import Agent, SequentialAgent
 from google.adk.models.base_llm import BaseLlm
-from pydantic import BaseModel, ConfigDict, Field
 
 from agente.agent import create_agent
+from flujo.modelos import Analysis, Finding, Review
 from qa_core import Evidence
 
-
-class Finding(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    case_id: str
-    description: str
-    recommendation: str
-    sources: list[str] = Field(default_factory=list)
-
-
-class Analysis(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    summary: str
-    findings: list[Finding]
-    next_action: str
-
-
-class Review(BaseModel):
-    # Sin extra="forbid": Gemini rechaza additionalProperties en output_schema.
-    decision: Literal["VALIDADO", "OBSERVADO"]
-    observations: list[str] = Field(description="Comprobaciones de consistencia o problemas detectados.")
+# procesar.py importa Analysis y Review desde este módulo.
+__all__ = ["Analysis", "Finding", "Review", "create_pipeline", "root_agent"]
 
 
 def create_pipeline(evidence: Evidence | None, model: str | BaseLlm):

@@ -48,6 +48,15 @@ def prepare(destination: Path, resume: bool = False) -> None:
             initializer = destination / name / "__init__.py"
             if not initializer.exists():
                 initializer.write_text('', encoding="utf-8")
+    # Puntos de partida para los bloques 2 y 3: el equipo construye el revisor y app.js.
+    copy_missing(ROOT / "flujo/modelos.py", destination / "flujo/modelos.py")
+    copy_missing(ROOT / "plantillas/flujo/agent.py", destination / "plantillas/flujo/agent.py")
+    copy_missing(ROOT / "pagina/estilos.css", destination / "plantillas/pagina/estilos.css")
+    page = destination / "plantillas/pagina/index.html"
+    if not page.exists():
+        # El kit no incluye el reporte de ejemplo de la referencia.
+        html = (ROOT / "pagina/index.html").read_text(encoding="utf-8")
+        page.write_text(html.replace('    <script src="ejemplo.js"></script>\n', ""), encoding="utf-8")
     plan = destination / "specs/plan.md"
     if not plan.exists():
         plan.write_text(

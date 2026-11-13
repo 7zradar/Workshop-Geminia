@@ -17,7 +17,7 @@ El producto es un agente de QA. La calculadora de comisiones PYME es exclusivame
 | 02:50 | 10 | Demostraciones y cierre | Evidencia del antes y después |
 
 ## Condiciones de entrada
-Antigravity con sesión iniciada, Python 3.12 y Node 22 o superior instalados. Git es opcional si se descarga el repositorio como ZIP. Antes del taller, un comando (`powershell -NoProfile -File .\preparar-workshop.ps1`) crea el kit, instala dependencias y comprueba herramientas, skills y pruebas sin solicitar la API key. Si faltan Python o Node, informa qué debe instalar TI. El participante configura su clave una sola vez después de construir el primer agente y antes de su primera ejecución con Gemini. El facilitador ensaya previamente el acceso al modelo con su propia configuración.
+Antigravity con sesión iniciada, Python 3.12 y Node 22 o superior instalados. Git es opcional si se descarga el repositorio como ZIP. Antes del taller, un comando (`powershell -NoProfile -ExecutionPolicy Bypass -File .\preparar-workshop.ps1`) crea el kit, instala dependencias y comprueba herramientas, skills y pruebas sin solicitar la API key. Si faltan Python o Node, informa qué debe instalar TI. El participante configura su clave una sola vez después de construir el primer agente y antes de su primera ejecución con Gemini. El facilitador ensaya previamente el acceso al modelo con su propia configuración.
 
 El facilitador entrega motor, contratos de prueba, skills y workflow. Los participantes construyen agente, flujo y dashboard en una carpeta de práctica, usando la solución completa como referencia de recuperación. Specs, skills y vibe coding se aplican desde el módulo 1.
 

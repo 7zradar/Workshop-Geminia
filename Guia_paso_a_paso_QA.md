@@ -32,7 +32,7 @@ Antes del evento necesitas Antigravity con sesión iniciada, Python 3.12 y Node 
 Abre PowerShell en la carpeta que contiene preparar-workshop.ps1 y ejecuta:
 
 ```powershell
-powershell -NoProfile -File .\preparar-workshop.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\preparar-workshop.ps1
 ```
 
 Este comando comprueba Python y Node, crea practica/equipo-01, prepara su entorno .venv, instala las dependencias y verifica las tres skills y las pruebas locales. No necesitas ejecutar pip, crear ni activar .venv manualmente. No solicita la API key ni llama a Gemini. Los agentes y la página quedan por construir.
@@ -41,7 +41,7 @@ Espera **PREPARACION COMPLETA**. En el kit nuevo se esperan cuatro pruebas, dos 
 
 Si la preparación se interrumpe, resuelve el mensaje y repite el mismo comando. Reutiliza las dependencias preparadas y completa solo archivos ausentes de un kit identificado; conserva código, contratos, skills y .env existentes. Si esa carpeta contiene trabajo previo sin la marca del preparador, elige otro nombre, por ejemplo agregando `-Equipo equipo-02` al mismo comando. No sobrescribe una carpeta ajena.
 
-Si la política corporativa bloquea scripts o descargas, comparte el mensaje con TI antes del taller. El preparador no cambia la política de ejecución, no instala Python ni Node y no modifica credenciales.
+Si la política corporativa bloquea scripts o descargas, comparte el mensaje con TI antes del taller. `-ExecutionPolicy Bypass` solo afecta a ese proceso, y el preparador desbloquea los `.ps1` de la práctica para que `.\taller.ps1` funcione. El preparador no cambia la política de ejecución, no instala Python ni Node y no modifica credenciales.
 
 ### 2.3 Abre la práctica en Antigravity
 
@@ -104,7 +104,7 @@ Pulsa «Comenzar las experiencias» y elige la primera tarjeta. En las siguiente
 
 ## 5. Experiencia 1, construye el agente QA
 
-### 5.1 Spec, ocho minutos
+### 5.1 Spec, seis minutos
 
 **En el HTML** abre «Define qué debe comprobar el agente» y pulsa Copiar.
 
@@ -141,7 +141,7 @@ Si la skill no aparece en el menú de comandos, escribe «Lee y aplica .agents/s
 
 **Avanza cuando** puedes explicar qué instrucción se agregó y cómo influye en la verificación.
 
-### 5.3 Plan, cinco minutos
+### 5.3 Plan, cuatro minutos
 
 **En el HTML** abre «Revisa el plan antes de construir» y copia el prompt.
 
@@ -159,7 +159,7 @@ Antes de pulsar Proceed, comprueba que el plan reutiliza qa_core.py y contempla 
 
 **Avanza cuando** cada tarea tiene archivos y una forma de verificar el resultado.
 
-### 5.4 Construir, quince minutos
+### 5.4 Construir, dieciocho minutos
 
 **En el HTML** abre «Construye una tarea y observa su resultado».
 
@@ -171,7 +171,7 @@ Antes de pulsar Proceed, comprueba que el plan reutiliza qa_core.py y contempla 
 
 **Avanza cuando** agente/agent.py está implementado y sus herramientas ejecutan las comprobaciones locales. La primera llamada a Gemini corresponde al siguiente paso.
 
-### 5.5 Verificar, diez minutos
+### 5.5 Verificar, once minutos
 
 **En el HTML** abre «Muestra la ejecución, no solo la respuesta».
 
@@ -199,7 +199,9 @@ Ese comando comprueba las pruebas sin usar un modelo. En ADK Web verificas adem�
 
 **Entrega del bloque** con spec, plan, skill editada, agente y evidencia de sus dos herramientas.
 
-### 5.6 Reto 1, tres minutos
+### 5.6 Reto 1 opcional, dos minutos
+
+**Opcional.** Hazlo solo si el equipo va a tiempo; si no, usa estos minutos como margen.
 
 El reto de extensión agrega QA-05 para comprobar el primer valor fuera del tramo gratuito.
 
@@ -225,7 +227,7 @@ El facilitador puede mantener los cuatro casos base durante la sesión y dejar e
 
 ## 6. Experiencia 2, automatiza y añade un revisor
 
-### 6.1 Spec, ocho minutos
+### 6.1 Spec, cinco minutos
 
 **En el HTML** abre «Define el flujo y su segundo agente».
 
@@ -241,17 +243,23 @@ Comprueba estas condiciones con el equipo.
 
 **Avanza cuando** el equipo puede explicar qué revisa el segundo agente y qué dispara el flujo.
 
-### 6.2 Plan, cinco minutos
+### 6.2 Plan, tres minutos
 
 **En el HTML** abre «Reutiliza el agente que ya construiste».
 
-Pega el prompt de planificación. Revisa que las tareas escriban specs/flujo-plan.md y flujo/agent.py, y que respeten las interfaces que consume procesar.py.
+Antes de planificar, copia plantillas/flujo/agent.py a flujo/agent.py. La plantilla ya trae los imports, la interfaz que consume procesar.py y los modelos de flujo/modelos.py; quedan por construir la instrucción del revisor, el agente revisor y la secuencia (sus TODO).
+
+```powershell
+Copy-Item -LiteralPath .\plantillas\flujo\agent.py -Destination .\flujo\agent.py
+```
+
+Pega el prompt de planificación. Revisa que las tareas escriban specs/flujo-plan.md y completen flujo/agent.py sin cambiar las interfaces que consume procesar.py.
 
 | Modelo o función | Campos o función esperados |
 |---|---|
-| Finding | case_id, description, recommendation |
-| Analysis | summary, findings, next_action |
-| Review | decision, observations |
+| Finding (dado) | case_id, description, recommendation, sources |
+| Analysis (dado) | summary, findings, next_action |
+| Review (dado) | decision, observations |
 | create_pipeline(evidence, model) | Conecta el QA anterior y el revisor |
 | Estado de salida | diagnostico y revision |
 
@@ -284,7 +292,7 @@ Para ensayar los resultados y la persistencia local puedes ejecutar el modo evid
 
 **Avanza cuando** el flujo genera el JSON y la revisión cumple su esquema.
 
-### 6.4 Automatizar, diez minutos
+### 6.4 Automatizar, doce minutos
 
 **En el HTML** abre «Guardar el código dispara una revisión».
 
@@ -310,7 +318,7 @@ Debes obtener trigger igual a cambio y 100 % de aprobación. Durante la ejecuci�
 
 El facilitador puede mostrar su dashboard de referencia en el puerto 8765 mientras los equipos revisan sus propios JSON en el 8767.
 
-### 6.5 Verificar, cinco minutos
+### 6.5 Verificar, ocho minutos
 
 **En el HTML** abre «Compara antes y después».
 
@@ -329,7 +337,9 @@ Pega el prompt /verificar del HTML y conserva la tabla de criterios con su evide
 
 **Entrega del bloque** con spec, plan, dos agentes, disparador automático y reportes antes y después.
 
-### 6.6 Reto 2, dos minutos
+### 6.6 Reto 2 opcional, dos minutos
+
+**Opcional.** Hazlo solo si el equipo va a tiempo; si no, pasa a la pausa.
 
 Este reto aísla al segundo agente para comprobar si observa un diagnóstico que contradice las pruebas. El kit incluye un comando preparado.
 
@@ -355,7 +365,7 @@ Conserva el servidor de la práctica activo para utilizarlo en el bloque siguien
 
 ## 8. Experiencia 3, construye el dashboard con vibe coding
 
-### 8.1 Spec, diez minutos
+### 8.1 Spec, siete minutos
 
 **En el HTML** abre «Especifica lo que la página debe demostrar».
 
@@ -374,11 +384,17 @@ Para una entrega base, cuatro casos con dos fallas deben mostrar 50 %. Si agrega
 
 **Avanza cuando** cada función visible tiene un criterio verificable.
 
-### 8.2 Plan, ocho minutos
+### 8.2 Plan, cinco minutos
 
 **En el HTML** abre «Define una construcción que puedas revisar».
 
-Pega el prompt de planificación y revisa specs/pagina-plan.md. Empieza por validación de datos, sigue con contadores y casos, y termina con integración y accesibilidad.
+Antes de planificar, copia la plantilla de la página. El HTML y el CSS ya están hechos; el equipo construye pagina/app.js sobre sus id y clases.
+
+```powershell
+Copy-Item -Path .\plantillas\pagina\* -Destination .\pagina
+```
+
+Pega el prompt de planificación y revisa specs/pagina-plan.md. Los controles que no alcances pueden quedar ocultos. Empieza por validación de datos, sigue con contadores y casos, y termina con integración y accesibilidad.
 
 | Ruta existente | Uso para la página |
 |---|---|
@@ -394,7 +410,7 @@ Las rutas están implementadas en servidor.py. En los controles POST revisa el o
 
 **Avanza cuando** el plan utiliza el servidor y el contrato que ya tienes.
 
-### 8.3 Construir, veinte minutos
+### 8.3 Construir, veinticinco minutos
 
 **En el HTML** abre «Deja que Antigravity escriba y revisa el diff».
 
@@ -405,13 +421,13 @@ Las rutas están implementadas en servidor.py. En los controles POST revisa el o
 5. Integra /api/report y la actualización de resultados.
 6. Abre la página de tu equipo en [puerto 8767](http://127.0.0.1:8767/).
 
-El servidor del segundo bloque puede seguir activo mientras guardas HTML, CSS y JavaScript. Si lo detuviste, reinícialo desde la raíz de la práctica con el comando del bloque anterior.
+El servidor del segundo bloque puede seguir activo mientras guardas app.js. Cambia el HTML o el CSS de la plantilla solo si la spec lo pide. Si lo detuviste, reinícialo desde la raíz de la práctica con el comando del bloque anterior.
 
 Usa un reporte inicial guardado en salida/reportes/ para comprobar las fallas. En la interfaz del facilitador puedes importar ese JSON o seleccionarlo desde el historial.
 
 **Avanza cuando** los datos visibles coinciden con un reporte ejecutado.
 
-### 8.4 Verificar, doce minutos
+### 8.4 Verificar, quince minutos
 
 **En el HTML** abre «Comprueba la página contra la spec».
 
@@ -438,7 +454,9 @@ Después corrígelo con Antigravity o usa el control Aplicar corrección si tu e
 
 **Entrega del bloque** con página, spec, plan y evidencia de sus criterios.
 
-### 8.5 Reto 3, cinco minutos
+### 8.5 Reto 3 y demo, tres minutos
+
+**La mejora es opcional; la demo no.** Si el equipo va justo, usa estos minutos solo para preparar la demo.
 
 En el paso «Cuenta la historia con evidencia», añade un filtro por ID de caso.
 

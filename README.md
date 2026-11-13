@@ -9,12 +9,12 @@ El agente es de QA. La calculadora ficticia de cuenta PYME es la aplicación que
 Descarga el [ZIP de esta rama](https://github.com/7zradar/Workshop-Geminia/archive/refs/heads/codex/qa-workshop.zip), extráelo y abre PowerShell en la carpeta que contiene preparar-workshop.ps1. Necesitas Antigravity con sesión iniciada, Python 3.12 y Node 22 o superior. Si falta Python o Node, el script indica qué debe instalar TI; no instala herramientas del sistema. Git no es necesario al usar el ZIP.
 
 ```powershell
-powershell -NoProfile -File .\preparar-workshop.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\preparar-workshop.ps1
 ```
 
 Espera **PREPARACION COMPLETA** y abre la carpeta indicada, `practica/equipo-01`, en Antigravity. El comando crea el kit inicial, prepara `.venv`, instala las dependencias y verifica ADK, las tres skills y las pruebas locales. El kit nuevo muestra 2/4 y 50 % por el bug intencional. No pide una API key ni llama a Gemini. Los agentes y el dashboard quedan por construir con los prompts del HTML.
 
-Si se interrumpe, repite el mismo comando. Conserva código, contratos, skills y `.env` de un kit identificado, agrega solo archivos ausentes y reutiliza dependencias cuando siguen válidas. Para otra práctica agrega `-Equipo equipo-02`. Una carpeta previa sin la marca del preparador se conserva y requiere elegir otro nombre. La preparación necesita acceso al repositorio de paquetes Python; si TI restringe scripts o descargas, comparte el error antes del evento. El script no cambia la política de PowerShell.
+Si se interrumpe, repite el mismo comando. Conserva código, contratos, skills y `.env` de un kit identificado, agrega solo archivos ausentes y reutiliza dependencias cuando siguen válidas. Para otra práctica agrega `-Equipo equipo-02`. Una carpeta previa sin la marca del preparador se conserva y requiere elegir otro nombre. La preparación necesita acceso al repositorio de paquetes Python; si TI restringe scripts o descargas, comparte el error antes del evento. El script no cambia la política de PowerShell: `-ExecutionPolicy Bypass` solo aplica a ese proceso y evita que Windows bloquee el script descargado en el ZIP. El preparador desbloquea los `.ps1` de la práctica para que `.\taller.ps1` funcione después. Si una directiva de grupo de TI impone la política, el bypass no surte efecto y hay que resolverlo con TI antes del evento.
 
 **Configura GOOGLE_API_KEY una sola vez en el `.env` de la práctica después de construir el primer agente y antes de su primera ejecución con Gemini.** Los dos agentes y RAG reutilizan esa configuración. No necesitas activar el entorno manualmente: los siguientes comandos usan el entorno ya preparado.
 
@@ -76,7 +76,7 @@ La demostración local funciona antes de configurar Gemini. Las llamadas al mode
 
 ## Realizar el workshop
 
-La solución de este repositorio sirve como referencia del facilitador. Cada participante utiliza la preparación de un comando indicada al inicio y abre su práctica en Antigravity. El kit trae el motor, contratos, infraestructura, workflow y skills. Los equipos redactan sus specs e implementan agente/, flujo/ y pagina/. La clave se configura después de construir el primer agente. El archivo .env de la solución no se copia al kit.
+La solución de este repositorio sirve como referencia del facilitador. Cada participante utiliza la preparación de un comando indicada al inicio y abre su práctica en Antigravity. El kit trae el motor, contratos, infraestructura, workflow y skills. Los equipos redactan sus specs e implementan agente/, flujo/ y pagina/. Para el flujo y el dashboard el kit da puntos de partida: `flujo/modelos.py` y `plantillas/flujo/agent.py` (solo faltan el revisor y la secuencia), y `plantillas/pagina/` con el HTML y el CSS (el equipo construye `app.js`). La clave se configura después de construir el primer agente. El archivo .env de la solución no se copia al kit.
 
 La [guía paso a paso](Guia_paso_a_paso_QA.md) detalla carpetas, terminales, acciones y resultados para realizar las tres experiencias. El [guion breve](Taller_QA_Gemini.md) resume los tiempos y la [presentación](WORKSHOP_GEMINI.html) contiene los prompts copiables.
 

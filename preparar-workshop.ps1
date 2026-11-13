@@ -25,6 +25,9 @@ try {
     & $basePython (Join-Path $PSScriptRoot 'scripts\preparar_practica.py') --equipo $Equipo --reanudar
     if ($LASTEXITCODE -ne 0) { throw 'No se pudo preparar la carpeta. Revisa el mensaje anterior; puedes elegir otro nombre con -Equipo.' }
     $practice = Join-Path $PSScriptRoot "practica\$Equipo"
+    # Las copias heredan la marca de descarga del ZIP; sin quitarla, RemoteSigned bloquea taller.ps1.
+    Get-ChildItem -LiteralPath $practice -Filter '*.ps1' -Recurse -File |
+        Where-Object { $_.FullName -notlike '*\.venv\*' } | Unblock-File
     $practicePython = Join-Path $practice '.venv\Scripts\python.exe'
     Write-Host '[3/5] Preparando el entorno Python aislado...'
     if (-not (Test-Path -LiteralPath $practicePython -PathType Leaf)) {

@@ -1,7 +1,7 @@
 # Preparación del participante con un comando
 
 ## Usuario y objetivo
-Un participante en Windows abre el repositorio descargado y ejecuta `powershell -NoProfile -File .\preparar-workshop.ps1`. La preparación termina antes del taller. Antigravity sigue siendo la herramienta con la que construye los agentes y el dashboard durante la sesión.
+Un participante en Windows abre el repositorio descargado y ejecuta `powershell -NoProfile -ExecutionPolicy Bypass -File .\preparar-workshop.ps1`. La preparación termina antes del taller. Antigravity sigue siendo la herramienta con la que construye los agentes y el dashboard durante la sesión.
 
 ## Alcance
 El script comprueba Python 3.12 y Node 22 o superior. Por decisión del usuario, no instala herramientas del sistema: indica qué falta para que TI lo instale. Antigravity y su inicio de sesión también se preparan previamente. Git no es necesario si el repositorio se descarga como ZIP. No cambia la política de ejecución de PowerShell.

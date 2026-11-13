@@ -34,6 +34,19 @@ def test_practice_resume_preserves_work_and_completes_missing_files(tmp_path):
     assert not (destination / "pagina/index.html").exists()
 
 
+def test_practice_includes_starting_points_for_blocks_2_and_3(tmp_path):
+    destination = tmp_path / "equipo"
+    prepare(destination)
+    template = (destination / "plantillas/flujo/agent.py").read_text(encoding="utf-8")
+    assert "from flujo.modelos import Analysis, Finding, Review" in template
+    assert 'output_key="revision"' in template and "NotImplementedError" in template
+    assert (destination / "flujo/modelos.py").read_bytes() == (ROOT / "flujo/modelos.py").read_bytes()
+    page = (destination / "plantillas/pagina/index.html").read_text(encoding="utf-8")
+    assert '<script src="app.js"></script>' in page and "ejemplo.js" not in page
+    assert (destination / "plantillas/pagina/estilos.css").is_file()
+    assert not (destination / "pagina/app.js").exists()
+
+
 def test_resume_rejects_unowned_folder_without_changes(tmp_path):
     destination = tmp_path / "carpeta ajena"
     destination.mkdir()
@@ -65,7 +78,7 @@ def test_missing_tools_requests_ti_without_creating_a_practice(tmp_path):
     (tmp_path / "scripts/entorno.ps1").write_text(
         "function Update-WorkshopPath {}\nfunction Get-WorkshopPython { return $null }\n"
         "function Get-WorkshopNode { return $null }\n", encoding="ascii")
-    result = subprocess.run(["powershell", "-NoProfile", "-File", str(tmp_path / "preparar-workshop.ps1")],
+    result = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(tmp_path / "preparar-workshop.ps1")],
                             capture_output=True, text=True, errors="replace", timeout=30)
     assert result.returncode == 1
     assert "Solicita a TI instalar" in result.stdout
@@ -81,7 +94,7 @@ def test_launcher_blocks_incomplete_or_incompatible_execution(tmp_path, argument
     destination = tmp_path / "equipo"
     (destination / ".venv/Scripts").mkdir(parents=True)
     (destination / ".venv/Scripts/python.exe").touch()
-    result = subprocess.run(["powershell", "-NoProfile", "-File", str(destination / "taller.ps1"), *arguments],
+    result = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(destination / "taller.ps1"), *arguments],
                             capture_output=True, text=True, errors="replace", timeout=30)
     assert result.returncode == 1
     assert message in result.stdout

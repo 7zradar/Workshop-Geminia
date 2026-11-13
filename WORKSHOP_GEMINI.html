@@ -1262,7 +1262,7 @@
                   infraestructura. El equipo construye los agentes y la página.
                 </p>
                 <pre>
-powershell -NoProfile -File .\preparar-workshop.ps1</pre
+powershell -NoProfile -ExecutionPolicy Bypass -File .\preparar-workshop.ps1</pre
                 >
                 <p>
                   Ejecuta ese único comando en PowerShell, dentro del repositorio,
@@ -1372,7 +1372,7 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
           steps: [
             {
               label: "Spec",
-              minutes: 8,
+              minutes: 6,
               title: "Define qué debe comprobar el agente",
               body: "<p>El agente es de QA. Su aplicación bajo prueba es un motor de cálculo pequeño, con un bug preparado. Abre <code>specs/aplicacion.md</code> y <code>contratos/casos.json</code>. Con 20 operaciones y 4 transferencias, el criterio exige 74 y el motor inicial devuelve 99.</p><ol><li>Abre tu carpeta de práctica en Antigravity.</li><li>Invoca la skill <code>/especificar</code> y revisa los criterios antes de generar código.</li><li>Comprueba que cada hallazgo conserve el ID de la prueba y su evidencia.</li></ol>",
               prompt:
@@ -1390,7 +1390,7 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
             },
             {
               label: "Plan",
-              minutes: 5,
+              minutes: 4,
               title: "Revisa el plan antes de construir",
               body: "<p>Usa Planning o <code>/plan</code>. Revisa qué archivos propone tocar Antigravity y cómo verificará cada tarea. El kit ya proporciona el runner, la persistencia y el servidor.</p><ol><li>Separa herramientas, agente y verificación.</li><li>Comprueba que reutilice <code>qa_core.py</code>.</li><li>Comenta el plan y apruébalo cuando cubra los criterios.</li></ol>",
               prompt:
@@ -1399,7 +1399,7 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
             },
             {
               label: "Construir",
-              minutes: 15,
+              minutes: 18,
               title: "Construye una tarea y observa su resultado",
               body: "<ol><li>Usa <code>/implementar</code> sobre T1. Revisa el diff.</li><li>Repite con T2 y T3.</li><li>Comprueba localmente las herramientas con Antigravity. Todavía no necesitas la API key.</li><li>Deja <code>agente/agent.py</code> listo para la primera ejecución del siguiente paso.</li></ol><p>Si tu equipo necesita recuperarse, compara con la solución completa que entregó el facilitador.</p>",
               prompt:
@@ -1408,7 +1408,7 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
             },
             {
               label: "Verificar",
-              minutes: 10,
+              minutes: 11,
               title: "Muestra la ejecución, no solo la respuesta",
               body: "<ol><li>El agente ya está construido. Configura ahora <code>GOOGLE_API_KEY</code> una sola vez en el <code>.env</code> de tu práctica; conserva <code>GEMINI_MODEL</code> o revisa el modelo disponible en tu cuenta.</li><li>Ejecuta el comando de abajo desde la terminal de Antigravity, en <code>practica/equipo-01</code>. Abre <code>http://127.0.0.1:8000</code>, elige <code>agente</code> y pide revisar la versión actual.</li><li>En Events identifica <code>leer_criterios</code> y <code>ejecutar_pruebas</code>.</li><li>Comprueba QA-02 esperado 25, obtenido 50 y QA-03 esperado 74, obtenido 99; relaciónalos con la spec.</li></ol><p>El comando usa el entorno ya preparado. Deja esta terminal abierta durante la prueba. Si no tienes clave o cuota, pide a Antigravity comprobar las herramientas localmente y registra la llamada a Gemini como pendiente.</p>",
               prompt:
@@ -1418,9 +1418,9 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
             },
             {
               label: "Reto",
-              minutes: 3,
+              minutes: 2,
               title: "Un caso límite que el agente pueda explicar",
-              body: "<p>Como extensión, agrega QA-05 para 11 operaciones y 0 transferencias. La especificación exige 27.50 y la versión con error obtiene 52.50.</p><p>Con este quinto caso, la versión inicial tiene 2/5 aprobadas y muestra 40 %. La corregida tendrá 5/5 y 100 %. Usa estos nuevos totales en las verificaciones siguientes. El recorrido base conserva cuatro casos.</p><p>Si la implementación falla, corrige el motor contra el criterio acordado.</p>",
+              body: "<p><strong>Opcional.</strong> Hazlo solo si tu equipo va a tiempo; si no, usa estos minutos como margen.</p><p>Como extensión, agrega QA-05 para 11 operaciones y 0 transferencias. La especificación exige 27.50 y la versión con error obtiene 52.50.</p><p>Con este quinto caso, la versión inicial tiene 2/5 aprobadas y muestra 40 %. La corregida tendrá 5/5 y 100 %. Usa estos nuevos totales en las verificaciones siguientes. El recorrido base conserva cuatro casos.</p><p>Si la implementación falla, corrige el motor contra el criterio acordado.</p>",
               prompt:
                 "/especificar Añade QA-05 con 11 operaciones y 0 transferencias, esperado 27.50. Actualiza la spec antes de agregar el caso al contrato y repetir la verificación. Explica qué límite cubre.",
               done: "Un caso adicional que cubre el primer valor después del tramo gratuito.",
@@ -1437,7 +1437,7 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
           steps: [
             {
               label: "Spec",
-              minutes: 8,
+              minutes: 5,
               title: "Define el flujo y su segundo agente",
               body: "<p>Especifica un flujo <strong>cambio de código → agente QA → agente revisor → reporte JSON</strong>. El revisor recibe todos los resultados y comprueba que el diagnóstico corresponda a las fallas reales.</p><p>Los resultados de las pruebas determinan si el motor cumple. La revisión se refiere a la consistencia del reporte.</p>",
               prompt:
@@ -1446,11 +1446,11 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
             },
             {
               label: "Plan",
-              minutes: 5,
+              minutes: 3,
               title: "Reutiliza el agente que ya construiste",
-              body: "<p>El kit incluye <code>procesar.py</code> y <code>servidor.py</code>. Implementa <code>flujo/agent.py</code> usando las interfaces de esos archivos. Revisa que el segundo agente reciba la evidencia completa.</p>",
+              body: "<p>El kit incluye <code>procesar.py</code>, <code>servidor.py</code>, los modelos de salida en <code>flujo/modelos.py</code> y una plantilla en <code>plantillas/flujo/agent.py</code> con los imports y la interfaz que espera <code>procesar.py</code>. Copia la plantilla a <code>flujo/agent.py</code>: solo faltan el revisor y la secuencia. Revisa que el segundo agente reciba la evidencia completa.</p>",
               prompt:
-                '/plan Lee specs/flujo.md y procesar.py. Propón T1 modelos Analysis y Review con Pydantic, T2 create_pipeline(evidence, model) que conecta create_agent del módulo anterior y un revisor con SequentialAgent, T3 verificación del flujo. El QA usa output_key diagnostico y el revisor output_key revision. El revisor lee {diagnostico} y {evidencia}, usa output_schema Review e include_contents="none". Reutiliza la infraestructura del kit.',
+                '/plan Lee specs/flujo.md, procesar.py y flujo/agent.py, copiado de plantillas/flujo/agent.py. Los modelos Analysis y Review ya están en flujo/modelos.py. Propón T1 la instrucción del revisor con {evidencia}, {diagnostico} y {contexto?}, T2 completar create_pipeline(evidence, model) con el revisor y SequentialAgent según los TODO de la plantilla, T3 verificación del flujo. Conserva output_schema Review, output_key revision e include_contents="none". Reutiliza la infraestructura del kit.',
               done: "El plan conecta ambos agentes mediante estado compartido.",
             },
             {
@@ -1459,13 +1459,13 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
               title: "Añade una revisión verificable",
               body: "<ol><li>Implementa las tareas del flujo con <code>/implementar</code>.</li><li>Usa el mismo <code>.env</code> del bloque 1. No vuelvas a configurar la clave.</li><li>En otra terminal de la práctica ejecuta el comando de abajo para probar ambos agentes.</li><li>Abre el reporte y localiza herramientas, diagnóstico y respuesta del revisor.</li></ol><p>La revisión debe cubrir todos los casos fallidos y señalar cualquier conclusión sin respaldo.</p>",
               prompt:
-                "/implementar T1 de specs/flujo-plan.md. Define los modelos esperados por procesar.py y verifica su validación. Después implementaremos el pipeline y su comprobación. Conserva la evidencia de las herramientas y limita los hallazgos a los casos fallidos.",
+                "/implementar T1 de specs/flujo-plan.md. Completa la instrucción del revisor en flujo/agent.py y verifica que nombre las comprobaciones de specs/flujo.md. Después completaremos el pipeline y su comprobación. Conserva la evidencia de las herramientas y limita los hallazgos a los casos fallidos.",
               command: ".\\taller.ps1 flujo",
               done: "Dos agentes ejecutados y un reporte estructurado con su traza.",
             },
             {
               label: "Automatizar",
-              minutes: 10,
+              minutes: 12,
               title: "Guardar el código dispara una revisión",
               body: "<ol><li>Detén ADK Web con Ctrl+C en su terminal. Desde la carpeta de práctica ejecuta el comando de abajo una vez: inicia el servidor en el puerto 8767 y deja la vigilancia activa.</li><li>Consulta <code>http://127.0.0.1:8767/api/status</code> y abre <code>salida/ultimo.json</code> con Antigravity. La página se construirá en el bloque 3.</li><li>Corrige la operación cobrada con <code>Math.max(0, operaciones - 10)</code> y guarda el archivo.</li><li>Espera el reporte con disparador <code>cambio</code>. Conserva esta terminal abierta también para el dashboard.</li></ol><p>El facilitador puede mostrar su dashboard de referencia. GitHub Actions queda como extensión posterior.</p>",
               prompt:
@@ -1475,7 +1475,7 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
             },
             {
               label: "Verificar",
-              minutes: 5,
+              minutes: 8,
               title: "Compara antes y después",
               body: "<p>Con el contrato base, la versión inicial tiene 2/4 aprobadas y la corregida 4/4. Si añadiste QA-05, compara 2/5 y 5/5. Comprueba que la huella del código cambió y la del contrato se conservó entre las dos versiones del mismo contrato. Repite la misma versión y verifica un único registro por contenido y modo.</p>",
               prompt:
@@ -1486,7 +1486,7 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
               label: "Reto",
               minutes: 2,
               title: "Pon a prueba al revisor",
-              body: "<p>En otra terminal de la práctica ejecuta <code>.\\taller.ps1 revisor</code>. Usa pruebas reales de la versión con error y presenta al segundo agente un diagnóstico que afirma que todo pasó. El revisor debe marcarlo OBSERVADO y explicar la contradicción.</p><p>Reutiliza la clave ya configurada y requiere el flujo implementado. El resultado queda en <code>salida/reto-revisor.json</code>. Después corresponde una pausa de 10 minutos.</p>",
+              body: "<p><strong>Opcional.</strong> Hazlo solo si tu equipo va a tiempo; si no, pasa a la pausa.</p><p>En otra terminal de la práctica ejecuta <code>.\\taller.ps1 revisor</code>. Usa pruebas reales de la versión con error y presenta al segundo agente un diagnóstico que afirma que todo pasó. El revisor debe marcarlo OBSERVADO y explicar la contradicción.</p><p>Reutiliza la clave ya configurada y requiere el flujo implementado. El resultado queda en <code>salida/reto-revisor.json</code>. Después corresponde una pausa de 10 minutos.</p>",
               prompt:
                 "Comprueba el revisor con evidencia donde QA-03 falla y un diagnóstico que dice que todas las pruebas pasaron. Debe devolver OBSERVADO y mencionar la contradicción concreta.",
               command: ".\\taller.ps1 revisor",
@@ -1504,7 +1504,7 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
           steps: [
             {
               label: "Spec",
-              minutes: 10,
+              minutes: 7,
               title: "Especifica lo que la página debe demostrar",
               body: "<p>El dashboard es el producto visible de la revisión. Abre <code>salida/ultimo.json</code> y usa ese contrato real. Debe mostrar totales, porcentaje, hallazgos, revisión y evidencia de cada caso.</p><p>Escribe primero los criterios. Con cuatro pruebas y dos fallas debe mostrar 50 %. Al cargar la versión corregida, 100 %.</p>",
               prompt:
@@ -1513,25 +1513,25 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
             },
             {
               label: "Plan",
-              minutes: 8,
+              minutes: 5,
               title: "Define una construcción que puedas revisar",
-              body: "<p>Revisa la skill <code>implementar</code> y el plan de la página. Empieza por validar el JSON y calcular el resumen, continúa con la tabla y termina con controles y accesibilidad.</p>",
+              body: "<p>El kit trae el HTML y el CSS de la página en <code>plantillas/pagina/</code>. Cópialos a <code>pagina/</code>: el equipo construye <code>pagina/app.js</code>. Revisa la skill <code>implementar</code> y el plan. Empieza por validar el JSON y calcular el resumen, continúa con la tabla y termina con controles y accesibilidad. Los controles que no alcances pueden quedar ocultos.</p>",
               prompt:
-                "/plan Lee specs/pagina.md y servidor.py. Escribe specs/pagina-plan.md. Divide el trabajo en validación y renderizado de JSON, interfaz y filtros, integración local y verificación visual. Reutiliza las rutas /api/report, /api/status, /api/run y /api/history. Renderiza textos importados con textContent. Incluye el comportamiento cuando el servidor no está disponible.",
+                "/plan Lee specs/pagina.md, servidor.py y pagina/index.html, copiado de plantillas/pagina/ junto con estilos.css. Escribe specs/pagina-plan.md para construir pagina/app.js sobre los id y clases existentes del HTML. Divide el trabajo en validación y renderizado de JSON, contadores y filtros, integración local y verificación visual. Reutiliza las rutas /api/report, /api/status, /api/run y /api/history. Renderiza textos importados con textContent. Incluye el comportamiento cuando el servidor no está disponible.",
               done: "Plan con archivos, contrato de datos y comprobaciones por tarea.",
             },
             {
               label: "Construir",
-              minutes: 20,
+              minutes: 25,
               title: "Deja que Antigravity escriba y revisa el diff",
-              body: "<ol><li>Implementa cada tarea con la skill correspondiente.</li><li>Prueba primero un reporte guardado de la versión defectuosa.</li><li>Usa el servidor del bloque 2 y abre <code>http://127.0.0.1:8767/</code> para ver la página del equipo.</li><li>Solicita los cambios de alcance actualizando la spec.</li></ol><p>El servidor puede seguir activo mientras guardas HTML, CSS y JavaScript. La solución completa del facilitador también admite un ejemplo guardado e importación de JSON.</p>",
+              body: "<ol><li>Implementa cada tarea con la skill correspondiente.</li><li>Prueba primero un reporte guardado de la versión defectuosa.</li><li>Usa el servidor del bloque 2 y abre <code>http://127.0.0.1:8767/</code> para ver la página del equipo.</li><li>Solicita los cambios de alcance actualizando la spec.</li></ol><p>El servidor puede seguir activo mientras guardas <code>app.js</code>. Cambia el HTML o el CSS de la plantilla solo si la spec lo pide. La solución completa del facilitador también admite un ejemplo guardado e importación de JSON.</p>",
               prompt:
-                "/implementar T1 de specs/pagina-plan.md. Usa HTML, CSS y JavaScript sin frameworks. Valida el contrato antes de reemplazar los datos visibles. Haz que el filtro conserve los contadores globales y muestra siempre el origen de la ejecución. Revisa el diff antes de avanzar a las siguientes tareas.",
+                "/implementar T1 de specs/pagina-plan.md en pagina/app.js. Usa JavaScript sin frameworks sobre el HTML y el CSS de la plantilla. Valida el contrato antes de reemplazar los datos visibles. Haz que el filtro conserve los contadores globales y muestra siempre el origen de la ejecución. Revisa el diff antes de avanzar a las siguientes tareas.",
               done: "Dashboard que carga y presenta el reporte de QA.",
             },
             {
               label: "Verificar",
-              minutes: 12,
+              minutes: 15,
               title: "Comprueba la página contra la spec",
               body: "<ol><li>En el navegador comprueba 4 pruebas, 2 fallas y 50 %.</li><li>Filtra fallidos y abre esperado y obtenido.</li><li>Aplica la corrección y espera el nuevo reporte automático.</li><li>Importa un JSON inválido y conserva el último resultado visible.</li><li>Recorre los controles con Tab y verifica el ancho de 375 px.</li></ol>",
               prompt:
@@ -1540,9 +1540,9 @@ powershell -NoProfile -File .\preparar-workshop.ps1</pre
             },
             {
               label: "Reto",
-              minutes: 5,
+              minutes: 3,
               title: "Cuenta la historia con evidencia",
-              body: "<p>Agrega una mejora definida en la spec, como filtrar casos por ID o comparar dos ejecuciones. Prepara una demo de dos minutos.</p><ol><li>Muestra la spec y una skill aplicada.</li><li>Abre un hallazgo y su evidencia.</li><li>Muestra la automatización y el segundo agente.</li><li>Termina con el dashboard después de corregir el bug.</li></ol>",
+              body: "<p><strong>La mejora es opcional; la demo no.</strong> Si tu equipo va justo, usa estos minutos solo para preparar la demo.</p><p>Agrega una mejora definida en la spec, como filtrar casos por ID o comparar dos ejecuciones. Prepara una demo de dos minutos.</p><ol><li>Muestra la spec y una skill aplicada.</li><li>Abre un hallazgo y su evidencia.</li><li>Muestra la automatización y el segundo agente.</li><li>Termina con el dashboard después de corregir el bug.</li></ol>",
               prompt:
                 "/especificar Añade un filtro por ID de caso al dashboard. Define su criterio, actualiza el plan, implementa el cambio y verifica que los totales globales se conserven.",
               done: "Entrega con tres specs, skills usadas, dos agentes, automatización y página.",

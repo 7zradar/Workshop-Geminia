@@ -10,7 +10,7 @@ La aplicación bajo prueba es la calculadora ficticia del paquete de casos. El m
 
 ## Preparación previa
 
-Cada participante ejecuta `powershell -NoProfile -File .\preparar-workshop.ps1` antes del evento. Comprueba Python y Node, prepara el kit y sus dependencias y verifica las skills y pruebas locales sin pedir la clave. Si faltan herramientas del sistema, informa qué instalar con TI. El participante abre la carpeta indicada en Antigravity y construye los entregables con el HTML. Configura la clave una vez, después de construir el agente, antes de su primera ejecución con Gemini.
+Cada participante ejecuta `powershell -NoProfile -ExecutionPolicy Bypass -File .\preparar-workshop.ps1` antes del evento. Comprueba Python y Node, prepara el kit y sus dependencias y verifica las skills y pruebas locales sin pedir la clave. Si faltan herramientas del sistema, informa qué instalar con TI. El participante abre la carpeta indicada en Antigravity y construye los entregables con el HTML. Configura la clave una vez, después de construir el agente, antes de su primera ejecución con Gemini.
 
 Como facilitador, usa iniciar.ps1 para ensayar la solución completa con tu propia configuración y comprobar una llamada real antes del evento. Conserva esa referencia para recuperar un equipo que se retrase. Specs, skills y vibe coding se aplican desde el módulo 1.
 
@@ -22,23 +22,23 @@ Explica qué hace el agente QA y qué aplicación revisa. Ejecuta el caso QA-03 
 
 ## Experiencia 1, 45 minutos
 
-1. Spec, 8 minutos. Usa /especificar para definir entradas, herramientas y salida del agente. Revisa los criterios de specs/agente-qa.md.
+1. Spec, 6 minutos. Usa /especificar para definir entradas, herramientas y salida del agente. Revisa los criterios de specs/agente-qa.md.
 2. Skill, 4 minutos. Edita verificar/SKILL.md para comprobar las huellas source_hash y contract_hash junto con los datos de cada falla. Muestra su aplicación.
-3. Plan, 5 minutos. Usa Planning o /plan. Revisa herramientas, agente y verificación. El kit provee qa_core.py y el runner.
-4. Construcción, 15 minutos. Implementa una tarea por vez. El agente exporta create_agent(evidence, model=None) y root_agent. Usa leer_criterios y ejecutar_pruebas. Esta última guarda evidencia en el estado.
-5. Verificación, 10 minutos. Configura la clave una vez e inicia `.\taller.ps1 agente`. En ADK Web observa las llamadas. Contrasta QA-02 y QA-03 con el contrato. Distingue llamada real a Gemini de ensayo local.
-6. Reto, 3 minutos. Como extensión agrega 11 operaciones y 0 transferencias, esperado 27.50. Registra primero el criterio. Con cinco casos, el resultado inicial es 40 % y el corregido 100 %.
+3. Plan, 4 minutos. Usa Planning o /plan. Revisa herramientas, agente y verificación. El kit provee qa_core.py y el runner.
+4. Construcción, 18 minutos. Implementa una tarea por vez. El agente exporta create_agent(evidence, model=None) y root_agent. Usa leer_criterios y ejecutar_pruebas. Esta última guarda evidencia en el estado.
+5. Verificación, 11 minutos. Configura la clave una vez e inicia `.\taller.ps1 agente`. En ADK Web observa las llamadas. Contrasta QA-02 y QA-03 con el contrato. Distingue llamada real a Gemini de ensayo local.
+6. Reto opcional, 2 minutos. Solo si el equipo va a tiempo; si no, es margen. Como extensión agrega 11 operaciones y 0 transferencias, esperado 27.50. Registra primero el criterio. Con cinco casos, el resultado inicial es 40 % y el corregido 100 %.
 
 Entrega de este bloque con spec, plan, agente y evidencia de herramientas.
 
 ## Experiencia 2, 45 minutos
 
-1. Spec, 8 minutos. Define disparadores, entrada, segundo agente, resultado y errores. Repetir un contenido no debe duplicar el historial.
-2. Plan, 5 minutos. Reutiliza create_agent. Define modelos Analysis y Review y create_pipeline(evidence, model) según las interfaces de procesar.py.
-3. Construcción, 15 minutos. Conecta QA y revisor. El revisor recibe diagnostico y evidencia y devuelve decision y observations. Ejecuta `.\taller.ps1 flujo` con la configuración del bloque anterior.
-4. Automatización, 10 minutos. Inicia `.\taller.ps1 automatizar` en el puerto 8767 y comprueba la vigilancia. Abre el JSON con Antigravity. Corrige operacionesCobradas con Math.max(0, operaciones - 10). Guardar el archivo dispara otra revisión. Conserva el servidor para el dashboard del bloque 3.
-5. Verificación, 5 minutos. Compara 50 % y 100 % con el contrato base, o 40 % y 100 % con cinco casos. La huella de fuente cambia y la del mismo contrato permanece. Repite para comprobar identidad.
-6. Reto, 2 minutos. Ejecuta `.\taller.ps1 revisor` con Gemini configurado. Comprueba OBSERVADO ante un diagnóstico que declare éxito cuando un caso falla.
+1. Spec, 5 minutos. Define disparadores, entrada, segundo agente, resultado y errores. Repetir un contenido no debe duplicar el historial.
+2. Plan, 3 minutos. Copia plantillas/flujo/agent.py a flujo/agent.py. La plantilla trae los imports, la interfaz de procesar.py y los modelos Analysis y Review de flujo/modelos.py. Planifica la instrucción del revisor y la secuencia.
+3. Construcción, 15 minutos. Completa los TODO de la plantilla para conectar QA y revisor. El revisor recibe diagnostico y evidencia y devuelve decision y observations. Ejecuta `.\taller.ps1 flujo` con la configuración del bloque anterior.
+4. Automatización, 12 minutos. Inicia `.\taller.ps1 automatizar` en el puerto 8767 y comprueba la vigilancia. Abre el JSON con Antigravity. Corrige operacionesCobradas con Math.max(0, operaciones - 10). Guardar el archivo dispara otra revisión. Conserva el servidor para el dashboard del bloque 3.
+5. Verificación, 8 minutos. Compara 50 % y 100 % con el contrato base, o 40 % y 100 % con cinco casos. La huella de fuente cambia y la del mismo contrato permanece. Repite para comprobar identidad.
+6. Reto opcional, 2 minutos. Solo si el equipo va a tiempo. Ejecuta `.\taller.ps1 revisor` con Gemini configurado. Comprueba OBSERVADO ante un diagnóstico que declare éxito cuando un caso falla.
 
 Entrega de este bloque con dos agentes, ejecución automática y reporte JSON.
 
@@ -46,11 +46,11 @@ Entrega de este bloque con dos agentes, ejecución automática y reporte JSON.
 
 ## Experiencia 3, 55 minutos
 
-1. Spec, 10 minutos. Usa el JSON real para definir contador, porcentaje, casos, filtros, diagnóstico, revisión y traza.
-2. Plan, 8 minutos. Divide validación, renderizado, controles y verificación. Revisa las rutas disponibles en servidor.py.
-3. Construcción, 20 minutos. Usa /implementar para construir HTML, CSS y JavaScript. Renderiza los valores importados como texto. Distingue el origen del reporte.
-4. Verificación, 12 minutos. Comprueba antes y después, filtro, archivo inválido, teclado y ancho móvil. Conserva evidencia en el walkthrough.
-5. Reto, 5 minutos. Añade un filtro por ID o una comparación de reportes, con su spec y criterio.
+1. Spec, 7 minutos. Usa el JSON real para definir contador, porcentaje, casos, filtros, diagnóstico, revisión y traza.
+2. Plan, 5 minutos. Copia plantillas/pagina/ (HTML y CSS listos) a pagina/. Divide validación, renderizado, controles y verificación de pagina/app.js. Revisa las rutas disponibles en servidor.py.
+3. Construcción, 25 minutos. Usa /implementar para construir pagina/app.js sobre los id del HTML. Renderiza los valores importados como texto. Distingue el origen del reporte.
+4. Verificación, 15 minutos. Comprueba antes y después, filtro, archivo inválido, teclado y ancho móvil. Conserva evidencia en el walkthrough.
+5. Reto y demo, 3 minutos. La mejora (filtro por ID o comparación de reportes) es opcional; preparar la demo no.
 
 Entrega de este bloque con dashboard conectado al reporte y walkthrough.
 
